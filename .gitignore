@@ -1,0 +1,8 @@
+*~
+*.diff
+*.patch
+.DS_Store
+.settings
+.project
+target/
+
