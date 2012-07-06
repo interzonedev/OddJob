@@ -1,7 +1,7 @@
 OddJob - An Object Oriented JavaScript Framework
 ================================
 
-OddJob is a way to have Java-like object inheritence and package organization.
+OddJob is a way to have Java-like object inheritance and package organization.
 
 More info coming soon.
 
