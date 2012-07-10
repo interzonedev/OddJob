@@ -29,7 +29,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<js.minoutput.directory>${project.build.directory}/${project.build.finalName}/static</js.minoutput.directory>
+		<js.source.directory>src/main/javascript</js.source.directory>
+		<js.compress.output.directory>${project.build.directory}/${project.build.finalName}/static</js.compress.output.directory>
 	</properties>
 
 	<pluginRepositories>
@@ -37,6 +38,10 @@
 			<name>oss.sonatype.org</name>
 			<id>oss.sonatype.org</id>
 			<url>http://oss.sonatype.org/content/groups/public</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>jsdoctk2</id>
+			<url>http://jsdoctk-plugin.googlecode.com/svn/repo</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -58,7 +63,6 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>jslint</goal>
 							<goal>compress</goal>
 						</goals>
 					</execution>
@@ -67,20 +71,39 @@
 					<preProcessAggregates>false</preProcessAggregates>
 					<jswarn>true</jswarn>
 					<linebreakpos>1000</linebreakpos>
-					<sourceDirectory>src/main/javascript</sourceDirectory>
+					<sourceDirectory>${js.source.directory}</sourceDirectory>
 					<includes>
 						<include>**/*.js</include>
 					</includes>
-					<outputDirectory>${js.minoutput.directory}</outputDirectory>
+					<outputDirectory>${js.compress.output.directory}</outputDirectory>
 					<aggregations>
 						<aggregation>
 							<removeIncluded>true</removeIncluded>
-							<output>${js.minoutput.directory}/oddjob-min.js</output>
+							<output>${js.compress.output.directory}/oddjob-min.js</output>
 							<includes>
 								<include>**/*.js</include>
 							</includes>
 						</aggregation>
 					</aggregations>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>gr.abiss.mvn.plugins</groupId>
+				<artifactId>maven-jstools-plugin</artifactId>
+				<version>0.7</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jsdoc</goal>
+							<goal>jslint</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jsDir>${js.source.directory}</jsDir>
+					<includes>**/*.js</includes>
 				</configuration>
 			</plugin>
 		</plugins>

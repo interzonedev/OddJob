@@ -1,4 +1,3 @@
 #!/bin/sh
 
-mvn clean net.alchim31.maven:yuicompressor-maven-plugin:jslint
-
+mvn clean gr.abiss.mvn.plugins:maven-jstools-plugin:jslint
