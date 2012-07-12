@@ -1,7 +1,7 @@
 (function(context) {
 	"use strict";
 
-	var topNamespace, validNamespace, core;
+	var topNamespace, validNamespace, oj;
 
 	// The top level namespace of the OddJob JavaScript library.
 	topNamespace = "oj";
@@ -10,9 +10,11 @@
 	validNamespace = /^([\$a-z]+[a-z0-9]?)+(\.[a-z]+[a-z0-9]?)*$/i;
 
 	/**
-	 * The core OddJob JavaScript library that will be attached to the to level namespace.
+	 * @namespace
+	 * 
+	 * The top level namespace of the OddJob JavaScript library.
 	 */
-	core = {
+	oj = {
 		/**
 		 * Creates an hierarchy of objects according to the specified namespace input.  Only parts of the heirarchy that
 		 * do not already exist will be created.
@@ -71,8 +73,8 @@
 		}
 	};
 
-	// Set the core JavaScript library to the top level namespace on the context in which this is run.
-	context[topNamespace] = core;
+	// Set the OddJob JavaScript library to the top level namespace on the context in which this is run.
+	context[topNamespace] = oj;
 
 }(this));
 
