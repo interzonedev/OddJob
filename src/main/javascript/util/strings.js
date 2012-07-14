@@ -47,11 +47,4 @@
 			return !oj.util.strings.isNotBlank(obj);
 		}
 	};
-
-	// Decorate all String objects with the trim method if it has not been defined already.
-	if (!String.prototype.trim) {
-		String.prototype.trim = function() {
-			return this.replace(/^\s+|\s+$/, "");
-		};
-	}
 }());
