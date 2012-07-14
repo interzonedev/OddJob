@@ -1,3 +1,5 @@
 #!/bin/sh
 
-mvn clean jsdoctk:jsdoc
+source `pwd`/bin/maven_command.sh $*
+
+$mvnCmd"jsdoctk:jsdoc"
