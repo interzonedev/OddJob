@@ -6,7 +6,7 @@
 	/**
 	 * @namespace
 	 * 
-	 * Utility methods for manipulating strings.
+	 * Utility methods for handling strings.
 	 */
 	oj.util.strings = {
 		/**
@@ -18,9 +18,7 @@
 		 *                    a string, otherwise false.
 		 */
 		isString: function(obj) {
-			return (obj !== undefined) &&
-				(obj !== null) &&
-				(typeof obj === "string");
+			return (undefined !== obj) && (null !== obj) && ("string" === typeof obj);
 		},
 
 		/**
