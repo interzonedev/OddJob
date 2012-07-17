@@ -1,6 +1,6 @@
 $(function() {
 
-	module("core");
+	module("oj");
 
 	// oj object tests
 	test("oj object defined in global namespace", function() {
@@ -84,13 +84,82 @@ $(function() {
 		}, Error, "oj.namespace called with a blank string should throw an Error");
 	});
 
-	/*
-	 * TODO - Bad inputs to test:
-	 * "xyz,abc"
-	 * "xy_z.abc"
-	 * "2yz.abc"
-	 * "xyz..abc"
-	 */
+	test("oj.namespace called with a comma separator", function() {
+		expect(1);
+
+		raises(function() {
+			oj.namespace("xyz,abc");
+		}, Error, "oj.namespace called with a comma separator should throw an Error");
+	});
+
+	test("oj.namespace called with an underscore namespace", function() {
+		expect(1);
+
+		raises(function() {
+			oj.namespace("xy_z.abc");
+		}, Error, "oj.namespace called with an underscore namespace should throw an Error");
+	});
+
+	test("oj.namespace called with a namespace starting with a number", function() {
+		expect(1);
+
+		raises(function() {
+			oj.namespace("2yz.abc");
+		}, Error, "oj.namespace called with a namespace starting with a number should throw an Error");
+	});
+
+	test("oj.namespace called with a namespace with two periods", function() {
+		expect(1);
+
+		raises(function() {
+			oj.namespace("xyz..abc");
+		}, Error, "oj.namespace called with a namespace starting with two periods should throw an Error");
+	});
+
+	test("oj.namespace valid", function() {
+		var test5Namespace1, test5Namespace2;
+
+		expect(6);
+
+		// Define a valid namespace.
+		test5Namespace1 = oj.namespace("oj.test4.test5");
+
+		ok(test5Namespace1, "test5Namespace1 defined");
+		strictEqual(oj.test4.test5, test5Namespace1, "oj.test4.test5 and test5Namespace1 are the same object");
+		strictEqual("object", typeof(test5Namespace1), "test5Namespace1 is an object");
+
+		// Redefine the same namespace.
+		test5Namespace2 = oj.namespace("oj.test4.test5");
+
+		ok(test5Namespace2, "test5Namespace2 defined");
+		strictEqual(oj.test4.test5, test5Namespace2, "oj.test4.test5 and test5Namespace2 are the same object");
+		strictEqual("object", typeof(test5Namespace2), "test5Namespace2 is an object");
+	});
+
+	test("oj.namespace redefine $ namespace", function() {
+		var $namespace;
+
+		expect(4);
+
+		$namespace = oj.namespace("$");
+
+		ok($namespace, "$namespace defined");
+		strictEqual($, $namespace, "$ and $namespace are the same object");
+		strictEqual("function", typeof($namespace), "$namespace is a function");
+		strictEqual(jQuery, $, "$ is still the jQuery object");
+	});
+
+	test("oj.namespace extend $ namespace", function() {
+		var $ojNamespace;
+
+		expect(3);
+
+		$ojNamespace = oj.namespace("$.oj");
+
+		ok($ojNamespace, "$ojNamespace defined");
+		strictEqual($.oj, $ojNamespace, "$ and $ojNamespace are the same object");
+		strictEqual("object", typeof($ojNamespace), "$ojNamespace is an object");
+	});
 
 	test("oj.namespace redefine oj", function() {
 		var ojObject;
