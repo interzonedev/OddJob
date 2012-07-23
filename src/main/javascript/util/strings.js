@@ -14,11 +14,11 @@
 		 * 
 		 * @param {Object} obj The input to examine.
 		 * 
-		 * @returns {Boolean} Returns true if the specified input is not undefined, not null and is
-		 *                    a string, otherwise false.
+		 * @returns {Boolean} Returns true if the specified input is not undefined, not null and is a string, otherwise
+		 *                    false.
 		 */
 		isString: function(obj) {
-			return (undefined !== obj) && (null !== obj) && ("string" === typeof obj);
+			return oj.isDefined(obj) && (("string" === typeof(obj)) || (String === obj.constructor));
 		},
 
 		/**
@@ -26,11 +26,20 @@
 		 * 
 		 * @param {Object} obj The input to examine.
 		 * 
-		 * @returns {Boolean} Returns true if the specified input is not undefined, not null, is a
-		 *                    string and has at least one non whitespace character, otherwise false.
+		 * @returns {Boolean} Returns false if the specified input is undefined or null.  Returns null if the specified
+		 *                    input is not a string.  If the specified input is defined and is a string, returns true if
+		 *                    the specified input has at least one non whitespace character, otherwise false.
 		 */
 		isNotBlank: function(obj) {
-			return oj.util.strings.isString(obj) && /\S/.test(obj);
+			if (!oj.isDefined(obj)) {
+				return false;
+			}
+			
+			if (!oj.util.strings.isString(obj)) {
+				return null;
+			}
+
+			return /\S/.test(obj);
 		},
 
 		/**
@@ -38,11 +47,20 @@
 		 * 
 		 * @param {Object} obj The input to examine.
 		 * 
-		 * @returns {Boolean} Returns true if the specified input is undefined, null, is a not a
-		 *                    string or has at only whitespace characters, otherwise false.
+		 * @returns {Boolean} Returns true if the specified input is undefined or null.  Returns null if the specified
+		 *                    input is not a string.  If the specified input is defined and is a string, returns true if
+		 *                    the specified input has only whitespace characters, otherwise false.
 		 */
 		isBlank: function(obj) {
-			return !oj.util.strings.isNotBlank(obj);
+			if (!oj.isDefined(obj)) {
+				return true;
+			}
+			
+			if (!oj.util.strings.isString(obj)) {
+				return null;
+			}
+
+			return !/\S/.test(obj);
 		}
 	};
 }());

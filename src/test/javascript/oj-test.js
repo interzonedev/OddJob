@@ -1,7 +1,4 @@
 $(function() {
-
-	module("oj");
-
 	// oj object tests
 	test("oj object defined in global namespace", function() {
 		expect(2);
@@ -18,22 +15,76 @@ $(function() {
 		strictEqual("function", typeof(oj.emptyFunction), "oj.emptyFunction is a function");
 	});
 
-	test("oj.emptyFunction function callable", function() {
-		var result1, result2;
+	test("oj.emptyFunction called with no args", function() {
+		var result;
 
-		expect(4);
+		expect(1);
 
-		// Call with no arguments.
-		result1 = oj.emptyFunction();
+		result = oj.emptyFunction();
 
-		ok(!result1, "result1 undefined");
-		strictEqual("undefined", typeof(result1), "result1 is undefined");
+		strictEqual("undefined", typeof(result), "oj.emptyFunction called with no args returns undefined");
+	});
 
-		// Call with argument.
-		result2 = oj.emptyFunction("test");
+	test("oj.emptyFunction called with non defined values", function() {
+		expect(QUnit.oj.nonDefinedValues.length);
 
-		ok(!result2, "result2 undefined");
-		strictEqual("undefined", typeof(result2), "result2 is undefined");
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			var result;
+
+			result = oj.emptyFunction(nonDefinedValue);
+			strictEqual("undefined", typeof(result), "oj.emptyFunction called with " + nonDefinedValue + " returns undefined");
+		});
+	});
+
+	test("oj.emptyFunction called with defined values", function() {
+		expect(QUnit.oj.definedInstances.length);
+
+		$.each(QUnit.oj.definedInstances, function(i, definedValue) {
+			var result;
+
+			result = oj.emptyFunction(definedValue);
+			strictEqual("undefined", typeof(result), "oj.emptyFunction called with " + definedValue + " returns undefined");
+		});
+	});
+
+	// oj.isDefined tests
+	test("oj.isDefined function defined", function() {
+		expect(2);
+
+		ok(oj.isDefined, "oj.isDefined defined");
+		strictEqual("function", typeof(oj.isDefined), "oj.isDefined is a function");
+	});
+
+	test("oj.isDefined called with no args", function() {
+		var result;
+
+		expect(1);
+
+		result = oj.isDefined();
+
+		strictEqual(false, result, "oj.isDefined called with no args false");
+	});
+
+	test("oj.isDefined called with non defined values", function() {
+		expect(QUnit.oj.nonDefinedValues.length);
+
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			var result;
+
+			result = oj.isDefined(nonDefinedValue);
+			strictEqual(false, result, "oj.isDefined called with " + nonDefinedValue + " returns false");
+		});
+	});
+
+	test("oj.isDefined called with defined values", function() {
+		expect(QUnit.oj.definedInstances.length);
+
+		$.each(QUnit.oj.definedInstances, function(i, definedValue) {
+			var result;
+
+			result = oj.isDefined(definedValue);
+			strictEqual(true, result, "oj.isDefined called with " + definedValue + " returns true");
+		});
 	});
 
 	// oj.namespace tests
@@ -44,76 +95,59 @@ $(function() {
 		strictEqual("function", typeof(oj.namespace), "oj.namespace is a function");
 	});
 
-	test("oj.namespace called with undefined", function() {
+	test("oj.namespace called with no args", function() {
 		expect(1);
 
 		raises(function() {
 			oj.namespace();
-		}, Error, "oj.namespace called with undefined should throw an Error");
+		}, Error, "oj.namespace called with no args should throw an Error");
 	});
 
-	test("oj.namespace called with null", function() {
-		expect(1);
+	test("oj.namespace called with non defined values", function() {
+		expect(QUnit.oj.nonDefinedValues.length);
 
-		raises(function() {
-			oj.namespace(null);
-		}, Error, "oj.namespace called with null should throw an Error");
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			raises(function() {
+				oj.namespace(nonDefinedValue);
+			}, Error, "oj.namespace called with " + nonDefinedValue + " should throw an Error");
+		});
 	});
 
-	test("oj.namespace called with a number", function() {
-		expect(1);
+	test("oj.namespace called with non strings", function() {
+		expect(QUnit.oj.nonStringInstances.length);
 
-		raises(function() {
-			oj.namespace(1);
-		}, Error, "oj.namespace called with a number should throw an Error");
+		$.each(QUnit.oj.nonStringInstances, function(i, nonString) {
+			raises(function() {
+				oj.namespace(nonString);
+			}, Error, "oj.namespace called with " + nonString + " should throw an Error");
+		});
 	});
 
-	test("oj.namespace called with an empty string", function() {
-		expect(1);
+	test("oj.namespace called with blank strings", function() {
+		expect(QUnit.oj.blankStringInstances.length);
 
-		raises(function() {
-			oj.namespace("");
-		}, Error, "oj.namespace called with an empty string should throw an Error");
+		$.each(QUnit.oj.blankStringInstances, function(i, blankString) {
+			raises(function() {
+				oj.namespace(blankString);
+			}, Error, "oj.namespace called with " + blankString + " should throw an Error");
+		});
 	});
 
-	test("oj.namespace called with a blank string", function() {
-		expect(1);
 
-		raises(function() {
-			oj.namespace("  ");
-		}, Error, "oj.namespace called with a blank string should throw an Error");
-	});
+	test("oj.namespace called with invalid namespaces", function() {
+		var invalidNamespaces;
 
-	test("oj.namespace called with a comma separator", function() {
-		expect(1);
+		invalidNamespaces = [
+			"xyz,abc", "xy_z.abc", "2yz.abc", "xyz..abc"
+		];
 
-		raises(function() {
-			oj.namespace("xyz,abc");
-		}, Error, "oj.namespace called with a comma separator should throw an Error");
-	});
+		expect(invalidNamespaces.length);
 
-	test("oj.namespace called with an underscore namespace", function() {
-		expect(1);
-
-		raises(function() {
-			oj.namespace("xy_z.abc");
-		}, Error, "oj.namespace called with an underscore namespace should throw an Error");
-	});
-
-	test("oj.namespace called with a namespace starting with a number", function() {
-		expect(1);
-
-		raises(function() {
-			oj.namespace("2yz.abc");
-		}, Error, "oj.namespace called with a namespace starting with a number should throw an Error");
-	});
-
-	test("oj.namespace called with a namespace with two periods", function() {
-		expect(1);
-
-		raises(function() {
-			oj.namespace("xyz..abc");
-		}, Error, "oj.namespace called with a namespace starting with two periods should throw an Error");
+		$.each(invalidNamespaces, function(i, invalidNamespace) {
+			raises(function() {
+				oj.namespace(invalidNamespace);
+			}, Error, "oj.namespace called with " + invalidNamespace + " should throw an Error");
+		});
 	});
 
 	test("oj.namespace valid", function() {

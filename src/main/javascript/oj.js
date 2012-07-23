@@ -43,7 +43,7 @@
 			// Check argument.
 			if (("string" !== typeof (namespaceInput)) || !validNamespace.test(namespaceInput)) {
 				errorMessage += "The namespace input must be a string of the form  level1.level2.level3...where each " +
-								"level is of the form /[a-z]+[a-z0-9]?/i.\nYou provided " + namespaceInput + ".";
+								"level is of the form /[a-z]+[a-z0-9]?/i.\nThe input was " + namespaceInput + ".";
 			}
 
 			// If the argument is valid create the namespace.
@@ -64,6 +64,18 @@
 			if (errorMessage !== initialErrorMessage) {
 				throw new Error(errorMessage);
 			}
+		},
+
+		/**
+		 * Determines whether or not the specified input is defined (not undefined and not null).
+		 * 
+		 * @param {Object} input The input to examine.
+		 * 
+		 * @returns {Boolean} Returns true is the specified input is not undefined and is not null, otherwise returns
+		 *                    false.
+		 */
+		isDefined: function(input) {
+			return ("undefined" !== typeof(input)) && (null !== input);
 		},
 
 		/**
