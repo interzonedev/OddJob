@@ -1,4 +1,7 @@
 $(function() {
+
+	module("oj");
+
 	// oj object tests
 	test("oj object defined in global namespace", function() {
 		expect(2);
