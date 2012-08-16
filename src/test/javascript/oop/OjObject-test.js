@@ -1,14 +1,10 @@
 $(function() {
 	var Singleton1, Singleton2, Prototype1, Prototype2;
 
-	Singleton1 = null;
-	Singleton2 = null;
-	Prototype1 = null;
-	Prototype2 = null;
-
-	module( "oj.oop.OjObject", {
+	module("oj.oop.OjObject", {
+		// Redefine the classes before each test to wipe out any state altered at the class level between test
+		// (especially singleton instance state).
 		setup: function() {
-			// Define test classes
 			Singleton1 = oj.oop.OjObject.extend({
 				initializedCount: 0,
 
@@ -18,15 +14,16 @@ $(function() {
 
 				init: function() {
 					this.base();
-
+		
 					this.initializedCount += 1;
 				}
 			},{
-				className: "Singleton1"
+				className: "Singleton1",
+				classProperty1: "classValue1"
 			}, true);
 
-			Singleton2 = oj.oop.OjObject.extend({
-				initializedCount: 0,
+			Singleton2 = Singleton1.extend({
+				instanceProperty2: "instanceValue2",
 
 				constructor: function(params) {
 					this.base(params);
@@ -34,11 +31,12 @@ $(function() {
 
 				init: function() {
 					this.base();
-
+		
 					this.initializedCount += 1;
 				}
 			},{
-				className: "Singleton2"
+				className: "Singleton2",
+				classProperty2: "classValue2"
 			}, true);
 
 			Prototype1 = oj.oop.OjObject.extend({
@@ -55,7 +53,7 @@ $(function() {
 				}
 			},{
 				className: "Prototype1",
-				classProperty: "classValue"
+				classProperty1: "classValue1"
 			});
 
 			Prototype2 = Prototype1.extend({
@@ -69,7 +67,8 @@ $(function() {
 					this.initializedCount += 1;
 				}
 			},{
-				className: "Prototype2"
+				className: "Prototype2",
+				classProperty2: "classValue2"
 			});
 		},
 		teardown: function() {
@@ -85,7 +84,7 @@ $(function() {
 		expect(2);
 
 		ok(oj.oop.OjObject, "oj.oop.OjObject class defined");
-		strictEqual("function", typeof(oj.oop.OjObject), "oj.oop.OjObject is a function");
+		strictEqual("function", typeof(oj.oop.OjObject), "oj.oop.OjObject is defined as a class");
 	});
 
 	test("oj.oop.OjObject class name", function() {
@@ -152,6 +151,30 @@ $(function() {
 	});
 
 	// Singleton test class tests
+	
+	
+	// Singleton 1
+	test("Singleton1 class properties", function() {
+		expect(3);
+
+		strictEqual("function", typeof(Singleton1), "Singleton1 is defined as a class");
+		strictEqual("Singleton1", Singleton1.className, "The Singleton1.className class property is defined");
+		strictEqual("classValue1", Singleton1.classProperty1, "The Singleton1.classProperty1 class property is defined");
+	});
+	
+	test("Singleton1.getInstance sets default properties on instance", function() {
+		var instance;
+
+		expect(4);
+
+		instance = Singleton1.getInstance({}, false);
+
+		strictEqual("object", typeof(instance), "Singleton1.getInstance returns an instance");
+		strictEqual(0, instance.instanceName.indexOf("Singleton1_instance_"), "Singleton1.getInstance returns an instance with the default instanceName set");
+		strictEqual("Singleton1", instance.className, "Singleton1.getInstance returns an instance with the class name set");
+		strictEqual(Singleton1, instance.clazz, "Singleton1.getInstance returns an instance with the class set");
+	});
+
 	test("Singleton1.getInstance called with instanceName param", function() {
 		var instanceName, params, instance;
 
@@ -191,7 +214,67 @@ $(function() {
 		strictEqual(1, instance2.initializedCount, "Singleton1.getInstance called twice only initializes the instance once");
 	});
 
+	test("Singleton2.getInstance called twice", function() {
+		var instance1, instance2;
+
+		expect(12);
+
+		instance1 = Singleton2.getInstance({}, true);
+		instance2 = Singleton2.getInstance({}, true);
+
+		strictEqual("object", typeof(instance1), "Singleton2.getInstance called twice returns an instance");
+		strictEqual("object", typeof(instance2), "Singleton2.getInstance called twice returns an instance");
+		strictEqual(instance1, instance2, "Singleton2.getInstance called twice returns the same instance");
+		strictEqual(instance1.instanceName, instance2.instanceName, "Singleton2.getInstance called twice returns the same instance");
+		strictEqual("Singleton2", instance1.className, "Singleton2.getInstance called twice returns an instance with the class name set");
+		strictEqual("Singleton2", instance2.className, "Singleton2.getInstance called twice returns an instance with the class name set");
+		strictEqual(Singleton2, instance1.clazz, "Singleton2.getInstance called twice returns an instance with the class set");
+		strictEqual(Singleton2, instance2.clazz, "Singleton2.getInstance called twice returns an instance with the class set");		
+		strictEqual(2, instance1.initializedCount, "Singleton2.getInstance called twice only initializes the instance once");
+		strictEqual(2, instance2.initializedCount, "Singleton2.getInstance called twice only initializes the instance once");
+		strictEqual("instanceValue2", instance1.instanceProperty2, "Singleton2.getInstance called twice returns an instance with the instance property set");
+		strictEqual("instanceValue2", instance2.instanceProperty2, "Singleton2.getInstance called twice returns an instance with the instance property set");
+
+	});
+
+	test("Singleton1.getInstance and Singleton2.getInstance called", function() {
+		var instance1, instance2;
+
+		expect(8);
+
+		instance1 = Singleton1.getInstance({}, true);
+		instance2 = Singleton2.getInstance({}, true);
+
+		strictEqual("object", typeof(instance1), "Singleton1.getInstance and Singleton2.getInstance called returns an instance for Singleton1");
+		strictEqual("object", typeof(instance2), "Singleton1.getInstance and Singleton2.getInstance called returns an instance for Singleton2");
+		strictEqual("Singleton1", instance1.className, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the class name set for Singleton1");
+		strictEqual("Singleton2", instance2.className, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the class name set for Singleton2");
+		strictEqual(Singleton1, instance1.clazz, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the class set for Singleton1");
+		strictEqual(Singleton2, instance2.clazz, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the class set for Singleton2");
+		strictEqual(1, instance1.initializedCount, "Singleton1.getInstance and Singleton2.getInstance called only initializes the instance once for Singleton1");
+		strictEqual(2, instance2.initializedCount, "Singleton1.getInstance and Singleton2.getInstance called only initializes the instance once for Singleton2");
+	});
+
+
+	// Singleton 2
+	test("Singleton2 class properties", function() {
+		expect(4);
+
+		strictEqual("function", typeof(Singleton2), "Singleton2 is defined as a class");
+		strictEqual("Singleton2", Singleton2.className, "The Singleton2.className class property is defined");
+		strictEqual("classValue1", Singleton2.classProperty1, "The Singleton2.classProperty1 class property is defined");
+		strictEqual("classValue2", Singleton2.classProperty2, "The Singleton2.classProperty2 class property is defined");
+	});
+
 	// Prototype test class tests
+	test("Prototype1 and Prototype2 class properties", function() {
+		expect(3);
+
+		strictEqual("classValue1", Prototype1.classProperty1, "The Prototype1.classProperty1 class property is defined");
+		strictEqual("classValue1", Prototype2.classProperty1, "The Prototype2.classProperty1 class property is defined");
+		strictEqual("classValue2", Prototype2.classProperty2, "The Prototype2.classProperty2 class property is defined");
+	});
+
 	test("Prototype1.getInstance called with instanceName param", function() {
 		var instanceName, params, instance;
 
