@@ -13,8 +13,16 @@ $(function() {
 			Singleton1 = oj.oop.OjObject.extend({
 				initializedCount: 0,
 
+				instanceProperty1: "instanceValue1",
+
 				constructor: function(params) {
 					this.base(params);
+
+					if (!params) {
+						return;
+					}
+
+					this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
 				},
 
 				init: function() {
@@ -37,6 +45,7 @@ $(function() {
 						return;
 					}
 
+					this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
 					this.instanceProperty2 = params.instanceProperty2 || this.instanceProperty2;
 				},
 
@@ -53,8 +62,16 @@ $(function() {
 			Prototype1 = oj.oop.OjObject.extend({
 				initializedCount: 0,
 
+				instanceProperty1: "instanceValue1",
+
 				constructor: function(params) {
 					this.base(params);
+
+					if (!params) {
+						return;
+					}
+
+					this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
 				},
 
 				init: function() {
@@ -77,6 +94,7 @@ $(function() {
 						return;
 					}
 
+					this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
 					this.instanceProperty2 = params.instanceProperty2 || this.instanceProperty2;
 				},
 
@@ -284,7 +302,7 @@ $(function() {
 	test("Singleton2.getInstance called with no params sets default properties on instance", function() {
 		var instance;
 
-		expect(5);
+		expect(6);
 
 		instance = Singleton2.getInstance();
 
@@ -292,13 +310,14 @@ $(function() {
 		strictEqual(0, instance.instanceName.indexOf("Singleton2_instance_"), "Singleton2.getInstance returns an instance with the default instanceName set");
 		strictEqual("Singleton2", instance.className, "Singleton2.getInstance returns an instance with the class name set");
 		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance returns an instance with the class set");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Singleton2.getInstance returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance returns an instance with the instance properties set");
 	});
 
 	test("Singleton2.getInstance called with empty params sets default properties on instance", function() {
 		var instance;
 
-		expect(5);
+		expect(6);
 
 		instance = Singleton2.getInstance({}, false);
 
@@ -306,13 +325,14 @@ $(function() {
 		strictEqual(0, instance.instanceName.indexOf("Singleton2_instance_"), "Singleton2.getInstance returns an instance with the default instanceName set");
 		strictEqual("Singleton2", instance.className, "Singleton2.getInstance returns an instance with the class name set");
 		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance returns an instance with the class set");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Singleton2.getInstance returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance returns an instance with the instance properties set");
 	});
 
 	test("Singleton2.getInstance called with instanceName param", function() {
 		var instanceName, params, instance;
 
-		expect(5);
+		expect(6);
 
 		instanceName = "instance1";
 
@@ -326,13 +346,14 @@ $(function() {
 		strictEqual(instanceName, instance.instanceName, "Singleton2.getInstance called with instanceName param returns an instance with instanceName set");
 		strictEqual("Singleton2", instance.className, "Singleton2.getInstance called with instanceName param returns an instance with the class name set");
 		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance called with instanceName param returns an instance with the class set");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance called with instanceName param returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Singleton2.getInstance called with instanceName param returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance called with instanceName param returns an instance with the instance properties set");
 	});
 
 	test("Singleton2.getInstance called with no initialization", function() {
 		var instance;
 
-		expect(6);
+		expect(7);
 
 		instance = Singleton2.getInstance({}, false);
 
@@ -341,13 +362,14 @@ $(function() {
 		strictEqual("Singleton2", instance.className, "Singleton2.getInstance called with no initialization returns an instance with the class name set");
 		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance called with no initialization returns an instance with the class set");
 		strictEqual(0, instance.initializedCount, "Singleton2.getInstance called with no initialization does not initialize the instance");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance called with no initialization returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Singleton2.getInstance called with no initialization returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance called with no initialization returns an instance with the instance properties set");
 	});
 
 	test("Singleton2.getInstance called with initialization", function() {
 		var instance;
 
-		expect(6);
+		expect(7);
 
 		instance = Singleton2.getInstance({}, true);
 
@@ -356,34 +378,38 @@ $(function() {
 		strictEqual("Singleton2", instance.className, "Singleton2.getInstance called with initialization returns an instance with the class name set");
 		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance called with initialization returns an instance with the class set");
 		strictEqual(2, instance.initializedCount, "Singleton2.getInstance called with initialization initializes the instance");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance called with initialization returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Singleton2.getInstance called with initialization returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Singleton2.getInstance called with initialization returns an instance with the instance properties set");
 	});
 
-	test("Singleton2.getInstance called with instanceProperty2 param", function() {
-		var instancePropertyValue, params, instance;
+	test("Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param", function() {
+		var instancePropertyValue1, instancePropertyValue2, params, instance;
 
-		expect(6);
+		expect(7);
 
-		instancePropertyValue = "test";
+		instancePropertyValue1 = "test1";
+		instancePropertyValue2 = "test2";
 
 		params = {
-			"instanceProperty2": instancePropertyValue
+			"instanceProperty1": instancePropertyValue1,
+			"instanceProperty2": instancePropertyValue2
 		};
 
 		instance = Singleton2.getInstance(params, true);
 
-		strictEqual("object", typeof(instance), "Singleton2.getInstance called with instanceProperty2 param returns an instance");
-		strictEqual(0, instance.instanceName.indexOf("Singleton2_instance_"), "Singleton2.getInstance called with instanceProperty2 param returns an instance with the default instanceName set");
-		strictEqual("Singleton2", instance.className, "Singleton2.getInstance called with instanceProperty2 param returns an instance with the class name set");
-		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance called with instanceProperty2 param returns an instance with the class set");
-		strictEqual(instancePropertyValue, instance.instanceProperty2, "Singleton2.getInstance called with instanceProperty2 param returns an instance with the instanceProperty2 property set");
-		strictEqual(2, instance.initializedCount, "Singleton2.getInstance called with instanceProperty2 param only initializes the instance once");
+		strictEqual("object", typeof(instance), "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance");
+		strictEqual(0, instance.instanceName.indexOf("Singleton2_instance_"), "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the default instanceName set");
+		strictEqual("Singleton2", instance.className, "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the class name set");
+		strictEqual(Singleton2, instance.clazz, "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the class set");
+		strictEqual(instancePropertyValue1, instance.instanceProperty1, "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the instanceProperty2 properties set");
+		strictEqual(instancePropertyValue2, instance.instanceProperty2, "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the instanceProperty2 properties set");
+		strictEqual(2, instance.initializedCount, "Singleton2.getInstance called with instanceProperty1 and instanceProperty2 param only initializes the instance once");
 	});
 
 	test("Singleton2.getInstance called twice", function() {
 		var instance1, instance2;
 
-		expect(12);
+		expect(14);
 
 		instance1 = Singleton2.getInstance({}, true);
 		instance2 = Singleton2.getInstance({}, true);
@@ -398,15 +424,17 @@ $(function() {
 		strictEqual(Singleton2, instance2.clazz, "Singleton2.getInstance called twice returns an instance with the class set");		
 		strictEqual(2, instance1.initializedCount, "Singleton2.getInstance called twice only initializes the instance once");
 		strictEqual(2, instance2.initializedCount, "Singleton2.getInstance called twice only initializes the instance once");
-		strictEqual("instanceValue2", instance1.instanceProperty2, "Singleton2.getInstance called twice returns an instance with the instance property set");
-		strictEqual("instanceValue2", instance2.instanceProperty2, "Singleton2.getInstance called twice returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance1.instanceProperty1, "Singleton2.getInstance called twice returns an instance with the instance properties set");
+		strictEqual("instanceValue1", instance2.instanceProperty1, "Singleton2.getInstance called twice returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance1.instanceProperty2, "Singleton2.getInstance called twice returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance2.instanceProperty2, "Singleton2.getInstance called twice returns an instance with the instance properties set");
 	});
 
 	// Singleton1 and Singleton2 test classes properties tests
 	test("Singleton1.getInstance and Singleton2.getInstance called", function() {
 		var instance1, instance2;
 
-		expect(11);
+		expect(13);
 
 		instance1 = Singleton1.getInstance({}, true);
 		instance2 = Singleton2.getInstance({}, true);
@@ -421,7 +449,9 @@ $(function() {
 		strictEqual(Singleton2, instance2.clazz, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the class set for Singleton2");
 		strictEqual(1, instance1.initializedCount, "Singleton1.getInstance and Singleton2.getInstance called only initializes the instance once for Singleton1");
 		strictEqual(2, instance2.initializedCount, "Singleton1.getInstance and Singleton2.getInstance called only initializes the instance once for Singleton2");
-		strictEqual("instanceValue2", instance2.instanceProperty2, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the instance property set for Singleton2");
+		strictEqual("instanceValue1", instance1.instanceProperty1, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the instance property set for Singleton1");
+		strictEqual("instanceValue1", instance2.instanceProperty1, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the instance properties set for Singleton2");
+		strictEqual("instanceValue2", instance2.instanceProperty2, "Singleton1.getInstance and Singleton2.getInstance called returns an instance with the instance properties set for Singleton2");
 	});
 
 	// Prototype1 test class properties tests
@@ -541,7 +571,7 @@ $(function() {
 	test("Prototype2.getInstance called with no params sets default properties on instance", function() {
 		var instance;
 
-		expect(5);
+		expect(6);
 
 		instance = Prototype2.getInstance();
 
@@ -549,13 +579,14 @@ $(function() {
 		strictEqual(0, instance.instanceName.indexOf("Prototype2_instance_"), "Prototype2.getInstance returns an instance with the default instanceName set");
 		strictEqual("Prototype2", instance.className, "Prototype2.getInstance returns an instance with the class name set");
 		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance returns an instance with the class set");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Prototype2.getInstance returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance returns an instance with the instance properties set");
 	});
 
 	test("Prototype2.getInstance called with empty params sets default properties on instance", function() {
 		var instance;
 
-		expect(5);
+		expect(6);
 
 		instance = Prototype2.getInstance({}, false);
 
@@ -563,13 +594,14 @@ $(function() {
 		strictEqual(0, instance.instanceName.indexOf("Prototype2_instance_"), "Prototype2.getInstance returns an instance with the default instanceName set");
 		strictEqual("Prototype2", instance.className, "Prototype2.getInstance returns an instance with the class name set");
 		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance returns an instance with the class set");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Prototype2.getInstance returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance returns an instance with the instance properties set");
 	});
 
 	test("Prototype2.getInstance called with instanceName param", function() {
 		var instanceName, params, instance;
 
-		expect(5);
+		expect(6);
 
 		instanceName = "instance1";
 
@@ -583,13 +615,14 @@ $(function() {
 		strictEqual(instanceName, instance.instanceName, "Prototype2.getInstance called with instanceName param returns an instance with instanceName set");
 		strictEqual("Prototype2", instance.className, "Prototype2.getInstance called with instanceName param returns an instance with the class name set");
 		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance called with instanceName param returns an instance with the class set");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance called with instanceName param returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Prototype2.getInstance called with instanceName param returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance called with instanceName param returns an instance with the instance properties set");
 	});
 
 	test("Prototype2.getInstance called with no initialization", function() {
 		var instance;
 
-		expect(6);
+		expect(7);
 
 		instance = Prototype2.getInstance({}, false);
 
@@ -598,13 +631,14 @@ $(function() {
 		strictEqual("Prototype2", instance.className, "Prototype2.getInstance called with no initialization returns an instance with the class name set");
 		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance called with no initialization returns an instance with the class set");
 		strictEqual(0, instance.initializedCount, "Prototype2.getInstance called with no initialization does not initialize the instance");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance called with no initialization returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Prototype2.getInstance called with no initialization returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance called with no initialization returns an instance with the instance properties set");
 	});
 
 	test("Prototype2.getInstance called with initialization", function() {
 		var instance;
 
-		expect(6);
+		expect(7);
 
 		instance = Prototype2.getInstance({}, true);
 
@@ -613,34 +647,38 @@ $(function() {
 		strictEqual("Prototype2", instance.className, "Prototype2.getInstance called with initialization returns an instance with the class name set");
 		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance called with initialization returns an instance with the class set");
 		strictEqual(2, instance.initializedCount, "Prototype2.getInstance called with initialization initializes the instance");
-		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance called with initialization returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance.instanceProperty1, "Prototype2.getInstance called with initialization returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance.instanceProperty2, "Prototype2.getInstance called with initialization returns an instance with the instance properties set");
 	});
 
-	test("Prototype2.getInstance called with instanceProperty2 param", function() {
-		var instancePropertyValue, params, instance;
+	test("Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param", function() {
+		var instancePropertyValue1, instancePropertyValue2, params, instance;
 
-		expect(6);
+		expect(7);
 
-		instancePropertyValue = "test";
+		instancePropertyValue1 = "test1";
+		instancePropertyValue2 = "test2";
 
 		params = {
-			"instanceProperty2": instancePropertyValue
+			"instanceProperty1": instancePropertyValue1,
+			"instanceProperty2": instancePropertyValue2
 		};
 
 		instance = Prototype2.getInstance(params, true);
 
-		strictEqual("object", typeof(instance), "Prototype2.getInstance called with instanceProperty2 param returns an instance");
-		strictEqual(0, instance.instanceName.indexOf("Prototype2_instance_"), "Prototype2.getInstance called with instanceProperty2 param returns an instance with the default instanceName set");
-		strictEqual("Prototype2", instance.className, "Prototype2.getInstance called with instanceProperty2 param returns an instance with the class name set");
-		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance called with instanceProperty2 param returns an instance with the class set");
-		strictEqual(instancePropertyValue, instance.instanceProperty2, "Prototype2.getInstance called with instanceProperty2 param returns an instance with the instanceProperty2 property set");
-		strictEqual(2, instance.initializedCount, "Prototype2.getInstance called with instanceProperty2 param only initializes the instance once");
+		strictEqual("object", typeof(instance), "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance");
+		strictEqual(0, instance.instanceName.indexOf("Prototype2_instance_"), "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the default instanceName set");
+		strictEqual("Prototype2", instance.className, "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the class name set");
+		strictEqual(Prototype2, instance.clazz, "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the class set");
+		strictEqual(instancePropertyValue1, instance.instanceProperty1, "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the instanceProperty1 property set");
+		strictEqual(instancePropertyValue2, instance.instanceProperty2, "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param returns an instance with the instanceProperty2 property set");
+		strictEqual(2, instance.initializedCount, "Prototype2.getInstance called with instanceProperty1 and instanceProperty2 param only initializes the instance once");
 	});
 
 	test("Prototype2.getInstance called twice", function() {
 		var instance1, instance2;
 
-		expect(14);
+		expect(16);
 
 		instance1 = Prototype2.getInstance({}, true);
 		instance2 = Prototype2.getInstance({}, true);
@@ -657,15 +695,17 @@ $(function() {
 		strictEqual(Prototype2, instance2.clazz, "Prototype2.getInstance called twice returns an instance with the class set");		
 		strictEqual(2, instance1.initializedCount, "Prototype2.getInstance called twice only initializes the instance once");
 		strictEqual(2, instance2.initializedCount, "Prototype2.getInstance called twice only initializes the instance once");
-		strictEqual("instanceValue2", instance1.instanceProperty2, "Prototype2.getInstance called twice returns an instance with the instance property set");
-		strictEqual("instanceValue2", instance2.instanceProperty2, "Prototype2.getInstance called twice returns an instance with the instance property set");
+		strictEqual("instanceValue1", instance1.instanceProperty1, "Prototype2.getInstance called twice returns an instance with the instance properties set");
+		strictEqual("instanceValue1", instance2.instanceProperty1, "Prototype2.getInstance called twice returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance1.instanceProperty2, "Prototype2.getInstance called twice returns an instance with the instance properties set");
+		strictEqual("instanceValue2", instance2.instanceProperty2, "Prototype2.getInstance called twice returns an instance with the instance properties set");
 	});
 
 	// Prototype1 and Prototype2 test classes properties tests
 	test("Prototype1.getInstance and Prototype2.getInstance called", function() {
 		var instance1, instance2;
 
-		expect(11);
+		expect(13);
 
 		instance1 = Prototype1.getInstance({}, true);
 		instance2 = Prototype2.getInstance({}, true);
@@ -680,7 +720,9 @@ $(function() {
 		strictEqual(Prototype2, instance2.clazz, "Prototype1.getInstance and Prototype2.getInstance called returns an instance with the class set for Prototype2");
 		strictEqual(1, instance1.initializedCount, "Prototype1.getInstance and Prototype2.getInstance called only initializes the instance once for Prototype1");
 		strictEqual(2, instance2.initializedCount, "Prototype1.getInstance and Prototype2.getInstance called only initializes the instance once for Prototype2");
-		strictEqual("instanceValue2", instance2.instanceProperty2, "Prototype1.getInstance and Prototype2.getInstance called returns an instance with the instance property set for Prototype2");
+		strictEqual("instanceValue1", instance1.instanceProperty1, "Prototype1.getInstance and Prototype2.getInstance called returns an instance with the instance property set for Prototype1");
+		strictEqual("instanceValue1", instance2.instanceProperty1, "Prototype1.getInstance and Prototype2.getInstance called returns an instance with the instance properties set for Prototype2");
+		strictEqual("instanceValue2", instance2.instanceProperty2, "Prototype1.getInstance and Prototype2.getInstance called returns an instance with the instance properties set for Prototype2");
 	});
 
 	// oj.oop.OjObject.extend method tests
