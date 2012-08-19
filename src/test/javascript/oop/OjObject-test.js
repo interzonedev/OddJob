@@ -116,7 +116,15 @@ $(function() {
 			},{
 				className: "Prototype1",
 
-				classProperty1: "classValue1"
+				classProperty1: "classValue1",
+
+				classMethod1: function(arg) {
+					return "classMethod1" + " - " + arg;
+				},
+
+				classMethod2: function(arg) {
+					return this.classProperty1 + " - " + arg;
+				}
 			});
 
 			Prototype2 = Prototype1.extend({
@@ -145,7 +153,11 @@ $(function() {
 			},{
 				className: "Prototype2",
 
-				classProperty2: "classValue2"
+				classProperty2: "classValue2",
+
+				classMethod2: function(arg) {
+					return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
+				}
 			});
 		},
 		teardown: function() {
@@ -841,6 +853,44 @@ $(function() {
 		strictEqual(instance.instanceProperty1 + " - " + arg, result, "The Prototype1.instanceMethod2 instance should return the correct result");
 	});
 
+	// Prototype1 test class classMethod1 class method tests
+	test("Prototype1.classMethod1 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Prototype1.classMethod1), "Prototype1 should have the classMethod1 class method defined");
+	});
+
+	test("Prototype1.classMethod1 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Prototype1.classMethod1(arg);
+
+		strictEqual("classMethod1" + " - " + arg, result, "The Prototype1.classMethod1 class method should return the correct result");
+	});
+
+	// Prototype1 test class classMethod2 class method tests
+	test("Prototype1.classMethod2 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Prototype1.classMethod2), "Prototype1 should have the classMethod2 class method defined");
+	});
+
+	test("Prototype1.classMethod2 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Prototype1.classMethod2(arg);
+
+		strictEqual(Prototype1.classProperty1 + " - " + arg, result, "The Prototype1.classMethod2 class method should return the correct result");
+	});
+
 	// Prototype2 test class properties tests
 	test("Prototype2 class properties", function() {
 		expect(4);
@@ -1057,6 +1107,44 @@ $(function() {
 		result = instance.instanceMethod2(arg);
 
 		strictEqual(instance.instanceProperty1 + " - " + arg + " - " + instance.instanceProperty2 + " - " + arg, result, "The Prototype2.instanceMethod2 instance should return the correct result");
+	});
+
+	// Prototype2 test class classMethod1 class method tests
+	test("Prototype2.classMethod1 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Prototype2.classMethod1), "Prototype2 should have the classMethod1 class method defined");
+	});
+
+	test("Prototype2.classMethod1 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Prototype2.classMethod1(arg);
+
+		strictEqual("classMethod1" + " - " + arg, result, "The Prototype2.classMethod1 class method should return the correct result");
+	});
+
+	// Prototype2 test class classMethod2 class method tests
+	test("Prototype2.classMethod2 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Prototype2.classMethod2), "Prototype2 should have the classMethod2 class method defined");
+	});
+
+	test("Prototype2.classMethod2 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Prototype2.classMethod2(arg);
+
+		strictEqual(Prototype2.classProperty1 + " - " + arg + " - " + Prototype2.classProperty2 + " - " + arg, result, "The Prototype2.classMethod2 class method should return the correct result");
 	});
 
 	// oj.oop.OjObject.extend method tests
