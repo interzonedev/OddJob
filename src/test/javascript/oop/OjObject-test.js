@@ -1,9 +1,9 @@
 $(function() {
-	var Singleton1, Singleton2, Prototype1, Prototype2;
+	var Singleton1, Prototype1, Singleton2, Prototype2;
 
 	Singleton1 = null;
-	Singleton2 = null;
 	Prototype1 = null;
+	Singleton2 = null;
 	Prototype2 = null;
 
 	module("oj.oop.OjObject", {
@@ -52,39 +52,6 @@ $(function() {
 				}
 			}, true);
 
-			Singleton2 = Singleton1.extend({
-				instanceProperty2: "instanceValue2",
-
-				constructor: function(params) {
-					this.base(params);
-
-					if (!params) {
-						return;
-					}
-
-					this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
-					this.instanceProperty2 = params.instanceProperty2 || this.instanceProperty2;
-				},
-
-				init: function() {
-					this.base();
-
-					this.initializedCount += 1;
-				},
-
-				instanceMethod2: function(arg) {
-					return this.base(arg) + " - " + this.instanceProperty2 + " - " + arg;
-				}
-			},{
-				className: "Singleton2",
-
-				classProperty2: "classValue2",
-
-				classMethod2: function(arg) {
-					return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
-				}
-			}, true);
-
 			Prototype1 = oj.oop.OjObject.extend({
 				initializedCount: 0,
 
@@ -127,7 +94,40 @@ $(function() {
 				}
 			});
 
-			Prototype2 = Prototype1.extend({
+			Singleton2 = Prototype1.extend({
+				instanceProperty2: "instanceValue2",
+
+				constructor: function(params) {
+					this.base(params);
+
+					if (!params) {
+						return;
+					}
+
+					this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
+					this.instanceProperty2 = params.instanceProperty2 || this.instanceProperty2;
+				},
+
+				init: function() {
+					this.base();
+
+					this.initializedCount += 1;
+				},
+
+				instanceMethod2: function(arg) {
+					return this.base(arg) + " - " + this.instanceProperty2 + " - " + arg;
+				}
+			},{
+				className: "Singleton2",
+
+				classProperty2: "classValue2",
+
+				classMethod2: function(arg) {
+					return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
+				}
+			}, true);
+
+			Prototype2 = Singleton1.extend({
 				instanceProperty2: "instanceValue2",
 
 				constructor: function(params) {
@@ -162,8 +162,8 @@ $(function() {
 		},
 		teardown: function() {
 			Singleton1 = null;
-			Singleton2 = null;
 			Prototype1 = null;
+			Singleton2 = null;
 			Prototype2 = null;
 		}
 	});
