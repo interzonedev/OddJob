@@ -40,7 +40,16 @@ $(function() {
 				}
 			},{
 				className: "Singleton1",
-				classProperty1: "classValue1"
+
+				classProperty1: "classValue1",
+
+				classMethod1: function(arg) {
+					return "classMethod1" + " - " + arg;
+				},
+
+				classMethod2: function(arg) {
+					return this.classProperty1 + " - " + arg;
+				}
 			}, true);
 
 			Singleton2 = Singleton1.extend({
@@ -68,7 +77,12 @@ $(function() {
 				}
 			},{
 				className: "Singleton2",
-				classProperty2: "classValue2"
+
+				classProperty2: "classValue2",
+
+				classMethod2: function(arg) {
+					return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
+				}
 			}, true);
 
 			Prototype1 = oj.oop.OjObject.extend({
@@ -101,6 +115,7 @@ $(function() {
 				}
 			},{
 				className: "Prototype1",
+
 				classProperty1: "classValue1"
 			});
 
@@ -129,6 +144,7 @@ $(function() {
 				}
 			},{
 				className: "Prototype2",
+
 				classProperty2: "classValue2"
 			});
 		},
@@ -322,7 +338,7 @@ $(function() {
 	});
 
 	// Singleton1 test class instanceMethod1 instance method tests
-	test("Singleton1.instanceMethod1 instanceMethod1 method defined", function() {
+	test("Singleton1.instanceMethod1 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -347,7 +363,7 @@ $(function() {
 	});
 
 	// Singleton1 test class instanceMethod2 instance method tests
-	test("Singleton1.instanceMethod2 instanceMethod2 method defined", function() {
+	test("Singleton1.instanceMethod2 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -369,6 +385,44 @@ $(function() {
 		result = instance.instanceMethod2(arg);
 
 		strictEqual(instance.instanceProperty1 + " - " + arg, result, "The Singleton1.instanceMethod2 instance should return the correct result");
+	});
+
+	// Singleton1 test class classMethod1 class method tests
+	test("Singleton1.classMethod1 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Singleton1.classMethod1), "Singleton1 should have the classMethod1 class method defined");
+	});
+ 
+	test("Singleton1.classMethod1 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Singleton1.classMethod1(arg);
+
+		strictEqual("classMethod1" + " - " + arg, result, "The Singleton1.classMethod1 class method should return the correct result");
+	});
+
+	// Singleton1 test class classMethod2 class method tests
+	test("Singleton1.classMethod2 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Singleton1.classMethod2), "Singleton1 should have the classMethod2 class method defined");
+	});
+ 
+	test("Singleton1.classMethod2 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Singleton1.classMethod2(arg);
+
+		strictEqual(Singleton1.classProperty1 + " - " + arg, result, "The Singleton1.classMethod2 class method should return the correct result");
 	});
 
 	// Singleton2 test class properties tests
@@ -538,7 +592,7 @@ $(function() {
 	});
 
 	// Singleton2 test class instanceMethod1 instance method tests
-	test("Singleton2.instanceMethod1 instanceMethod1 method defined", function() {
+	test("Singleton2.instanceMethod1 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -563,7 +617,7 @@ $(function() {
 	});
 
 	// Singleton2 test class instanceMethod2 instance method tests
-	test("Singleton2.instanceMethod2 instanceMethod2 method defined", function() {
+	test("Singleton2.instanceMethod2 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -585,6 +639,44 @@ $(function() {
 		result = instance.instanceMethod2(arg);
 
 		strictEqual(instance.instanceProperty1 + " - " + arg + " - " + instance.instanceProperty2 + " - " + arg, result, "The Singleton2.instanceMethod2 instance should return the correct result");
+	});
+
+	// Singleton2 test class classMethod1 class method tests
+	test("Singleton2.classMethod1 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Singleton2.classMethod1), "Singleton2 should have the classMethod1 class method defined");
+	});
+
+	test("Singleton2.classMethod1 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Singleton2.classMethod1(arg);
+
+		strictEqual("classMethod1" + " - " + arg, result, "The Singleton2.classMethod1 class method should return the correct result");
+	});
+
+	// Singleton2 test class classMethod2 class method tests
+	test("Singleton2.classMethod2 class method defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(Singleton2.classMethod2), "Singleton2 should have the classMethod2 class method defined");
+	});
+
+	test("Singleton2.classMethod2 class method called", function() {
+		var arg, result;
+
+		expect(1);
+
+		arg = "test1";
+
+		result = Singleton2.classMethod2(arg);
+
+		strictEqual(Singleton1.classProperty1 + " - " + arg + " - " + Singleton2.classProperty2 + " - " + arg, result, "The Singleton2.classMethod2 class method should return the correct result");
 	});
 
 	// Prototype1 test class properties tests
@@ -692,7 +784,7 @@ $(function() {
 		strictEqual("Prototype1", instance1.className, "Prototype1.getInstance called twice returns an instance with the class name set");
 		strictEqual("Prototype1", instance2.className, "Prototype1.getInstance called twice returns an instance with the class name set");
 		strictEqual(Prototype1, instance1.clazz, "Prototype1.getInstance called twice returns an instance with the class set");
-		strictEqual(Prototype1, instance2.clazz, "Prototype1.getInstance called twice returns an instance with the class set");		
+		strictEqual(Prototype1, instance2.clazz, "Prototype1.getInstance called twice returns an instance with the class set");
 		strictEqual(1, instance1.initializedCount, "Prototype1.getInstance called twice only initializes the instance once");
 		strictEqual(1, instance2.initializedCount, "Prototype1.getInstance called twice only initializes the instance once");
 		strictEqual("instanceValue1", instance1.instanceProperty1, "Prototype1.getInstance called twice returns an instance with the instance property set");
@@ -700,7 +792,7 @@ $(function() {
 	});
 
 	// Prototype1 test class instanceMethod1 instance method tests
-	test("Prototype1.instanceMethod1 instanceMethod1 method defined", function() {
+	test("Prototype1.instanceMethod1 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -725,7 +817,7 @@ $(function() {
 	});
 
 	// Prototype1 test class instanceMethod2 instance method tests
-	test("Prototype1.instanceMethod2 instanceMethod2 method defined", function() {
+	test("Prototype1.instanceMethod2 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -884,7 +976,7 @@ $(function() {
 		strictEqual("Prototype2", instance1.className, "Prototype2.getInstance called twice returns an instance with the class name set");
 		strictEqual("Prototype2", instance2.className, "Prototype2.getInstance called twice returns an instance with the class name set");
 		strictEqual(Prototype2, instance1.clazz, "Prototype2.getInstance called twice returns an instance with the class set");
-		strictEqual(Prototype2, instance2.clazz, "Prototype2.getInstance called twice returns an instance with the class set");		
+		strictEqual(Prototype2, instance2.clazz, "Prototype2.getInstance called twice returns an instance with the class set");
 		strictEqual(2, instance1.initializedCount, "Prototype2.getInstance called twice only initializes the instance once");
 		strictEqual(2, instance2.initializedCount, "Prototype2.getInstance called twice only initializes the instance once");
 		strictEqual("instanceValue1", instance1.instanceProperty1, "Prototype2.getInstance called twice returns an instance with the instance properties set");
@@ -918,7 +1010,7 @@ $(function() {
 	});
 
 	// Prototype2 test class instanceMethod1 instance method tests
-	test("Prototype2.instanceMethod1 instanceMethod1 method defined", function() {
+	test("Prototype2.instanceMethod1 instance method defined", function() {
 		var instance;
 
 		expect(1);
@@ -943,7 +1035,7 @@ $(function() {
 	});
 
 	// Prototype2 test class instanceMethod2 instance method tests
-	test("Prototype2.instanceMethod2 instanceMethod2 method defined", function() {
+	test("Prototype2.instanceMethod2 instance method defined", function() {
 		var instance;
 
 		expect(1);
