@@ -2,18 +2,6 @@ $(function() {
 
 	module("oj.util.framework");
 
-	/*
-	test("oj.util.framework object defined", function() {
-		var foo = 2;
-
-		expect(3);
-
-		ok(foo, "foo object defined");
-		strictEqual("object", typeof(foo), "foo is an object");
-		ok(/^\d/.test(foo), "foo starts with a number");
-	});
-	*/
-
 	// oj.util.framework object tests
 	test("oj.util.framework object defined", function() {
 		expect(2);
