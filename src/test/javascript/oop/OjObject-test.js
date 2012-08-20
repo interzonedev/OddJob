@@ -170,9 +170,8 @@ $(function() {
 
 	// oj.oop.OjObject class tests
 	test("oj.oop.OjObject class defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.oop.OjObject, "oj.oop.OjObject class defined");
 		strictEqual("function", typeof(oj.oop.OjObject), "oj.oop.OjObject is defined as a class");
 	});
 
@@ -184,9 +183,8 @@ $(function() {
 
 	// oj.oop.OjObject.getInstance method tests
 	test("oj.oop.OjObject.getInstance method defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.oop.OjObject.getInstance, "oj.oop.OjObject.getInstance object defined");
 		strictEqual("function", typeof(oj.oop.OjObject.getInstance), "oj.oop.OjObject.getInstance is a function");
 	});
 
@@ -1149,9 +1147,8 @@ $(function() {
 
 	// oj.oop.OjObject.extend method tests
 	test("oj.oop.OjObject.extend method defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.oop.OjObject.extend, "oj.oop.OjObject.extend object defined");
 		strictEqual("function", typeof(oj.oop.OjObject.extend), "oj.oop.OjObject.extend is a function");
 	});
 

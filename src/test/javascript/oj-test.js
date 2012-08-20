@@ -12,9 +12,8 @@ $(function() {
 
 	// oj.emptyFunction tests
 	test("oj.emptyFunction function defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.emptyFunction, "oj.emptyFunction defined");
 		strictEqual("function", typeof(oj.emptyFunction), "oj.emptyFunction is a function");
 	});
 
@@ -52,9 +51,8 @@ $(function() {
 
 	// oj.isDefined tests
 	test("oj.isDefined function defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.isDefined, "oj.isDefined defined");
 		strictEqual("function", typeof(oj.isDefined), "oj.isDefined is a function");
 	});
 
@@ -92,9 +90,8 @@ $(function() {
 
 	// oj.namespace tests
 	test("oj.namespace function defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.namespace, "oj.namespace defined");
 		strictEqual("function", typeof(oj.namespace), "oj.namespace is a function");
 	});
 
@@ -176,13 +173,12 @@ $(function() {
 	test("oj.namespace redefine $ namespace", function() {
 		var $namespace;
 
-		expect(4);
+		expect(3);
 
 		$namespace = oj.namespace("$");
 
-		ok($namespace, "$namespace defined");
-		strictEqual($, $namespace, "$ and $namespace are the same object");
 		strictEqual("function", typeof($namespace), "$namespace is a function");
+		strictEqual($, $namespace, "$ and $namespace are the same object");
 		strictEqual(jQuery, $, "$ is still the jQuery object");
 	});
 
@@ -215,7 +211,7 @@ $(function() {
 		expect(6);
 
 		ojNamespace = oj.namespace("oj.namespace");
-		ok(ojNamespace, "ojNamespace defined");
+		strictEqual("function", typeof(ojNamespace), "ojNamespace defined as a function");
 		strictEqual(oj.namespace, ojNamespace, "oj.namespace and ojNamespace are the same object");
 		strictEqual("function", typeof(oj.namespace), "oj.namespace is still a function");
 

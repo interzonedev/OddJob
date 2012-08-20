@@ -12,9 +12,8 @@ $(function() {
 
 	// oj.util.strings.isString method tests
 	test("oj.util.strings.isString function defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.util.strings.isString, "oj.util.strings.isString object defined");
 		strictEqual("function", typeof(oj.util.strings.isString), "oj.util.strings.isString is a function");
 	});
 
@@ -64,9 +63,8 @@ $(function() {
 
 	// oj.util.strings.isNotBlank method tests
 	test("oj.util.strings.isNotBlank function defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.util.strings.isNotBlank, "oj.util.strings.isNotBlank object defined");
 		strictEqual("function", typeof(oj.util.strings.isNotBlank), "oj.util.strings.isNotBlank is a function");
 	});
 
@@ -116,9 +114,8 @@ $(function() {
 
 	// oj.util.strings.isBlank method tests
 	test("oj.util.strings.isBlank function defined", function() {
-		expect(2);
+		expect(1);
 
-		ok(oj.util.strings.isBlank, "oj.util.strings.isBlank object defined");
 		strictEqual("function", typeof(oj.util.strings.isBlank), "oj.util.strings.isBlank is a function");
 	});
 

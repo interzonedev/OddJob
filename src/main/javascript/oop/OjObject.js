@@ -122,7 +122,12 @@
 	oj.oop.OjObject.extend = function(instanceProperties, classProperties, singleton) {
 		var propName = null, clazz;
 
-		// In the current context, "this" references the superclass.
+		// Note: In the current context, "this" references the superclass being extended.
+
+		// Make sure the input parameters are set to something sensible if they are not defined.
+		instanceProperties = instanceProperties || {};
+		classProperties = classProperties || {};
+		singleton = !!singleton;
 
 		// Add any class level properties in the super class not already in base2.Base or the the specified class
 		// properties to the class properties.
