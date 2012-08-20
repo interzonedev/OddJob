@@ -31,6 +31,28 @@
 			timeStamp = (new Date().getTime()).toString();
 			rand = (Math.floor((Math.random() * 100000))).toString();
 			return prefix + timeStamp + rand;
+		},
+
+		/**
+		 * Determines whether or not the specified input is an object.
+		 * 
+		 * @param {Object} input The input to examine.
+		 * 
+		 * @returns {Boolean} True if the specified input has the type of an object, not null and not an array, otherwise false.
+		 */
+		isObject: function(input) {
+			return (("object" === typeof input) && !oj.util.framework.isArray(input) && (input !== null));
+		},
+
+		/**
+		 * Determines whether or not the specified input is an array.
+		 * 
+		 * @param {Object} input The input to examine.
+		 * 
+		 * @returns {Boolean} True if the specified input is an array, otherwise false.
+		 */
+		isArray: function(input) {
+			return ("[object Array]" === Object.prototype.toString.apply(input));
 		}
 	};
 }());

@@ -112,28 +112,47 @@
 	 * Overrides the extend method inherited from base2.Base to allow the transference of class level properties from
 	 * the super class to the sub class and for singleton class defintions.
 	 * 
-	 * @param {String} instanceProperties The instance properties for the class being defined.
-	 * @param {String} classProperties The class (static-like) properties for the class being defined.
-	 * @param {Boolean} singleton Whether or not the class should be a singleton.
+	 * @param {String} instanceProperties The instance properties for the class being defined.  If this is not an object
+	 *                                    an empty object will be used in its place.
+	 * @param {String} classProperties The class (static-like) properties for the class being defined..  If this is not
+	 *                                 an object an empty object will be used in its place.
+	 * @param {Boolean} singleton Whether or not the class should be a singleton.  This is treated as "truthy".
 	 * 
 	 * @return {Function} Returns the same class definition as the original base2.Base.extend with class properties
 	 *                    inherited from the super class.
 	 */
 	oj.oop.OjObject.extend = function(instanceProperties, classProperties, singleton) {
-		var propName = null, clazz;
+		var propName = null, instancePropertiesClone = {}, classPropertiesClone = {}, clazz;
 
 		// Note: In the current context, "this" references the superclass being extended.
 
-		// Make sure the input parameters are set to something sensible if they are not defined.
-		instanceProperties = instanceProperties || {};
-		classProperties = classProperties || {};
+		// Clone the instanceProperties argument so the original value does not get altered.
+		for (propName in instanceProperties) {
+			if (instanceProperties.hasOwnProperty(propName)) {
+				instancePropertiesClone[propName] = instanceProperties[propName]; 
+			}
+		}
+		
+		// Clone the classProperties argument so the original value does not get altered.
+		for (propName in classProperties) {
+			if (classProperties.hasOwnProperty(propName)) {
+				classPropertiesClone[propName] = classProperties[propName]; 
+			}
+		}
+
+		// Force the singleton argument to a Boolean.
 		singleton = !!singleton;
+
+		// If a class name was not set in the class properties set a random one based on the superclass name.
+		if (!classPropertiesClone.className) {
+			classPropertiesClone.className = oj.util.framework.getUniqueId(this.className + "_subclass_");
+		}
 
 		// Add any class level properties in the super class not already in base2.Base or the the specified class
 		// properties to the class properties.
 		for (propName in this) {
-			if (this.hasOwnProperty(propName) && !base2.Base[propName] && !classProperties[propName]) {
-				classProperties[propName] = this[propName];
+			if (this.hasOwnProperty(propName) && !base2.Base[propName] && !classPropertiesClone[propName]) {
+				classPropertiesClone[propName] = this[propName];
 			}
 		}
 
@@ -142,7 +161,7 @@
 		// the case of a singleton class definition.  For non-singleton class definitions, the private
 		// constructFromPrototype method is called directly as in the default case of the oj.oop.OjObject class
 		// definition.
-		classProperties.getInstance = (function() {
+		classPropertiesClone.getInstance = (function() {
 			var instance = null; // Cache the instance.  This is used for singletons and ignored for non-singletons.
 
 			return function(params, initialize) {
@@ -163,7 +182,7 @@
 		}());
 
 		// Define the class by extending base2.Base with modified class properties.
-		clazz = base2.Base.extend.apply(this, [instanceProperties, classProperties]);
+		clazz = base2.Base.extend.apply(this, [instancePropertiesClone, classPropertiesClone]);
 
 		// Return the class definition.
 		return clazz;

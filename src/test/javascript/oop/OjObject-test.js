@@ -1,5 +1,7 @@
 $(function() {
-	var Singleton1, Prototype1, Singleton2, Prototype2;
+	var Singleton1, Prototype1, Singleton2, Prototype2, anonymousSubclassNameRegEx;
+
+	anonymousSubclassNameRegEx = /^oj\.oop\.OjObject_subclass_\d+$/;
 
 	Singleton1 = null;
 	Prototype1 = null;
@@ -1189,37 +1191,73 @@ $(function() {
 		strictEqual("function", typeof(oj.oop.OjObject.extend), "oj.oop.OjObject.extend is a function");
 	});
 
-	/*
 	test("oj.oop.OjObject.extend called with non defined values", function() {
-		expect(4 * QUnit.oj.nonDefinedValues.length);
+		expect(10 * QUnit.oj.nonDefinedValues.length);
 
 		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
-			var subClass;
+			var subClass, instance;
 
 			subClass = oj.oop.OjObject.extend(nonDefinedValue, nonDefinedValue, nonDefinedValue);
 
-			strictEqual("object", typeof(subClass), "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a subClass");
-			strictEqual(0, subClass.subClassName.indexOf("oj.oop.OjObject_subClass_"), "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns an instantiated subClass");
-			strictEqual("oj.oop.OjObject", subClass.className, "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a subClass with the class name set");
-			strictEqual(oj.oop.OjObject, subClass.clazz, "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a subClass with the class set");
+			strictEqual("function", typeof(subClass), "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a defined subclass");
+			ok(anonymousSubclassNameRegEx.test(subClass.className), "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a subclass with the class name set to a random value");
+			strictEqual("function", typeof(subClass.getInstance), "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a subclass with the getInstance method defined");
+			strictEqual("function", typeof(subClass.extend), "oj.oop.OjObject.extend called with " + nonDefinedValue + " returns a subclass with the extend method defined");
+
+			instance = subClass.getInstance();
+
+			ok(instance, "getInstance called on anonymous subclass of oj.oop.OjObject with " + nonDefinedValue + " returns a defined value");
+			strictEqual("object", typeof(instance), "getInstance called on anonymous subclass of oj.oop.OjObject with " + nonDefinedValue + " returns an instance");
+			strictEqual(0, instance.instanceName.indexOf(subClass.className + "_instance_"), "getInstance called on anonymous subclass of oj.oop.OjObject with " + nonDefinedValue + " returns an instance with the default instanceName set");
+			strictEqual(subClass.className, instance.className, "getInstance called on anonymous subclass of oj.oop.OjObject with " + nonDefinedValue + " returns an instance with the class name set");
+			strictEqual(subClass, instance.clazz, "getInstance called on anonymous subclass of oj.oop.OjObject with " + nonDefinedValue + " returns an instance with the class set");
+			strictEqual("function", typeof(instance.init), "getInstance called on anonymous subclass of oj.oop.OjObject with " + nonDefinedValue + " returns an instance with the init method defined");
 		});
 	});
-	*/
 
-	/*
 	test("oj.oop.OjObject.extend called with defined values", function() {
-		expect(4 * QUnit.oj.definedInstances.length);
+		expect(10 * QUnit.oj.definedInstances.length);
 
 		$.each(QUnit.oj.definedInstances, function(i, definedValue) {
-			var subClass;
+			var subClass, instance;
 
-			subClass = oj.oop.OjObject.extend(definedValue, true);
+			subClass = oj.oop.OjObject.extend(definedValue, definedValue, definedValue);
 
-			strictEqual("object", typeof(subClass), "oj.oop.OjObject.extend called with " + definedValue + " returns a subClass");
-			strictEqual(0, subClass.subClassName.indexOf("oj.oop.OjObject_subClass_"), "oj.oop.OjObject.extend called with " + definedValue + " returns an instantiated subClass");
-			strictEqual("oj.oop.OjObject", subClass.className, "oj.oop.OjObject.extend called with " + definedValue + " returns a subClass with the class name set");
-			strictEqual(oj.oop.OjObject, subClass.clazz, "oj.oop.OjObject.extend called with " + definedValue + " returns a subClass with the class set");
+			strictEqual("function", typeof(subClass), "oj.oop.OjObject.extend called with " + definedValue + " returns a defined subclass");
+			ok(anonymousSubclassNameRegEx.test(subClass.className), "oj.oop.OjObject.extend called with " + definedValue + " returns a subclass with the class name set to a random value");
+			strictEqual("function", typeof(subClass.getInstance), "oj.oop.OjObject.extend called with " + definedValue + " returns a subclass with the getInstance method defined");
+			strictEqual("function", typeof(subClass.extend), "oj.oop.OjObject.extend called with " + definedValue + " returns a subclass with the extend method defined");
+
+			instance = subClass.getInstance();
+
+			ok(instance, "getInstance called on anonymous subclass of oj.oop.OjObject with " + definedValue + " returns a defined value");
+			strictEqual("object", typeof(instance), "getInstance called on anonymous subclass of oj.oop.OjObject with " + definedValue + " returns an instance");
+			strictEqual(0, instance.instanceName.indexOf(subClass.className + "_instance_"), "getInstance called on anonymous subclass of oj.oop.OjObject with " + definedValue + " returns an instance with the default instanceName set");
+			strictEqual(subClass.className, instance.className, "getInstance called on anonymous subclass of oj.oop.OjObject with " + definedValue + " returns an instance with the class name set");
+			strictEqual(subClass, instance.clazz, "getInstance called on anonymous subclass of oj.oop.OjObject with " + definedValue + " returns an instance with the class set");
+			strictEqual("function", typeof(instance.init), "getInstance called on anonymous subclass of oj.oop.OjObject with " + definedValue + " returns an instance with the init method defined");
 		});
 	});
-	*/
+
+	test("oj.oop.OjObject.extend called with empty params", function() {
+		var subClass, instance;
+
+		expect(10);
+
+		subClass = oj.oop.OjObject.extend({}, {}, false);
+
+		strictEqual("function", typeof(subClass), "oj.oop.OjObject.extend called with empty params returns a defined subclass");
+		ok(anonymousSubclassNameRegEx.test(subClass.className), "oj.oop.OjObject.extend called with empty params returns a subclass with the class name set to a random value");
+		strictEqual("function", typeof(subClass.getInstance), "oj.oop.OjObject.extend called with empty params returns a subclass with the getInstance method defined");
+		strictEqual("function", typeof(subClass.extend), "oj.oop.OjObject.extend called with empty params returns a subclass with the extend method defined");
+
+		instance = subClass.getInstance();
+
+		ok(instance, "getInstance called on anonymous subclass of oj.oop.OjObject with no params returns a defined value");
+		strictEqual("object", typeof(instance), "getInstance called on anonymous subclass of oj.oop.OjObject with no params returns an instance");
+		strictEqual(0, instance.instanceName.indexOf(subClass.className + "_instance_"), "getInstance called on anonymous subclass of oj.oop.OjObject with no params returns an instance with the default instanceName set");
+		strictEqual(subClass.className, instance.className, "getInstance called on anonymous subclass of oj.oop.OjObject with no params returns an instance with the class name set");
+		strictEqual(subClass, instance.clazz, "getInstance called on anonymous subclass of oj.oop.OjObject with no params returns an instance with the class set");
+		strictEqual("function", typeof(instance.init), "getInstance called on anonymous subclass of oj.oop.OjObject with no params returns an instance with the init method defined");
+	});
 });

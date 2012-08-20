@@ -70,4 +70,9 @@ $(function() {
 		});
 	});
 
+	// oj.util.framework.isObject method tests
+	// TODO - Implement oj.util.framework.isObject method tests 
+
+	// oj.util.framework.isArray method tests
+	// TODO - Implement oj.util.framework.isArray method tests
 });
