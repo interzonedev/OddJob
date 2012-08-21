@@ -54,6 +54,27 @@
 		 */
 		isArray: function(input) {
 			return ("[object Array]" === Object.prototype.toString.apply(input));
+		},
+
+		/**
+		 * Returns a function that executes the specified function in the specified context when called.
+		 * 
+		 * @param {Object} context The context in which the function executes. The context will be the object the "this"
+		 *                         keyword refers to inside the function definition.
+		 * @param {Function} func The function that should execute in the specified context when called.
+		 * 
+		 * @returns {Function} An anonymous function that executes func in context, and returns whatever func returns.
+		 *                     If func does not have a return statement, the JavaScript interpretter will return an
+		 *                     undefined value for func, and therefore the anonymous function will return undefined.
+		 */
+		getFunctionInContext: function(context, func) {
+			if ("function" !== typeof(func)) {
+				throw new Error("oj.util.framework.getFunctionInContext: The func argument must be a function");
+			}
+
+			return function() {
+				return func.apply(context, arguments);
+			};
 		}
 	};
 }());

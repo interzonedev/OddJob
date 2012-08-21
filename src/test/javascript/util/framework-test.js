@@ -154,4 +154,42 @@ $(function() {
 			strictEqual(result, true, "oj.util.framework.isArray called with " + arrayValue + " returns true");
 		});
 	});
+
+	// oj.util.framework.getFunctionInContext method tests
+	test("oj.util.framework.getFunctionInContext function defined", function() {
+		expect(1);
+
+		strictEqual(typeof(oj.util.framework.getFunctionInContext), "function", "oj.util.framework.getFunctionInContext is a function");
+	});
+
+	test("oj.util.framework.getFunctionInContext called with valid values", function() {
+		var context, func, functionInContext, value, result;
+		
+		expect(3);
+
+		context = {
+			property1: "default1",
+			property2: "default2"
+		};
+
+		func = function(val) {
+			this.property1 = val;
+
+			return this.property2;
+		};
+
+		functionInContext = oj.util.framework.getFunctionInContext(context, func);
+
+		strictEqual(typeof(functionInContext), "function", "oj.util.framework.getFunctionInContext called with valid values returns a function");
+
+		value = "value";
+
+		result = functionInContext(value);
+
+		strictEqual(context.property1, value, "oj.util.framework.getFunctionInContext called with valid values returns a function that runs in the specified context");
+		strictEqual(result, context.property2, "oj.util.framework.getFunctionInContext called with valid values returns a function that runs in the specified context");
+	});
+
+	// TODO: Add oj.util.framework.getFunctionInContext method tests with invalid values
+
 });
