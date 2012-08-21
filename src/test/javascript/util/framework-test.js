@@ -7,14 +7,14 @@ $(function() {
 		expect(2);
 
 		ok(oj.util.framework, "oj.util.framework object defined");
-		strictEqual("object", typeof(oj.util.framework), "oj.util.framework is an object");
+		strictEqual(typeof(oj.util.framework), "object", "oj.util.framework is an object");
 	});
 
 	// oj.util.framework.getUniqueId method tests
 	test("oj.util.framework.getUniqueId function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.util.framework.getUniqueId), "oj.util.framework.getUniqueId is a function");
+		strictEqual(typeof(oj.util.framework.getUniqueId), "function", "oj.util.framework.getUniqueId is a function");
 	});
 
 	test("oj.util.framework.getUniqueId called with non defined values", function() {
@@ -65,7 +65,7 @@ $(function() {
 
 			matches = uniqueId.match(prefixRegEx);
 
-			strictEqual(1, matches.length, "oj.util.framework.getUniqueId called with \"" + nonBlankString + "\" returns a value with a prefix");
+			strictEqual(matches.length, 1, "oj.util.framework.getUniqueId called with \"" + nonBlankString + "\" returns a value with a prefix");
 		});
 	});
 
@@ -73,7 +73,7 @@ $(function() {
 	test("oj.util.framework.isObject function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.util.framework.isObject), "oj.util.framework.isObject is a function");
+		strictEqual(typeof(oj.util.framework.isObject), "function", "oj.util.framework.isObject is a function");
 	});
 
 	test("oj.util.framework.isObject called with non defined values", function() {
@@ -84,7 +84,7 @@ $(function() {
 
 			result = oj.util.framework.isObject(nonDefinedValue);
 
-			strictEqual(false, result, "oj.util.framework.isObject called with " + nonDefinedValue + " returns false");
+			strictEqual(result, false, "oj.util.framework.isObject called with " + nonDefinedValue + " returns false");
 		});
 	});
 
@@ -96,7 +96,7 @@ $(function() {
 
 			result = oj.util.framework.isObject(nonObjectValue);
 
-			strictEqual(false, result, "oj.util.framework.isObject called with " + nonObjectValue + " returns false");
+			strictEqual(result, false, "oj.util.framework.isObject called with " + nonObjectValue + " returns false");
 		});
 	});
 
@@ -108,7 +108,7 @@ $(function() {
 
 			result = oj.util.framework.isObject(objectValue);
 
-			strictEqual(true, result, "oj.util.framework.isObject called with " + objectValue + " returns true");
+			strictEqual(result, true, "oj.util.framework.isObject called with " + objectValue + " returns true");
 		});
 	});
 
@@ -116,7 +116,7 @@ $(function() {
 	test("oj.util.framework.isArray function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.util.framework.isArray), "oj.util.framework.isArray is a function");
+		strictEqual(typeof(oj.util.framework.isArray), "function", "oj.util.framework.isArray is a function");
 	});
 
 	test("oj.util.framework.isArray called with non defined values", function() {
@@ -127,7 +127,7 @@ $(function() {
 
 			result = oj.util.framework.isArray(nonDefinedValue);
 
-			strictEqual(false, result, "oj.util.framework.isArray called with " + nonDefinedValue + " returns false");
+			strictEqual(result, false, "oj.util.framework.isArray called with " + nonDefinedValue + " returns false");
 		});
 	});
 
@@ -139,7 +139,7 @@ $(function() {
 
 			result = oj.util.framework.isArray(nonArrayValue);
 
-			strictEqual(false, result, "oj.util.framework.isArray called with " + nonArrayValue + " returns false");
+			strictEqual(result, false, "oj.util.framework.isArray called with " + nonArrayValue + " returns false");
 		});
 	});
 
@@ -151,7 +151,7 @@ $(function() {
 
 			result = oj.util.framework.isArray(arrayValue);
 
-			strictEqual(true, result, "oj.util.framework.isArray called with " + arrayValue + " returns true");
+			strictEqual(result, true, "oj.util.framework.isArray called with " + arrayValue + " returns true");
 		});
 	});
 });
