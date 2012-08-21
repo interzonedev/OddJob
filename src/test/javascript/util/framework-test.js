@@ -17,7 +17,6 @@ $(function() {
 		strictEqual("function", typeof(oj.util.framework.getUniqueId), "oj.util.framework.getUniqueId is a function");
 	});
 
-
 	test("oj.util.framework.getUniqueId called with non defined values", function() {
 		expect(QUnit.oj.nonDefinedValues.length);
 
@@ -71,8 +70,88 @@ $(function() {
 	});
 
 	// oj.util.framework.isObject method tests
-	// TODO - Implement oj.util.framework.isObject method tests 
+	test("oj.util.framework.isObject function defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(oj.util.framework.isObject), "oj.util.framework.isObject is a function");
+	});
+
+	test("oj.util.framework.isObject called with non defined values", function() {
+		expect(QUnit.oj.nonDefinedValues.length);
+
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			var result;
+
+			result = oj.util.framework.isObject(nonDefinedValue);
+
+			strictEqual(false, result, "oj.util.framework.isObject called with " + nonDefinedValue + " returns false");
+		});
+	});
+
+	test("oj.util.framework.isObject called with non Object values", function() {
+		expect(QUnit.oj.nonObjectInstances.length);
+
+		$.each(QUnit.oj.nonObjectInstances, function(i, nonObjectValue) {
+			var result;
+
+			result = oj.util.framework.isObject(nonObjectValue);
+
+			strictEqual(false, result, "oj.util.framework.isObject called with " + nonObjectValue + " returns false");
+		});
+	});
+
+	test("oj.util.framework.isObject called with Object values", function() {
+		expect(QUnit.oj.objectInstances.length);
+
+		$.each(QUnit.oj.objectInstances, function(i, objectValue) {
+			var result;
+
+			result = oj.util.framework.isObject(objectValue);
+
+			strictEqual(true, result, "oj.util.framework.isObject called with " + objectValue + " returns true");
+		});
+	});
 
 	// oj.util.framework.isArray method tests
-	// TODO - Implement oj.util.framework.isArray method tests
+	test("oj.util.framework.isArray function defined", function() {
+		expect(1);
+
+		strictEqual("function", typeof(oj.util.framework.isArray), "oj.util.framework.isArray is a function");
+	});
+
+	test("oj.util.framework.isArray called with non defined values", function() {
+		expect(QUnit.oj.nonDefinedValues.length);
+
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			var result;
+
+			result = oj.util.framework.isArray(nonDefinedValue);
+
+			strictEqual(false, result, "oj.util.framework.isArray called with " + nonDefinedValue + " returns false");
+		});
+	});
+
+	test("oj.util.framework.isArray called with non Array values", function() {
+		expect(QUnit.oj.nonArrayInstances.length);
+
+		$.each(QUnit.oj.nonArrayInstances, function(i, nonArrayValue) {
+			var result;
+
+			result = oj.util.framework.isArray(nonArrayValue);
+
+			strictEqual(false, result, "oj.util.framework.isArray called with " + nonArrayValue + " returns false");
+		});
+	});
+
+	test("oj.util.framework.isArray called with Array values", function() {
+		expect(QUnit.oj.arrayInstances.length);
+
+		$.each(QUnit.oj.arrayInstances, function(i, arrayValue) {
+			var result;
+
+			result = oj.util.framework.isArray(arrayValue);
+
+			strictEqual(true, result, "oj.util.framework.isArray called with " + arrayValue + " returns true");
+		});
+	});
 });

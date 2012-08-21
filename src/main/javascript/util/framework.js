@@ -38,10 +38,11 @@
 		 * 
 		 * @param {Object} input The input to examine.
 		 * 
-		 * @returns {Boolean} True if the specified input has the type of an object, not null and not an array, otherwise false.
+		 * @returns {Boolean} True if the specified input is defined, not null, has an Object constructor, and not an
+		 *                    array, otherwise false.
 		 */
 		isObject: function(input) {
-			return (("object" === typeof input) && !oj.util.framework.isArray(input) && (input !== null));
+			return (!!input && (Object === input.constructor) && !oj.util.framework.isArray(input));
 		},
 
 		/**
