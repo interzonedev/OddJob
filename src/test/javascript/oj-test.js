@@ -7,14 +7,14 @@ $(function() {
 		expect(2);
 
 		ok(oj, "oj object defined");
-		strictEqual("object", typeof(oj), "oj is an object");
+		strictEqual(typeof(oj), "object", "oj is an object");
 	});
 
 	// oj.emptyFunction tests
 	test("oj.emptyFunction function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.emptyFunction), "oj.emptyFunction is a function");
+		strictEqual(typeof(oj.emptyFunction), "function", "oj.emptyFunction is a function");
 	});
 
 	test("oj.emptyFunction called with no args", function() {
@@ -24,7 +24,7 @@ $(function() {
 
 		result = oj.emptyFunction();
 
-		strictEqual("undefined", typeof(result), "oj.emptyFunction called with no args returns undefined");
+		strictEqual(typeof(result), "undefined", "oj.emptyFunction called with no args returns undefined");
 	});
 
 	test("oj.emptyFunction called with non defined values", function() {
@@ -34,7 +34,7 @@ $(function() {
 			var result;
 
 			result = oj.emptyFunction(nonDefinedValue);
-			strictEqual("undefined", typeof(result), "oj.emptyFunction called with " + nonDefinedValue + " returns undefined");
+			strictEqual(typeof(result), "undefined", "oj.emptyFunction called with " + nonDefinedValue + " returns undefined");
 		});
 	});
 
@@ -45,7 +45,7 @@ $(function() {
 			var result;
 
 			result = oj.emptyFunction(definedValue);
-			strictEqual("undefined", typeof(result), "oj.emptyFunction called with " + definedValue + " returns undefined");
+			strictEqual(typeof(result), "undefined", "oj.emptyFunction called with " + definedValue + " returns undefined");
 		});
 	});
 
@@ -53,7 +53,7 @@ $(function() {
 	test("oj.isDefined function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.isDefined), "oj.isDefined is a function");
+		strictEqual(typeof(oj.isDefined), "function", "oj.isDefined is a function");
 	});
 
 	test("oj.isDefined called with no args", function() {
@@ -63,7 +63,7 @@ $(function() {
 
 		result = oj.isDefined();
 
-		strictEqual(false, result, "oj.isDefined called with no args false");
+		strictEqual(result, false, "oj.isDefined called with no args false");
 	});
 
 	test("oj.isDefined called with non defined values", function() {
@@ -73,7 +73,7 @@ $(function() {
 			var result;
 
 			result = oj.isDefined(nonDefinedValue);
-			strictEqual(false, result, "oj.isDefined called with " + nonDefinedValue + " returns false");
+			strictEqual(result, false, "oj.isDefined called with " + nonDefinedValue + " returns false");
 		});
 	});
 
@@ -84,7 +84,7 @@ $(function() {
 			var result;
 
 			result = oj.isDefined(definedValue);
-			strictEqual(true, result, "oj.isDefined called with " + definedValue + " returns true");
+			strictEqual(result, true, "oj.isDefined called with " + definedValue + " returns true");
 		});
 	});
 
@@ -92,7 +92,7 @@ $(function() {
 	test("oj.namespace function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.namespace), "oj.namespace is a function");
+		strictEqual(typeof(oj.namespace), "function", "oj.namespace is a function");
 	});
 
 	test("oj.namespace called with no args", function() {
@@ -159,15 +159,15 @@ $(function() {
 		test5Namespace1 = oj.namespace("oj.test4.test5");
 
 		ok(test5Namespace1, "test5Namespace1 defined");
-		strictEqual(oj.test4.test5, test5Namespace1, "oj.test4.test5 and test5Namespace1 are the same object");
-		strictEqual("object", typeof(test5Namespace1), "test5Namespace1 is an object");
+		strictEqual(test5Namespace1, oj.test4.test5, "oj.test4.test5 and test5Namespace1 are the same object");
+		strictEqual(typeof(test5Namespace1), "object", "test5Namespace1 is an object");
 
 		// Redefine the same namespace.
 		test5Namespace2 = oj.namespace("oj.test4.test5");
 
 		ok(test5Namespace2, "test5Namespace2 defined");
-		strictEqual(oj.test4.test5, test5Namespace2, "oj.test4.test5 and test5Namespace2 are the same object");
-		strictEqual("object", typeof(test5Namespace2), "test5Namespace2 is an object");
+		strictEqual(test5Namespace2, oj.test4.test5, "oj.test4.test5 and test5Namespace2 are the same object");
+		strictEqual(typeof(test5Namespace2), "object", "test5Namespace2 is an object");
 	});
 
 	test("oj.namespace redefine $ namespace", function() {
@@ -177,9 +177,9 @@ $(function() {
 
 		$namespace = oj.namespace("$");
 
-		strictEqual("function", typeof($namespace), "$namespace is a function");
-		strictEqual($, $namespace, "$ and $namespace are the same object");
-		strictEqual(jQuery, $, "$ is still the jQuery object");
+		strictEqual(typeof($namespace), "function", "$namespace is a function");
+		strictEqual($namespace, $, "$ and $namespace are the same object");
+		strictEqual($, jQuery, "$ is still the jQuery object");
 	});
 
 	test("oj.namespace extend $ namespace", function() {
@@ -190,8 +190,8 @@ $(function() {
 		$ojNamespace = oj.namespace("$.oj");
 
 		ok($ojNamespace, "$ojNamespace defined");
-		strictEqual($.oj, $ojNamespace, "$ and $ojNamespace are the same object");
-		strictEqual("object", typeof($ojNamespace), "$ojNamespace is an object");
+		strictEqual($ojNamespace, $.oj, "$ and $ojNamespace are the same object");
+		strictEqual(typeof($ojNamespace), "object", "$ojNamespace is an object");
 	});
 
 	test("oj.namespace redefine oj", function() {
@@ -201,8 +201,8 @@ $(function() {
 
 		ojObject = oj.namespace("oj");
 		ok(ojObject, "ojObject defined");
-		strictEqual(oj, ojObject, "oj and ojObject are the same object");
-		strictEqual("object", typeof(ojObject), "ojObject is an object");
+		strictEqual(ojObject, oj, "oj and ojObject are the same object");
+		strictEqual(typeof(ojObject), "object", "ojObject is an object");
 	});
 
 	test("oj.namespace redefine oj.namespace", function() {
@@ -211,16 +211,16 @@ $(function() {
 		expect(6);
 
 		ojNamespace = oj.namespace("oj.namespace");
-		strictEqual("function", typeof(ojNamespace), "ojNamespace defined as a function");
-		strictEqual(oj.namespace, ojNamespace, "oj.namespace and ojNamespace are the same object");
-		strictEqual("function", typeof(oj.namespace), "oj.namespace is still a function");
+		strictEqual(typeof(ojNamespace), "function", "ojNamespace defined as a function");
+		strictEqual(ojNamespace, oj.namespace, "oj.namespace and ojNamespace are the same object");
+		strictEqual(typeof(oj.namespace), "function", "oj.namespace is still a function");
 
 		// Make sure the oj.namespace function still works as before.
 		test1Namespace = oj.namespace("oj.test1");
 
 		ok(test1Namespace, "test1Namespace defined");
-		strictEqual(oj.test1, test1Namespace, "oj.test1 and test1Namespace are the same object");
-		strictEqual("object", typeof(test1Namespace), "test1Namespace is an object");
+		strictEqual(test1Namespace, oj.test1, "oj.test1 and test1Namespace are the same object");
+		strictEqual(typeof(test1Namespace), "object", "test1Namespace is an object");
 	});
 
 	test("oj.namespace append to oj.namespace", function() {
@@ -229,17 +229,18 @@ $(function() {
 		expect(7);
 
 		test2Namespace = oj.namespace("oj.namespace.test2");
+
 		ok(test2Namespace, "test2Namespace defined");
-		strictEqual(oj.namespace.test2, test2Namespace, "oj.namespace.test2 and test2Namespace are the same object");
-		strictEqual("object", typeof(test2Namespace), "test2Namespace is an object");
-		strictEqual("function", typeof(oj.namespace), "oj.namespace is still a function");
+		strictEqual(test2Namespace, oj.namespace.test2, "oj.namespace.test2 and test2Namespace are the same object");
+		strictEqual(typeof(test2Namespace), "object", "test2Namespace is an object");
+		strictEqual(typeof(oj.namespace), "function", "oj.namespace is still a function");
 
 		// Make sure the oj.namespace function still works as before.
 		test3Namespace = oj.namespace("oj.test3");
 
 		ok(test3Namespace, "test3Namespace defined");
-		strictEqual(oj.test3, test3Namespace, "oj.test3 and test3Namespace are the same object");
-		strictEqual("object", typeof(test3Namespace), "test3Namespace is an object");
+		strictEqual(test3Namespace, oj.test3, "oj.test3 and test3Namespace are the same object");
+		strictEqual(typeof(test3Namespace), "object", "test3Namespace is an object");
 	});
 
 });
