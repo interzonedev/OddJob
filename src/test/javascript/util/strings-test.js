@@ -7,14 +7,15 @@ $(function() {
 		expect(2);
 
 		ok(oj.util.strings, "oj.util.strings object defined");
-		strictEqual("object", typeof(oj.util.strings), "oj.util.strings is an object");
+
+		strictEqual(typeof(oj.util.strings), "object", "oj.util.strings is an object");
 	});
 
 	// oj.util.strings.isString method tests
 	test("oj.util.strings.isString function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.util.strings.isString), "oj.util.strings.isString is a function");
+		strictEqual(typeof(oj.util.strings.isString), "function", "oj.util.strings.isString is a function");
 	});
 
 	test("oj.util.strings.isString called with non defined values", function() {
@@ -24,7 +25,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isString(nonDefinedValue);
-			strictEqual(false, result, "oj.util.strings.isString called with " + nonDefinedValue + " returns false");
+
+			strictEqual(result, false, "oj.util.strings.isString called with " + nonDefinedValue + " returns false");
 		});
 	});
 
@@ -35,7 +37,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isString(nonString);
-			strictEqual(false, result, "oj.util.strings.isString called with " + nonString + " returns false");
+
+			strictEqual(result, false, "oj.util.strings.isString called with " + nonString + " returns false");
 		});
 	});
 
@@ -46,7 +49,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isString(blankString);
-			strictEqual(true, result, "oj.util.strings.isString called with \"" + blankString + "\" returns true");
+
+			strictEqual(result, true, "oj.util.strings.isString called with \"" + blankString + "\" returns true");
 		});
 	});
 
@@ -57,7 +61,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isString(nonBlankString);
-			strictEqual(true, result, "oj.util.strings.isString called with \"" + nonBlankString + "\" returns true");
+
+			strictEqual(result, true, "oj.util.strings.isString called with \"" + nonBlankString + "\" returns true");
 		});
 	});
 
@@ -65,7 +70,7 @@ $(function() {
 	test("oj.util.strings.isNotBlank function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.util.strings.isNotBlank), "oj.util.strings.isNotBlank is a function");
+		strictEqual(typeof(oj.util.strings.isNotBlank), "function", "oj.util.strings.isNotBlank is a function");
 	});
 
 	test("oj.util.strings.isNotBlank called with non defined values", function() {
@@ -75,7 +80,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isNotBlank(nonDefinedValue);
-			strictEqual(false, result, "oj.util.strings.isNotBlank called with " + nonDefinedValue + " returns false");
+
+			strictEqual(result, false, "oj.util.strings.isNotBlank called with " + nonDefinedValue + " returns false");
 		});
 	});
 
@@ -86,7 +92,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isNotBlank(nonString);
-			strictEqual(null, result, "oj.util.strings.isNotBlank called with " + nonString + " returns null");
+
+			strictEqual(result, null, "oj.util.strings.isNotBlank called with " + nonString + " returns null");
 		});
 	});
 
@@ -97,7 +104,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isNotBlank(blankString);
-			strictEqual(false, result, "oj.util.strings.isNotBlank called with \"" + blankString + "\" returns false");
+
+			strictEqual(result, false, "oj.util.strings.isNotBlank called with \"" + blankString + "\" returns false");
 		});
 	});
 
@@ -108,7 +116,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isNotBlank(nonBlankString);
-			strictEqual(true, result, "oj.util.strings.isNotBlank called with \"" + nonBlankString + "\" returns true");
+
+			strictEqual(result, true, "oj.util.strings.isNotBlank called with \"" + nonBlankString + "\" returns true");
 		});
 	});
 
@@ -116,7 +125,7 @@ $(function() {
 	test("oj.util.strings.isBlank function defined", function() {
 		expect(1);
 
-		strictEqual("function", typeof(oj.util.strings.isBlank), "oj.util.strings.isBlank is a function");
+		strictEqual(typeof(oj.util.strings.isBlank), "function", "oj.util.strings.isBlank is a function");
 	});
 
 	test("oj.util.strings.isBlank called with non defined values", function() {
@@ -126,7 +135,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isBlank(nonDefinedValue);
-			strictEqual(true, result, "oj.util.strings.isBlank called with " + nonDefinedValue + " returns true");
+
+			strictEqual(result, true, "oj.util.strings.isBlank called with " + nonDefinedValue + " returns true");
 		});
 	});
 
@@ -137,7 +147,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isBlank(nonString);
-			strictEqual(null, result, "oj.util.strings.isBlank called with " + nonString + " returns null");
+
+			strictEqual(result, null, "oj.util.strings.isBlank called with " + nonString + " returns null");
 		});
 	});
 
@@ -148,7 +159,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isBlank(blankString);
-			strictEqual(true, result, "oj.util.strings.isBlank called with \"" + blankString + "\" returns true");
+
+			strictEqual(result, true, "oj.util.strings.isBlank called with \"" + blankString + "\" returns true");
 		});
 	});
 
@@ -159,7 +171,8 @@ $(function() {
 			var result;
 
 			result = oj.util.strings.isBlank(nonBlankString);
-			strictEqual(false, result, "oj.util.strings.isBlank called with \"" + nonBlankString + "\" returns false");
+
+			strictEqual(result, false, "oj.util.strings.isBlank called with \"" + nonBlankString + "\" returns false");
 		});
 	});
 });
