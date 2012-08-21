@@ -1,195 +1,226 @@
-$(function() {
+(function(context){
+	$(function() {
+		var functionContext, wrappedFunction;
 
-	module("oj.util.framework");
+		functionContext = null;
+		wrappedFunction = null;
 
-	// oj.util.framework object tests
-	test("oj.util.framework object defined", function() {
-		expect(2);
+		module("oj.util.framework", {
+			setup: function() {
+				functionContext = {
+					property1: "default1",
+					property2: "default2"
+				};
 
-		ok(oj.util.framework, "oj.util.framework object defined");
-		strictEqual(typeof(oj.util.framework), "object", "oj.util.framework is an object");
-	});
+				wrappedFunction = function(val) {
+					this.property1 = val;
 
-	// oj.util.framework.getUniqueId method tests
-	test("oj.util.framework.getUniqueId function defined", function() {
-		expect(1);
-
-		strictEqual(typeof(oj.util.framework.getUniqueId), "function", "oj.util.framework.getUniqueId is a function");
-	});
-
-	test("oj.util.framework.getUniqueId called with non defined values", function() {
-		expect(QUnit.oj.nonDefinedValues.length);
-
-		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
-			var uniqueId;
-
-			uniqueId = oj.util.framework.getUniqueId(nonDefinedValue);
-
-			ok(/^\d/.test(uniqueId), "oj.util.framework.getUniqueId called with " + nonDefinedValue + " returns a value with no prefix");
+					return this.property2;
+				};
+			},
+			teardown: function() {
+				functionContext = null;
+				wrappedFunction = null;
+			}
 		});
-	});
 
-	test("oj.util.framework.getUniqueId called with blank strings", function() {
-		expect(QUnit.oj.blankStringInstances.length);
+		// oj.util.framework object tests
+		test("oj.util.framework object defined", function() {
+			expect(2);
 
-		$.each(QUnit.oj.blankStringInstances, function(i, blankString) {
-			var uniqueId;
-
-			uniqueId = oj.util.framework.getUniqueId(blankString);
-
-			ok(/^\d/.test(uniqueId), "oj.util.framework.getUniqueId called with \"" + blankString + "\" returns a value with no prefix");
+			ok(oj.util.framework, "oj.util.framework object defined");
+			strictEqual(typeof(oj.util.framework), "object", "oj.util.framework is an object");
 		});
-	});
 
-	test("oj.util.framework.getUniqueId called with non strings", function() {
-		expect(QUnit.oj.nonStringInstances.length);
+		// oj.util.framework.getUniqueId method tests
+		test("oj.util.framework.getUniqueId function defined", function() {
+			expect(1);
 
-		$.each(QUnit.oj.nonStringInstances, function(i, nonString) {
-			var uniqueId;
-
-			uniqueId = oj.util.framework.getUniqueId(nonString);
-
-			ok(/^\d/.test(uniqueId), "oj.util.framework.getUniqueId called with \"" + nonString + "\" returns a value with no prefix");
+			strictEqual(typeof(oj.util.framework.getUniqueId), "function", "oj.util.framework.getUniqueId is a function");
 		});
-	});
 
-	test("oj.util.framework.getUniqueId called with non blank strings", function() {
-		expect(QUnit.oj.nonBlankStringInstances.length);
+		test("oj.util.framework.getUniqueId called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
 
-		$.each(QUnit.oj.nonBlankStringInstances, function(i, nonBlankString) {
-			var prefixRegEx, uniqueId, matches;
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var uniqueId;
 
-			prefixRegEx = new RegExp(nonBlankString);
+				uniqueId = oj.util.framework.getUniqueId(nonDefinedValue);
 
-			uniqueId = oj.util.framework.getUniqueId(nonBlankString);
-
-			matches = uniqueId.match(prefixRegEx);
-
-			strictEqual(matches.length, 1, "oj.util.framework.getUniqueId called with \"" + nonBlankString + "\" returns a value with a prefix");
+				ok(/^\d/.test(uniqueId), "oj.util.framework.getUniqueId called with " + nonDefinedValue + " returns a value with no prefix");
+			});
 		});
-	});
 
-	// oj.util.framework.isObject method tests
-	test("oj.util.framework.isObject function defined", function() {
-		expect(1);
+		test("oj.util.framework.getUniqueId called with blank strings", function() {
+			expect(QUnit.oj.blankStringInstances.length);
 
-		strictEqual(typeof(oj.util.framework.isObject), "function", "oj.util.framework.isObject is a function");
-	});
+			$.each(QUnit.oj.blankStringInstances, function(i, blankString) {
+				var uniqueId;
 
-	test("oj.util.framework.isObject called with non defined values", function() {
-		expect(QUnit.oj.nonDefinedValues.length);
+				uniqueId = oj.util.framework.getUniqueId(blankString);
 
-		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
-			var result;
-
-			result = oj.util.framework.isObject(nonDefinedValue);
-
-			strictEqual(result, false, "oj.util.framework.isObject called with " + nonDefinedValue + " returns false");
+				ok(/^\d/.test(uniqueId), "oj.util.framework.getUniqueId called with \"" + blankString + "\" returns a value with no prefix");
+			});
 		});
-	});
 
-	test("oj.util.framework.isObject called with non Object values", function() {
-		expect(QUnit.oj.nonObjectInstances.length);
+		test("oj.util.framework.getUniqueId called with non strings", function() {
+			expect(QUnit.oj.nonStringInstances.length);
 
-		$.each(QUnit.oj.nonObjectInstances, function(i, nonObjectValue) {
-			var result;
+			$.each(QUnit.oj.nonStringInstances, function(i, nonString) {
+				var uniqueId;
 
-			result = oj.util.framework.isObject(nonObjectValue);
+				uniqueId = oj.util.framework.getUniqueId(nonString);
 
-			strictEqual(result, false, "oj.util.framework.isObject called with " + nonObjectValue + " returns false");
+				ok(/^\d/.test(uniqueId), "oj.util.framework.getUniqueId called with \"" + nonString + "\" returns a value with no prefix");
+			});
 		});
-	});
 
-	test("oj.util.framework.isObject called with Object values", function() {
-		expect(QUnit.oj.objectInstances.length);
+		test("oj.util.framework.getUniqueId called with non blank strings", function() {
+			expect(QUnit.oj.nonBlankStringInstances.length);
 
-		$.each(QUnit.oj.objectInstances, function(i, objectValue) {
-			var result;
+			$.each(QUnit.oj.nonBlankStringInstances, function(i, nonBlankString) {
+				var prefixRegEx, uniqueId, matches;
 
-			result = oj.util.framework.isObject(objectValue);
+				prefixRegEx = new RegExp(nonBlankString);
 
-			strictEqual(result, true, "oj.util.framework.isObject called with " + objectValue + " returns true");
+				uniqueId = oj.util.framework.getUniqueId(nonBlankString);
+
+				matches = uniqueId.match(prefixRegEx);
+
+				strictEqual(matches.length, 1, "oj.util.framework.getUniqueId called with \"" + nonBlankString + "\" returns a value with a prefix");
+			});
 		});
-	});
 
-	// oj.util.framework.isArray method tests
-	test("oj.util.framework.isArray function defined", function() {
-		expect(1);
+		// oj.util.framework.isObject method tests
+		test("oj.util.framework.isObject function defined", function() {
+			expect(1);
 
-		strictEqual(typeof(oj.util.framework.isArray), "function", "oj.util.framework.isArray is a function");
-	});
-
-	test("oj.util.framework.isArray called with non defined values", function() {
-		expect(QUnit.oj.nonDefinedValues.length);
-
-		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
-			var result;
-
-			result = oj.util.framework.isArray(nonDefinedValue);
-
-			strictEqual(result, false, "oj.util.framework.isArray called with " + nonDefinedValue + " returns false");
+			strictEqual(typeof(oj.util.framework.isObject), "function", "oj.util.framework.isObject is a function");
 		});
-	});
 
-	test("oj.util.framework.isArray called with non Array values", function() {
-		expect(QUnit.oj.nonArrayInstances.length);
+		test("oj.util.framework.isObject called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
 
-		$.each(QUnit.oj.nonArrayInstances, function(i, nonArrayValue) {
-			var result;
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var result;
 
-			result = oj.util.framework.isArray(nonArrayValue);
+				result = oj.util.framework.isObject(nonDefinedValue);
 
-			strictEqual(result, false, "oj.util.framework.isArray called with " + nonArrayValue + " returns false");
+				strictEqual(result, false, "oj.util.framework.isObject called with " + nonDefinedValue + " returns false");
+			});
 		});
-	});
 
-	test("oj.util.framework.isArray called with Array values", function() {
-		expect(QUnit.oj.arrayInstances.length);
+		test("oj.util.framework.isObject called with non Object values", function() {
+			expect(QUnit.oj.nonObjectInstances.length);
 
-		$.each(QUnit.oj.arrayInstances, function(i, arrayValue) {
-			var result;
+			$.each(QUnit.oj.nonObjectInstances, function(i, nonObjectValue) {
+				var result;
 
-			result = oj.util.framework.isArray(arrayValue);
+				result = oj.util.framework.isObject(nonObjectValue);
 
-			strictEqual(result, true, "oj.util.framework.isArray called with " + arrayValue + " returns true");
+				strictEqual(result, false, "oj.util.framework.isObject called with " + nonObjectValue + " returns false");
+			});
 		});
+
+		test("oj.util.framework.isObject called with Object values", function() {
+			expect(QUnit.oj.objectInstances.length);
+
+			$.each(QUnit.oj.objectInstances, function(i, objectValue) {
+				var result;
+
+				result = oj.util.framework.isObject(objectValue);
+
+				strictEqual(result, true, "oj.util.framework.isObject called with " + objectValue + " returns true");
+			});
+		});
+
+		// oj.util.framework.isArray method tests
+		test("oj.util.framework.isArray function defined", function() {
+			expect(1);
+
+			strictEqual(typeof(oj.util.framework.isArray), "function", "oj.util.framework.isArray is a function");
+		});
+
+		test("oj.util.framework.isArray called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
+
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var result;
+
+				result = oj.util.framework.isArray(nonDefinedValue);
+
+				strictEqual(result, false, "oj.util.framework.isArray called with " + nonDefinedValue + " returns false");
+			});
+		});
+
+		test("oj.util.framework.isArray called with non Array values", function() {
+			expect(QUnit.oj.nonArrayInstances.length);
+
+			$.each(QUnit.oj.nonArrayInstances, function(i, nonArrayValue) {
+				var result;
+
+				result = oj.util.framework.isArray(nonArrayValue);
+
+				strictEqual(result, false, "oj.util.framework.isArray called with " + nonArrayValue + " returns false");
+			});
+		});
+
+		test("oj.util.framework.isArray called with Array values", function() {
+			expect(QUnit.oj.arrayInstances.length);
+
+			$.each(QUnit.oj.arrayInstances, function(i, arrayValue) {
+				var result;
+
+				result = oj.util.framework.isArray(arrayValue);
+
+				strictEqual(result, true, "oj.util.framework.isArray called with " + arrayValue + " returns true");
+			});
+		});
+
+		// oj.util.framework.getFunctionInContext method tests
+		test("oj.util.framework.getFunctionInContext function defined", function() {
+			expect(1);
+
+			strictEqual(typeof(oj.util.framework.getFunctionInContext), "function", "oj.util.framework.getFunctionInContext is a function");
+		});
+
+		test("oj.util.framework.getFunctionInContext called with valid values", function() {
+			var functionInContext, value, result;
+
+			expect(3);
+
+			functionInContext = oj.util.framework.getFunctionInContext(functionContext, wrappedFunction);
+
+			strictEqual(typeof(functionInContext), "function", "oj.util.framework.getFunctionInContext called with valid values returns a function");
+
+			value = "value";
+
+			result = functionInContext(value);
+
+			strictEqual(functionContext.property1, value, "oj.util.framework.getFunctionInContext called with valid values returns a function that runs in the specified context");
+			strictEqual(result, functionContext.property2, "oj.util.framework.getFunctionInContext called with valid values returns a function that runs in the specified context");
+		});
+
+		test("oj.util.framework.getFunctionInContext called with non defined values for the context", function() {
+			expect(4 * QUnit.oj.nonDefinedValues.length);
+
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var functionInContext, value, result;
+
+				functionInContext = oj.util.framework.getFunctionInContext(nonDefinedValue, wrappedFunction);
+
+				strictEqual(typeof(functionInContext), "function", "oj.util.framework.getFunctionInContext called with non defined values for the context returns a function");
+
+				value = "value";
+
+				result = functionInContext(value);
+
+				strictEqual(functionContext.property1, "default1", "oj.util.framework.getFunctionInContext called with non defined values for the context does not alter the intended context");
+				strictEqual(context.property1, value, "oj.util.framework.getFunctionInContext called with non defined values for the context altered the top level context");
+				ok(!result, "The result of calling oj.util.framework.getFunctionInContext called with non defined values for the context is undefined");
+			});
+		});
+
+		// TODO: Add more oj.util.framework.getFunctionInContext method tests with invalid values
 	});
-
-	// oj.util.framework.getFunctionInContext method tests
-	test("oj.util.framework.getFunctionInContext function defined", function() {
-		expect(1);
-
-		strictEqual(typeof(oj.util.framework.getFunctionInContext), "function", "oj.util.framework.getFunctionInContext is a function");
-	});
-
-	test("oj.util.framework.getFunctionInContext called with valid values", function() {
-		var context, func, functionInContext, value, result;
-		
-		expect(3);
-
-		context = {
-			property1: "default1",
-			property2: "default2"
-		};
-
-		func = function(val) {
-			this.property1 = val;
-
-			return this.property2;
-		};
-
-		functionInContext = oj.util.framework.getFunctionInContext(context, func);
-
-		strictEqual(typeof(functionInContext), "function", "oj.util.framework.getFunctionInContext called with valid values returns a function");
-
-		value = "value";
-
-		result = functionInContext(value);
-
-		strictEqual(context.property1, value, "oj.util.framework.getFunctionInContext called with valid values returns a function that runs in the specified context");
-		strictEqual(result, context.property2, "oj.util.framework.getFunctionInContext called with valid values returns a function that runs in the specified context");
-	});
-
-	// TODO: Add oj.util.framework.getFunctionInContext method tests with invalid values
-
-});
+}(this));
