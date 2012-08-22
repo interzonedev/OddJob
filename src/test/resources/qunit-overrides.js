@@ -88,7 +88,23 @@
 		nonBlankStringInstances: [
 			new String("hello"),
 			"hello"
-		]
+		],
+		nonFunctionInstances: [
+			new Object(),
+			{},
+			new Array(),
+			[],
+			new String("hello"),
+			"hello",
+			new Number(1),
+			1,
+			new Boolean(false),
+			false,
+			new Error(),
+			new Date(),
+			new RegExp("/\d+/"),
+			/\d+/
+		],
 	};
 
 	/**

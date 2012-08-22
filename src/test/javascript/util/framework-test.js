@@ -1,12 +1,14 @@
-(function(context){
+(function(context, $){
 	$(function() {
-		var functionContext, wrappedFunction;
+		var functionContext, wrappedFunction, cleanContext;
 
 		functionContext = null;
 		wrappedFunction = null;
 
 		module("oj.util.framework", {
 			setup: function() {
+				cleanContext();
+
 				functionContext = {
 					property1: "default1",
 					property2: "default2"
@@ -19,10 +21,16 @@
 				};
 			},
 			teardown: function() {
+				cleanContext();
+
 				functionContext = null;
 				wrappedFunction = null;
 			}
 		});
+
+		cleanContext = function() {
+			delete context.property1;
+		};
 
 		// oj.util.framework object tests
 		test("oj.util.framework object defined", function() {
@@ -202,10 +210,12 @@
 		});
 
 		test("oj.util.framework.getFunctionInContext called with non defined values for the context", function() {
-			expect(4 * QUnit.oj.nonDefinedValues.length);
+			expect(5 * QUnit.oj.nonDefinedValues.length);
 
 			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
 				var functionInContext, value, result;
+
+				cleanContext();
 
 				functionInContext = oj.util.framework.getFunctionInContext(nonDefinedValue, wrappedFunction);
 
@@ -216,11 +226,20 @@
 				result = functionInContext(value);
 
 				strictEqual(functionContext.property1, "default1", "oj.util.framework.getFunctionInContext called with non defined values for the context does not alter the intended context");
+				strictEqual(functionContext.property2, "default2", "oj.util.framework.getFunctionInContext called with non defined values for the context does not alter the intended context");
 				strictEqual(context.property1, value, "oj.util.framework.getFunctionInContext called with non defined values for the context altered the top level context");
 				ok(!result, "The result of calling oj.util.framework.getFunctionInContext called with non defined values for the context is undefined");
 			});
 		});
 
-		// TODO: Add more oj.util.framework.getFunctionInContext method tests with invalid values
+		test("oj.util.framework.getFunctionInContext called with non function values for the function", function() {
+			expect(QUnit.oj.nonFunctionInstances.length);
+
+			$.each(QUnit.oj.nonFunctionInstances, function(i, nonFunctionValue) {
+				raises(function() {
+					oj.util.framework.getFunctionInContext(functionContext, nonFunctionValue);
+				}, Error, "oj.util.framework.getFunctionInContext called with non function values for the function should throw an Error");
+			});
+		});
 	});
-}(this));
+}(this, jQuery));
