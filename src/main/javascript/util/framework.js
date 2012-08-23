@@ -7,8 +7,6 @@
 	 * @namespace
 	 * 
 	 * General framework utility methods.
-	 * 
-	 * @requires oj.util.strings
 	 */
 	oj.util.framework = {
 		/**
