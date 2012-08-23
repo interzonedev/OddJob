@@ -18,7 +18,7 @@
 		 *                    false.
 		 */
 		isString: function(obj) {
-			return oj.isDefined(obj) && (("string" === typeof(obj)) || (String === obj.constructor));
+			return oj.isDefined(obj) && (String === obj.constructor);
 		},
 
 		/**
