@@ -185,6 +185,171 @@
 			});
 		});
 
+		// oj.util.framework.isString method tests
+		test("oj.util.framework.isString function defined", function() {
+			expect(1);
+
+			strictEqual(typeof(oj.util.framework.isString), "function", "oj.util.framework.isString is a function");
+		});
+
+		test("oj.util.framework.isString called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
+
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var result;
+
+				result = oj.util.framework.isString(nonDefinedValue);
+
+				strictEqual(result, false, "oj.util.framework.isString called with " + nonDefinedValue + " returns false");
+			});
+		});
+
+		test("oj.util.framework.isString called with non strings", function() {
+			expect(QUnit.oj.nonStringInstances.length);
+
+			$.each(QUnit.oj.nonStringInstances, function(i, nonString) {
+				var result;
+
+				result = oj.util.framework.isString(nonString);
+
+				strictEqual(result, false, "oj.util.framework.isString called with " + nonString + " returns false");
+			});
+		});
+
+		test("oj.util.framework.isString called with blank strings", function() {
+			expect(QUnit.oj.blankStringInstances.length);
+
+			$.each(QUnit.oj.blankStringInstances, function(i, blankString) {
+				var result;
+
+				result = oj.util.framework.isString(blankString);
+
+				strictEqual(result, true, "oj.util.framework.isString called with \"" + blankString + "\" returns true");
+			});
+		});
+
+		test("oj.util.framework.isString called with non blank strings", function() {
+			expect(QUnit.oj.nonBlankStringInstances.length);
+
+			$.each(QUnit.oj.nonBlankStringInstances, function(i, nonBlankString) {
+				var result;
+
+				result = oj.util.framework.isString(nonBlankString);
+
+				strictEqual(result, true, "oj.util.framework.isString called with \"" + nonBlankString + "\" returns true");
+			});
+		});
+
+		// oj.util.framework.isNotBlankString method tests
+		test("oj.util.framework.isNotBlankString function defined", function() {
+			expect(1);
+
+			strictEqual(typeof(oj.util.framework.isNotBlankString), "function", "oj.util.framework.isNotBlankString is a function");
+		});
+
+		test("oj.util.framework.isNotBlankString called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
+
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var result;
+
+				result = oj.util.framework.isNotBlankString(nonDefinedValue);
+
+				strictEqual(result, false, "oj.util.framework.isNotBlankString called with " + nonDefinedValue + " returns false");
+			});
+		});
+
+		test("oj.util.framework.isNotBlankString called with non strings", function() {
+			expect(QUnit.oj.nonStringInstances.length);
+
+			$.each(QUnit.oj.nonStringInstances, function(i, nonString) {
+				var result;
+
+				result = oj.util.framework.isNotBlankString(nonString);
+
+				strictEqual(result, null, "oj.util.framework.isNotBlankString called with " + nonString + " returns null");
+			});
+		});
+
+		test("oj.util.framework.isNotBlankString called with blank strings", function() {
+			expect(QUnit.oj.blankStringInstances.length);
+
+			$.each(QUnit.oj.blankStringInstances, function(i, blankString) {
+				var result;
+
+				result = oj.util.framework.isNotBlankString(blankString);
+
+				strictEqual(result, false, "oj.util.framework.isNotBlankString called with \"" + blankString + "\" returns false");
+			});
+		});
+
+		test("oj.util.framework.isNotBlankString called with non blank strings", function() {
+			expect(QUnit.oj.nonBlankStringInstances.length);
+
+			$.each(QUnit.oj.nonBlankStringInstances, function(i, nonBlankString) {
+				var result;
+
+				result = oj.util.framework.isNotBlankString(nonBlankString);
+
+				strictEqual(result, true, "oj.util.framework.isNotBlankString called with \"" + nonBlankString + "\" returns true");
+			});
+		});
+
+		// oj.util.framework.isBlankString method tests
+		test("oj.util.framework.isBlankString function defined", function() {
+			expect(1);
+
+			strictEqual(typeof(oj.util.framework.isBlankString), "function", "oj.util.framework.isBlankString is a function");
+		});
+
+		test("oj.util.framework.isBlankString called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
+
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var result;
+
+				result = oj.util.framework.isBlankString(nonDefinedValue);
+
+				strictEqual(result, true, "oj.util.framework.isBlankString called with " + nonDefinedValue + " returns true");
+			});
+		});
+
+		test("oj.util.framework.isBlankString called with non strings", function() {
+			expect(QUnit.oj.nonStringInstances.length);
+
+			$.each(QUnit.oj.nonStringInstances, function(i, nonString) {
+				var result;
+
+				result = oj.util.framework.isBlankString(nonString);
+
+				strictEqual(result, null, "oj.util.framework.isBlankString called with " + nonString + " returns null");
+			});
+		});
+
+		test("oj.util.framework.isBlankString called with blank strings", function() {
+			expect(QUnit.oj.blankStringInstances.length);
+
+			$.each(QUnit.oj.blankStringInstances, function(i, blankString) {
+				var result;
+
+				result = oj.util.framework.isBlankString(blankString);
+
+				strictEqual(result, true, "oj.util.framework.isBlankString called with \"" + blankString + "\" returns true");
+			});
+		});
+
+		test("oj.util.framework.isBlankString called with non blank strings", function() {
+			expect(QUnit.oj.nonBlankStringInstances.length);
+
+			$.each(QUnit.oj.nonBlankStringInstances, function(i, nonBlankString) {
+				var result;
+
+				result = oj.util.framework.isBlankString(nonBlankString);
+
+				strictEqual(result, false, "oj.util.framework.isBlankString called with \"" + nonBlankString + "\" returns false");
+			});
+		});
+
 		// oj.util.framework.getFunctionInContext method tests
 		test("oj.util.framework.getFunctionInContext function defined", function() {
 			expect(1);
