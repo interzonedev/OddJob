@@ -76,12 +76,6 @@
 		 */
 		isDefined: function(input) {
 			return ("undefined" !== typeof(input)) && (null !== input);
-		},
-
-		/**
-		 * An empty function for no-op callbacks.
-		 */
-		emptyFunction: function() {
 		}
 	};
 

@@ -10,45 +10,6 @@ $(function() {
 		strictEqual(typeof(oj), "object", "oj is an object");
 	});
 
-	// oj.emptyFunction tests
-	test("oj.emptyFunction function defined", function() {
-		expect(1);
-
-		strictEqual(typeof(oj.emptyFunction), "function", "oj.emptyFunction is a function");
-	});
-
-	test("oj.emptyFunction called with no args", function() {
-		var result;
-
-		expect(1);
-
-		result = oj.emptyFunction();
-
-		strictEqual(typeof(result), "undefined", "oj.emptyFunction called with no args returns undefined");
-	});
-
-	test("oj.emptyFunction called with non defined values", function() {
-		expect(QUnit.oj.nonDefinedValues.length);
-
-		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
-			var result;
-
-			result = oj.emptyFunction(nonDefinedValue);
-			strictEqual(typeof(result), "undefined", "oj.emptyFunction called with " + nonDefinedValue + " returns undefined");
-		});
-	});
-
-	test("oj.emptyFunction called with defined values", function() {
-		expect(QUnit.oj.definedInstances.length);
-
-		$.each(QUnit.oj.definedInstances, function(i, definedValue) {
-			var result;
-
-			result = oj.emptyFunction(definedValue);
-			strictEqual(typeof(result), "undefined", "oj.emptyFunction called with " + definedValue + " returns undefined");
-		});
-	});
-
 	// oj.isDefined tests
 	test("oj.isDefined function defined", function() {
 		expect(1);
