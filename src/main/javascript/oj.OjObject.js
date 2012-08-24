@@ -3,7 +3,8 @@
 
 	var constructFromPrototype;
 
-	oj.namespace("oj.oop");
+	// TODO - Probably don't need this.
+	oj.namespace("oj");
 
 	/**
 	 * @private
@@ -37,27 +38,27 @@
 	 * 
 	 * Base class to be extended by all classes in the system.
 	 * 
-	 * @requires oj.util.framework
+	 * @requires oj.util
 	 */
-	oj.oop.OjObject = base2.Base.extend(
+	oj.OjObject = base2.Base.extend(
 	/**
-	 * @lends oj.oop.OjObject.prototype
+	 * @lends oj.OjObject.prototype
 	 */
 	{
 		/**
-		 * @lends oj.oop.OjObject.prototype
+		 * @lends oj.OjObject.prototype
 		 * @property {Object} clazz A reference to the class definition of this instance.
 		 */
 		clazz: null,
 
 		/**
-		 * @lends oj.oop.OjObject.prototype
+		 * @lends oj.OjObject.prototype
 		 * @property {String} className The name of this class. Used for logging.
 		 */
 		className: null,
 
 		/**
-		 * @lends oj.oop.OjObject.prototype
+		 * @lends oj.OjObject.prototype
 		 * @property {String} instanceName The name of this instance. Used for logging.
 		 */
 		instanceName: null,
@@ -78,7 +79,7 @@
 		constructor: function(params) {
 			this.clazz = this.constructor;
 			this.className = this.constructor.className;
-			this.instanceName = (params && params.instanceName) || oj.util.framework.getUniqueId(this.className + "_instance_");
+			this.instanceName = (params && params.instanceName) || oj.util.getUniqueId(this.className + "_instance_");
 		},
 
 		/**
@@ -88,10 +89,10 @@
 		}
 	}, {
 		/**
-		 * @lends oj.oop.OjObject
+		 * @lends oj.OjObject
 		 * @property {String} className The name of this class. Used for logging.
 		 */
-		className: "oj.oop.OjObject",
+		className: "oj.OjObject",
 
 		/**
 		 * Factory method that creates an instance of this class each time it is called.
@@ -121,7 +122,7 @@
 	 * @return {Function} Returns the same class definition as the original base2.Base.extend with class properties
 	 *                    inherited from the super class.
 	 */
-	oj.oop.OjObject.extend = function(instanceProperties, classProperties, singleton) {
+	oj.OjObject.extend = function(instanceProperties, classProperties, singleton) {
 		var propName = null, instancePropertiesClone = {}, classPropertiesClone = {}, clazz;
 
 		// Note: In the current context, "this" references the superclass being extended.
@@ -145,7 +146,7 @@
 
 		// If a class name was not set in the class properties set a random one based on the superclass name.
 		if (!classPropertiesClone.className) {
-			classPropertiesClone.className = oj.util.framework.getUniqueId(this.className + "_subclass_");
+			classPropertiesClone.className = oj.util.getUniqueId(this.className + "_subclass_");
 		}
 
 		// Add any class level properties in the super class not already in base2.Base or the the specified class
@@ -159,7 +160,7 @@
 		// Override the default getInstance method definition to allow for singleton class definition.  Use the
 		// memoization pattern to keep track of whether or not the class being defined has already been instantiated in
 		// the case of a singleton class definition.  For non-singleton class definitions, the private
-		// constructFromPrototype method is called directly as in the default case of the oj.oop.OjObject class
+		// constructFromPrototype method is called directly as in the default case of the oj.OjObject class
 		// definition.
 		classPropertiesClone.getInstance = (function() {
 			var instance = null; // Cache the instance.  This is used for singletons and ignored for non-singletons.

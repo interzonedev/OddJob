@@ -30,7 +30,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<js.source.directory>src/main/javascript</js.source.directory>
-		<js.compress.output.directory>${project.build.directory}/${project.build.finalName}/static</js.compress.output.directory>
+		<js.compress.output.directory>${project.build.directory}/${project.build.finalName}</js.compress.output.directory>
 	</properties>
 
 	<pluginRepositories>

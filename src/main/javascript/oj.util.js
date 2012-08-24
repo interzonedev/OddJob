@@ -1,14 +1,15 @@
 (function() {
 	"use strict";
 
-	oj.namespace("oj.util");
+	// TODO - Probably don't need this.
+	oj.namespace("oj");
 
 	/**
 	 * @namespace
 	 * 
 	 * General framework utility methods.
 	 */
-	oj.util.framework = {
+	oj.util = {
 		/**
 		 * Gets a (mostly) unique identifier using the client's timestamp and a random number. Optional prefix parameter
 		 * prefixes the unique id with an arbitrary string.
@@ -22,7 +23,7 @@
 			var timeStamp, rand;
 
 			prefix = prefix || "";
-			if (!oj.util.framework.isString(prefix) || !/\S/.test(prefix)) {
+			if (!oj.util.isString(prefix) || !/\S/.test(prefix)) {
 				prefix = "";
 			}
 
@@ -40,7 +41,7 @@
 		 *                    array, otherwise false.
 		 */
 		isObject: function(input) {
-			return (!!input && (Object === input.constructor) && !oj.util.framework.isArray(input));
+			return (!!input && (Object === input.constructor) && !oj.util.isArray(input));
 		},
 
 		/**
@@ -80,7 +81,7 @@
 				return false;
 			}
 			
-			if (!oj.util.framework.isString(obj)) {
+			if (!oj.util.isString(obj)) {
 				return null;
 			}
 
@@ -101,7 +102,7 @@
 				return true;
 			}
 			
-			if (!oj.util.framework.isString(obj)) {
+			if (!oj.util.isString(obj)) {
 				return null;
 			}
 
@@ -121,7 +122,7 @@
 		 */
 		getFunctionInContext: function(context, func) {
 			if ("function" !== typeof(func)) {
-				throw new Error("oj.util.framework.getFunctionInContext: The func argument must be a function");
+				throw new Error("oj.util.getFunctionInContext: The func argument must be a function");
 			}
 
 			return function() {
