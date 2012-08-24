@@ -99,6 +99,45 @@
 			});
 		});
 
+		// oj.util.isDefined tests
+		test("oj.util.isDefined function defined", function() {
+			expect(1);
+
+			strictEqual(typeof(oj.util.isDefined), "function", "oj.util.isDefined is a function");
+		});
+
+		test("oj.util.isDefined called with no args", function() {
+			var result;
+
+			expect(1);
+
+			result = oj.util.isDefined();
+
+			strictEqual(result, false, "oj.util.isDefined called with no args false");
+		});
+
+		test("oj.util.isDefined called with non defined values", function() {
+			expect(QUnit.oj.nonDefinedValues.length);
+
+			$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+				var result;
+
+				result = oj.util.isDefined(nonDefinedValue);
+				strictEqual(result, false, "oj.util.isDefined called with " + nonDefinedValue + " returns false");
+			});
+		});
+
+		test("oj.util.isDefined called with defined values", function() {
+			expect(QUnit.oj.definedInstances.length);
+
+			$.each(QUnit.oj.definedInstances, function(i, definedValue) {
+				var result;
+
+				result = oj.util.isDefined(definedValue);
+				strictEqual(result, true, "oj.util.isDefined called with " + definedValue + " returns true");
+			});
+		});
+
 		// oj.util.isObject method tests
 		test("oj.util.isObject function defined", function() {
 			expect(1);

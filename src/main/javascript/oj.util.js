@@ -33,6 +33,18 @@
 		},
 
 		/**
+		 * Determines whether or not the specified input is defined (not undefined and not null).
+		 * 
+		 * @param {Object} input The input to examine.
+		 * 
+		 * @returns {Boolean} Returns true is the specified input is not undefined and is not null, otherwise returns
+		 *                    false.
+		 */
+		isDefined: function(input) {
+			return ("undefined" !== typeof(input)) && (null !== input);
+		},
+
+		/**
 		 * Determines whether or not the specified input is an object.
 		 * 
 		 * @param {Object} input The input to examine.
@@ -64,7 +76,7 @@
 		 *                    false.
 		 */
 		isString: function(obj) {
-			return oj.isDefined(obj) && (String === obj.constructor);
+			return oj.util.isDefined(obj) && (String === obj.constructor);
 		},
 
 		/**
@@ -77,7 +89,7 @@
 		 *                    the specified input has at least one non whitespace character, otherwise false.
 		 */
 		isNotBlankString: function(obj) {
-			if (!oj.isDefined(obj)) {
+			if (!oj.util.isDefined(obj)) {
 				return false;
 			}
 			
@@ -98,7 +110,7 @@
 		 *                    the specified input has only whitespace characters, otherwise false.
 		 */
 		isBlankString: function(obj) {
-			if (!oj.isDefined(obj)) {
+			if (!oj.util.isDefined(obj)) {
 				return true;
 			}
 			

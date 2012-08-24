@@ -10,45 +10,6 @@ $(function() {
 		strictEqual(typeof(oj), "object", "oj is an object");
 	});
 
-	// oj.isDefined tests
-	test("oj.isDefined function defined", function() {
-		expect(1);
-
-		strictEqual(typeof(oj.isDefined), "function", "oj.isDefined is a function");
-	});
-
-	test("oj.isDefined called with no args", function() {
-		var result;
-
-		expect(1);
-
-		result = oj.isDefined();
-
-		strictEqual(result, false, "oj.isDefined called with no args false");
-	});
-
-	test("oj.isDefined called with non defined values", function() {
-		expect(QUnit.oj.nonDefinedValues.length);
-
-		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
-			var result;
-
-			result = oj.isDefined(nonDefinedValue);
-			strictEqual(result, false, "oj.isDefined called with " + nonDefinedValue + " returns false");
-		});
-	});
-
-	test("oj.isDefined called with defined values", function() {
-		expect(QUnit.oj.definedInstances.length);
-
-		$.each(QUnit.oj.definedInstances, function(i, definedValue) {
-			var result;
-
-			result = oj.isDefined(definedValue);
-			strictEqual(result, true, "oj.isDefined called with " + definedValue + " returns true");
-		});
-	});
-
 	// oj.namespace tests
 	test("oj.namespace function defined", function() {
 		expect(1);

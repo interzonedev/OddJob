@@ -64,18 +64,6 @@
 			if (errorMessage !== initialErrorMessage) {
 				throw new Error(errorMessage);
 			}
-		},
-
-		/**
-		 * Determines whether or not the specified input is defined (not undefined and not null).
-		 * 
-		 * @param {Object} input The input to examine.
-		 * 
-		 * @returns {Boolean} Returns true is the specified input is not undefined and is not null, otherwise returns
-		 *                    false.
-		 */
-		isDefined: function(input) {
-			return ("undefined" !== typeof(input)) && (null !== input);
 		}
 	};
 
