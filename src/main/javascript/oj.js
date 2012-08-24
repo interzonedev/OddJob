@@ -41,7 +41,7 @@
 			errorMessage = initialErrorMessage;
 
 			// Check argument.
-			if (("string" !== typeof (namespaceInput)) || !validNamespace.test(namespaceInput)) {
+			if (!validNamespace.test(namespaceInput)) {
 				errorMessage += "The namespace input must be a string of the form  level1.level2.level3...where each " +
 								"level is of the form /[a-z]+[a-z0-9]?/i.\nThe input was " + namespaceInput + ".";
 			}

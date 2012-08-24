@@ -165,4 +165,17 @@ $(function() {
 		strictEqual(typeof(test3Namespace), "object", "test3Namespace is an object");
 	});
 
+	test("oj.namespace input not altered", function() {
+		var input, inputClone;
+
+		expect(1);
+
+		input = "test";
+
+		inputClone = input.toString();
+
+		oj.namespace(input);
+
+		strictEqual(input, inputClone, "oj.namespace does not alter its input");
+	});
 });
