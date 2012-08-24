@@ -3,9 +3,6 @@
 
 	var constructFromPrototype;
 
-	// TODO - Probably don't need this.
-	oj.namespace("oj");
-
 	/**
 	 * @private
 	 * 

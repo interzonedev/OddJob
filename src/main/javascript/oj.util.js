@@ -1,9 +1,6 @@
 (function() {
 	"use strict";
 
-	// TODO - Probably don't need this.
-	oj.namespace("oj");
-
 	/**
 	 * @namespace
 	 * 
