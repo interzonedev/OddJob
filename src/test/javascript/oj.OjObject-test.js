@@ -242,6 +242,28 @@ $(function() {
 		strictEqual(instance.clazz, oj.OjObject, "oj.OjObject.getInstance called with instanceName param returns an instance with the class set");
 	});
 
+	test("oj.OjObject.getInstance input not altered", function() {
+		var params, initialize, paramsClone, initializeClone;
+
+		expect(2);
+
+		params = {
+			x: 1,
+			y: 2
+		};
+
+		initialize = true;
+
+		paramsClone = $.extend(true, {}, params);
+
+		initializeClone = !!initialize;
+
+		oj.OjObject.getInstance(params, initialize);
+
+		deepEqual(params, paramsClone, "oj.OjObject.getInstance does not alter its params input");
+		strictEqual(initialize, initializeClone, "oj.OjObject.getInstance does not alter its initialize input");
+	});
+
 	// Singleton1 test class properties tests
 	test("Singleton1 class properties", function() {
 		expect(3);
@@ -1259,5 +1281,33 @@ $(function() {
 		strictEqual(instance.className, subClass.className, "getInstance called on anonymous subclass of oj.OjObject with no params returns an instance with the class name set");
 		strictEqual(instance.clazz, subClass, "getInstance called on anonymous subclass of oj.OjObject with no params returns an instance with the class set");
 		strictEqual(typeof(instance.init), "function", "getInstance called on anonymous subclass of oj.OjObject with no params returns an instance with the init method defined");
+	});
+
+	test("oj.OjObject.extend inputs not altered", function() {
+		var instanceProperties, classProperties, singleton, instancePropertiesClone, classPropertiesClone, singletonClone;
+
+		expect(3);
+
+		instanceProperties = {
+			a: 1,
+			b: 2,
+			c: function() {
+				return this.a;
+			}
+		};
+		classProperties = {
+			d: 4
+		};
+		singleton = false;
+
+		instancePropertiesClone = $.extend(true, {}, instanceProperties);
+		classPropertiesClone = $.extend(true, {}, classProperties);
+		singletonClone = !!singleton;
+
+		oj.OjObject.extend(instanceProperties, classProperties, singleton);
+
+		deepEqual(instanceProperties, instancePropertiesClone, "oj.OjObject.extend does not alter its instanceProperties input");
+		deepEqual(classProperties, classPropertiesClone, "oj.OjObject.extend does not alter its instanceProperties input");
+		strictEqual(singleton, singletonClone, "oj.OjObject.extend does not alter its singleton input");
 	});
 });
