@@ -99,6 +99,20 @@
 			});
 		});
 
+		test("oj.util.getUniqueId input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.getUniqueId(input);
+
+			strictEqual(input, inputClone, "oj.util.getUniqueId does not alter its input");
+		});
+
 		// oj.util.isDefined tests
 		test("oj.util.isDefined function defined", function() {
 			expect(1);
@@ -136,6 +150,20 @@
 				result = oj.util.isDefined(definedValue);
 				strictEqual(result, true, "oj.util.isDefined called with " + definedValue + " returns true");
 			});
+		});
+
+		test("oj.util.isDefined input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.isDefined(input);
+
+			strictEqual(input, inputClone, "oj.util.isDefined does not alter its input");
 		});
 
 		// oj.util.isObject method tests
@@ -181,6 +209,20 @@
 			});
 		});
 
+		test("oj.util.isObject input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.isObject(input);
+
+			strictEqual(input, inputClone, "oj.util.isObject does not alter its input");
+		});
+
 		// oj.util.isArray method tests
 		test("oj.util.isArray function defined", function() {
 			expect(1);
@@ -222,6 +264,20 @@
 
 				strictEqual(result, true, "oj.util.isArray called with " + arrayValue + " returns true");
 			});
+		});
+
+		test("oj.util.isArray input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.isArray(input);
+
+			strictEqual(input, inputClone, "oj.util.isArray does not alter its input");
 		});
 
 		// oj.util.isString method tests
@@ -279,6 +335,20 @@
 			});
 		});
 
+		test("oj.util.isString input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.isString(input);
+
+			strictEqual(input, inputClone, "oj.util.isString does not alter its input");
+		});
+
 		// oj.util.isNotBlankString method tests
 		test("oj.util.isNotBlankString function defined", function() {
 			expect(1);
@@ -332,6 +402,20 @@
 
 				strictEqual(result, true, "oj.util.isNotBlankString called with \"" + nonBlankString + "\" returns true");
 			});
+		});
+
+		test("oj.util.isNotBlankString input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.isNotBlankString(input);
+
+			strictEqual(input, inputClone, "oj.util.isNotBlankString does not alter its input");
 		});
 
 		// oj.util.isBlankString method tests
@@ -389,6 +473,20 @@
 			});
 		});
 
+		test("oj.util.isBlankString input not altered", function() {
+			var input, inputClone;
+
+			expect(1);
+
+			input = "test";
+
+			inputClone = input.toString();
+
+			oj.util.isBlankString(input);
+
+			strictEqual(input, inputClone, "oj.util.isBlankString does not alter its input");
+		});
+
 		// oj.util.getFunctionInContext method tests
 		test("oj.util.getFunctionInContext function defined", function() {
 			expect(1);
@@ -444,6 +542,24 @@
 					oj.util.getFunctionInContext(functionContext, nonFunctionValue);
 				}, Error, "oj.util.getFunctionInContext called with non function values for the function should throw an Error");
 			});
+		});
+
+		test("oj.util.getFunctionInContext inputs not altered", function() {
+			var functionContextClone, value, result;
+
+			expect(3);
+
+			functionContextClone = $.extend(true, {}, functionContext);
+
+			oj.util.getFunctionInContext(functionContext, wrappedFunction);
+
+			value = "value";
+
+			result = wrappedFunction(value);
+
+			deepEqual(functionContext, functionContextClone, "oj.util.getFunctionInContext does not alter its context input");
+			strictEqual(context.property1, value, "oj.util.getFunctionInContext does not alter its function input");
+			ok(!result, "oj.util.getFunctionInContext does not alter its function input");
 		});
 	});
 }(this, jQuery));
