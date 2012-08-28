@@ -1,7 +1,7 @@
 $(function() {
-	var htmlUrl, htmlContent;
+	var ajaxTestServletUrl, htmlContent;
 
-	htmlUrl = "resources/oj/ajax/test.html";
+	ajaxTestServletUrl = "../../ajaxTest";
 	htmlContent = "<div>Ajax Test</div>";
 
 	module("oj.ajax");
@@ -27,7 +27,7 @@ $(function() {
 		expect(6);
 
 		response = oj.ajax.doGet({
-			url: htmlUrl,
+			url: ajaxTestServletUrl,
 			params: {},
 			asynchronous: false,
 			preventCache: true
@@ -47,7 +47,7 @@ $(function() {
 		expect(6);
 
 		synchronousResponse = oj.ajax.doGet({
-			url: htmlUrl,
+			url: ajaxTestServletUrl,
 			params: {},
 			asynchronous: true,
 			preventCache: true,
