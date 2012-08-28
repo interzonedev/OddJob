@@ -26,7 +26,7 @@ $(function() {
 		expect(1);
 
 		response = oj.ajax.doGet({
-			url: "resources/oj/ajaxTest.html",
+			url: "resources/oj/ajax/test.html",
 			params: {},
 			asynchronous: false,
 			preventCache: true
@@ -41,7 +41,7 @@ $(function() {
 		expect(3);
 
 		synchronousResponse = oj.ajax.doGet({
-			url: "resources/oj/ajaxTest.html",
+			url: "resources/oj/ajax/test.html",
 			params: {},
 			asynchronous: true,
 			preventCache: true,
