@@ -10,6 +10,9 @@
 	NOT_BLANK_REG_EXP = /\S/;
 	PREVENT_CACHE_PARAM_NAME = "ojPreventCache";
 
+	/**
+	 * @private
+	 */
 	getXhr = function() {
 		var xhr;
 
@@ -34,6 +37,9 @@
 		return xhr;
 	};
 
+	/**
+	 * @private
+	 */
 	getQueryStringFromParams = function(params) {
 		var queryString, queryStringArray, name = null, value;
 
@@ -56,6 +62,9 @@
 		return queryString;
 	};
 
+	/**
+	 * @private
+	 */
 	setQueryStringOnUrl = function(url, queryString) {
 		var newURL;
 
@@ -76,6 +85,9 @@
 		return newURL;
 	};
 
+	/**
+	 * @private
+	 */
 	getJSONResponse = function(json) {
 		var obj;
 
@@ -88,10 +100,16 @@
 		return obj;
 	};
 
+	/**
+	 * @private
+	 */
 	getXMLResponse = function(xml) {
 		return xml;
 	};
 
+	/**
+	 * @private
+	 */
 	handleResponse = function(xhr, successCallback, errorCallback, timeoutRef) {
 		var response, contentType, responseContent = null, callback;
 
@@ -211,6 +229,7 @@
 				timeoutRef = null;
 				requestAborted = false;
 				if (!isNaN(parseFloat(timeout)) && (timeout > 0)) {
+					/** @ignore */
 					timeoutWrapper = function() {
 						xhr.onreadystatechange = function() {};
 						xhr.abort();
