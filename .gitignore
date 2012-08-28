@@ -2,6 +2,7 @@
 *.diff
 *.patch
 .DS_Store
+.classpath
 .settings
 .project
 target/
