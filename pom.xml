@@ -106,6 +106,7 @@
 				<configuration>
 					<jsDir>${js.source.directory}</jsDir>
 					<includes>**/*.js</includes>
+					<excludes>base2-p.js</excludes>
 				</configuration>
 			</plugin>
 
@@ -123,6 +124,9 @@
 					<Allfunctions>false</Allfunctions>
 					<privateOption>false</privateOption>
 					<srcDir>${basedir}/${js.source.directory}</srcDir>
+					<exclude>
+						<param>base2-p.js</param>
+					</exclude>
 				</configuration>
 			</plugin>
 		</plugins>
