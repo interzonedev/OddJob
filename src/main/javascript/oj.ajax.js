@@ -93,9 +93,7 @@
 	};
 
 	handleResponse = function(xhr, successCallback, errorCallback, timeoutRef) {
-		var response, contentType;
-
-		response = null;
+		var response, contentType, responseContent = null, callback;
 
 		// Only check the status if the readyState is complete.
 		if (4 === xhr.readyState) {
@@ -103,35 +101,40 @@
 				clearTimeout(timeoutRef);
 			}
 
-			// Only set the success return value and call the success callback if
-			// the HTTP status indicated a successful request.
+			// Only set the success return value and call the success callback if the HTTP status indicated a successful
+			// request.
 			if (((xhr.status >= 200) && (xhr.status < 300)) || 304 === xhr.status) {
 				// Successful request.
 				// Set the return value according to the content type.
 				contentType = xhr.getResponseHeader("Content-type");
 				if (XML_CONTENT_TYPE_REG_EXP.test(contentType)) {
-					response = getXMLResponse(xhr.responseXML);
+					responseContent = getXMLResponse(xhr.responseXML);
 				} else if (JSON_CONTENT_TYPE_REG_EXP.test(contentType)) {
-					response = getJSONResponse(xhr.responseText);
+					responseContent = getJSONResponse(xhr.responseText);
 				} else if (NOT_BLANK_REG_EXP.test(xhr.responseText)) {
-					response = xhr.responseText;
+					responseContent = xhr.responseText;
 				}
 
-				// Call the success callback if it is set.
-				if (successCallback) {
-					successCallback.call(null, response, xhr.status);
-				}
+				callback = successCallback;
 			} else {
 				// Unsuccessful request.
 				// Set the return value to the response text.
-				response = xhr.responseText;
+				responseContent = xhr.responseText;
 
-				// Call the error callback if it is set.
-				if (errorCallback) {
-					errorCallback.call(null, xhr.status, response);
-				}
+				callback = errorCallback;
+			}
+
+			// If either a success or an error callback was set call it.
+			if (callback) {
+				callback.call(null, responseContent, xhr.status, xhr);
 			}
 		}
+
+		response = {
+			"content": responseContent,
+			"status": xhr.status,
+			"xhr": xhr
+		};
 
 		return response;
 	};
@@ -213,7 +216,7 @@
 						xhr.abort();
 						requestAborted = true;
 						if (timeoutCallback) {
-							timeoutCallback.call(null);
+							timeoutCallback.call(null, xhr);
 						}
 					};
 					timeoutRef = setTimeout(timeoutWrapper, timeout);

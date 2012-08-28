@@ -1,7 +1,8 @@
 $(function() {
-	var testAjaxHtml;
+	var htmlUrl, htmlContent;
 
-	testAjaxHtml = "<div>Ajax Test</div>";
+	htmlUrl = "resources/oj/ajax/test.html";
+	htmlContent = "<div>Ajax Test</div>";
 
 	module("oj.ajax");
 
@@ -23,39 +24,48 @@ $(function() {
 	test("oj.ajax.doGet function synchronous HTML content type", function() {
 		var response;
 
-		expect(1);
+		expect(6);
 
 		response = oj.ajax.doGet({
-			url: "resources/oj/ajax/test.html",
+			url: htmlUrl,
 			params: {},
 			asynchronous: false,
 			preventCache: true
 		});
 
-		strictEqual(response, testAjaxHtml, "oj.ajax.doGet function synchronous HTML content type returns test Ajax HTML");
+		strictEqual(typeof(response), "object", "oj.ajax.doGet synchronous HTML content type returns an object");
+		strictEqual(response.status, 200, "oj.ajax.doGet synchronous HTML content type returns 200 status");
+		strictEqual(response.content, htmlContent, "oj.ajax.doGet synchronous HTML content type returns test Ajax HTML");
+		ok(response.xhr, "oj.ajax.doGet synchronous HTML content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doGet synchronous HTML content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doGet synchronous HTML content type returns the XHR object");
 	});
 
 	asyncTest("oj.ajax.doGet function asynchronous HTML content type with valid arguments", function() {
 		var synchronousResponse;
 
-		expect(3);
+		expect(6);
 
 		synchronousResponse = oj.ajax.doGet({
-			url: "resources/oj/ajax/test.html",
+			url: htmlUrl,
 			params: {},
 			asynchronous: true,
 			preventCache: true,
-			successCallback: function(response, status) {
-				strictEqual(response, testAjaxHtml, "oj.ajax.doGet function asynchronous HTML content type with valid arguments returns test Ajax HTML");
-				strictEqual(status, 200, "oj.ajax.doGet function asynchronous HTML content type with valid arguments returns 200 status");
+			successCallback: function(response, status, xhr) {
+				strictEqual(response, htmlContent, "oj.ajax.doGet asynchronous HTML content type with valid arguments returns test Ajax HTML");
+				strictEqual(status, 200, "oj.ajax.doGet asynchronous HTML content type with valid arguments returns 200 status");
+				ok(xhr, "oj.ajax.doGet asynchronous HTML content type with valid arguments returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doGet asynchronous HTML content type with valid arguments returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doGet asynchronous HTML content type with valid arguments returns the XHR object");
+
 				start();
 			},
-			errorCallback: function(status, response) {
-				ok(false, "oj.ajax.doGet function asynchronous HTML content type  with valid arguments should not call the error callback ");
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doGet asynchronous HTML content type with valid arguments should not call the error callback ");
 				start();
 			}
 		});
 
-		strictEqual(synchronousResponse, null, "oj.ajax.doGet function asynchronous HTML content type returns null");
+		strictEqual(synchronousResponse, null, "oj.ajax.doGet asynchronous HTML content type with valid arguments returns null");
 	});
 });
