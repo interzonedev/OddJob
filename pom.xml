@@ -31,6 +31,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<js.source.directory>src/main/javascript</js.source.directory>
 		<js.compress.output.directory>${project.build.directory}/${project.build.finalName}</js.compress.output.directory>
+		<js.compress.output.filename>oddjob-min.js</js.compress.output.filename>
 	</properties>
 
 	<dependencies>
@@ -82,6 +83,19 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>properties-maven-plugin</artifactId>
+										<versionRange>[1.0-alpha-2,)</versionRange>
+										<goals>
+											<goal>read-project-properties</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -90,6 +104,26 @@
 		</pluginManagement>
 
 		<plugins>
+			<!-- External project properties file -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/build.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- YUI Compression -->
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
@@ -114,7 +148,7 @@
 					<aggregations>
 						<aggregation>
 							<removeIncluded>true</removeIncluded>
-							<output>${js.compress.output.directory}/oddjob-min.js</output>
+							<output>${js.compress.output.directory}/${js.compress.output.filename}</output>
 							<includes>
 								<include>**/*.js</include>
 							</includes>
