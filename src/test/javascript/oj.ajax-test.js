@@ -1,7 +1,7 @@
 $(function() {
 	var ajaxTestServletUrl, htmlContent;
 
-	ajaxTestServletUrl = "../../ajaxTest";
+	ajaxTestServletUrl = "../../../ajaxTest";
 	htmlContent = "<div>Ajax Test</div>";
 
 	module("oj.ajax");
