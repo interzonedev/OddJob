@@ -104,6 +104,16 @@
 		</pluginManagement>
 
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
 			<!-- External project properties file -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -199,7 +209,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Test servlet build and run -->
+			<!-- Test servlet build without dependencies to be run with the repo in the classpath -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
