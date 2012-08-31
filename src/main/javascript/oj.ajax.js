@@ -111,7 +111,7 @@
 	 * @private
 	 */
 	handleResponse = function(xhr, successCallback, errorCallback, timeoutRef) {
-		var response, contentType, responseContent = null, callback;
+		var response, contentType, responseContent = null, statusCode = null, callback;
 
 		// Only check the status if the readyState is complete.
 		if (4 === xhr.readyState) {
@@ -142,15 +142,17 @@
 				callback = errorCallback;
 			}
 
+			statusCode = xhr.status;
+
 			// If either a success or an error callback was set call it.
 			if (callback) {
-				callback.call(null, responseContent, xhr.status, xhr);
+				callback.call(null, responseContent, statusCode, xhr);
 			}
 		}
 
 		response = {
 			"content": responseContent,
-			"status": xhr.status,
+			"status": statusCode,
 			"xhr": xhr
 		};
 
