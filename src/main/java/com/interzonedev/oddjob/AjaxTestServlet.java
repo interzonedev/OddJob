@@ -21,8 +21,9 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.util.StatusPrinter;
 
 /**
- * Servlet that handles Ajax requests from the OddJob JavaScript unit tests. Returns simple content, content type and
- * status code depending on the parameters in the requeset.
+ * Servlet that handles Ajax requests from the OddJob JavaScript unit tests.
+ * Returns simple content, content type and status code depending on the
+ * parameters in the requeset.
  * 
  * @author mmarkarian
  */
@@ -37,8 +38,9 @@ public class AjaxTestServlet extends HttpServlet {
 	private Logger log = (Logger) LoggerFactory.getLogger(getClass());
 
 	/**
-	 * Handles GET requests. Sets the content type and output according to the "type" request parameter. Sets the status
-	 * according to the "error" request parameter.
+	 * Handles GET requests. Sets the content type and output according to the
+	 * "type" request parameter. Sets the status according to the "error"
+	 * request parameter.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
@@ -49,7 +51,8 @@ public class AjaxTestServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		log.debug("doGet: Start");
 
 		processResponseForRequest(request, response);
@@ -58,7 +61,8 @@ public class AjaxTestServlet extends HttpServlet {
 	}
 
 	/**
-	 * Sets the content type and status on the specified response and writes the content to the output stream.
+	 * Sets the content type and status on the specified response and writes the
+	 * content to the output stream.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
@@ -67,7 +71,8 @@ public class AjaxTestServlet extends HttpServlet {
 	 * 
 	 * @throws IOException
 	 */
-	private void processResponseForRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void processResponseForRequest(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 		String contentType = getContentTypeForRequest(request);
 		int status = getStatusForRequest(request);
 		String content = getContentForRequest(request);
@@ -78,60 +83,123 @@ public class AjaxTestServlet extends HttpServlet {
 	}
 
 	/**
-	 * Gets the content type for the specified request according to the "type" parameter if it is present.
+	 * Gets the content type for the specified request according to the "type"
+	 * parameter if it is present.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
 	 * 
-	 * @return Returns the content type for the specified request according to the "type" parameter if it is present.
-	 *         Defaults to "text/html";
+	 * @return Returns the content type for the specified request according to
+	 *         the "type" parameter if it is present. Defaults to "text/html";
 	 */
 	private String getContentTypeForRequest(HttpServletRequest request) {
-		String contentType = "text/html";
+		String type = request.getParameter("type");
 
-		return contentType;
+		if ("json".equals(type)) {
+			return "application/json";
+		} else if ("xml".equals(type)) {
+			return "text/xml";
+		} else {
+			return "text/html";
+		}
 	}
 
 	/**
-	 * Gets the status code for the specified request according to the "error" parameter if it is present.
+	 * Gets the status code for the specified request according to the "error"
+	 * parameter if it is present.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
 	 * 
-	 * @return Returns the status code for the specified request according to the "error" parameter if it is present.
-	 *         Defaults to {@link HttpServletResponse#SC_OK}.
+	 * @return Returns the status code for the specified request according to
+	 *         the "error" parameter if it is present. Defaults to
+	 *         {@link HttpServletResponse#SC_OK}.
 	 */
 	private int getStatusForRequest(HttpServletRequest request) {
-		int status = HttpServletResponse.SC_OK;
-
-		return status;
+		if (isParameterSet(request, "error")) {
+			return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		} else {
+			return HttpServletResponse.SC_OK;
+		}
 	}
 
 	/**
-	 * Gets the content for the specified request according to the "type" parameter if it is present. Echos the request
-	 * parameters to the content.
+	 * Gets the content for the specified request according to the "type"
+	 * parameter if it is present. Echos the request parameters to the content.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
 	 * 
-	 * @return Returns the content for the specified request according to the "type" parameter if it is present.
+	 * @return Returns the content for the specified request according to the
+	 *         "type" parameter if it is present.
 	 */
 	private String getContentForRequest(HttpServletRequest request) {
-		String content = "<div>Ajax Test</div>";
+		String type = request.getParameter("type");
 
-		return content;
+		if ("json".equals(type)) {
+			return getJsonContent(request);
+		} else if ("xml".equals(type)) {
+			return getXmlContent(request);
+		} else {
+			return getHtmlContent(request);
+		}
+	}
+
+	private boolean isParameterSet(HttpServletRequest request,
+			String parameterName) {
+		String parameterValue = request.getParameter(parameterName);
+		if ((null != parameterValue) && Boolean.parseBoolean(parameterValue)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private String getJsonContent(HttpServletRequest request) {
+		StringBuilder content = new StringBuilder("{");
+
+		content.append("\"method\": \"").append(request.getMethod().toLowerCase()).append("\"");
+		
+		content.append("}");
+
+		return content.toString();
+	}
+
+	private String getXmlContent(HttpServletRequest request) {
+		StringBuilder content = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+
+		content.append("<response method=\"").append(request.getMethod().toLowerCase()).append("\">");
+		content.append("</response>");
+
+		return content.toString();
+	}
+
+	private String getHtmlContent(HttpServletRequest request) {
+		StringBuilder content = new StringBuilder("<div>");
+
+		content.append("<div>");
+		content.append(request.getMethod().toLowerCase());
+		content.append("</div>");
+
+		content.append("</div>");
+
+		return content.toString();
 	}
 
 	/**
-	 * Configures the logger context programmatically to avoid an external configuration file.
+	 * Configures the logger context programmatically to avoid an external
+	 * configuration file.
 	 */
 	private static void configureLoggerContext() {
-		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory
+				.getILoggerFactory();
 		loggerContext.reset();
 
 		// Set log levels on individual packages.
 		loggerContext.getLogger("org.mortbay.log").setLevel(Level.INFO);
-		loggerContext.getLogger("com.interzonedev.oddjob").setLevel(Level.DEBUG);
+		loggerContext.getLogger("com.interzonedev.oddjob")
+				.setLevel(Level.DEBUG);
 
 		String logPattern = "%date [%thread] %-5level %logger - %msg%n";
 		PatternLayoutEncoder patternLayoutEncoder = new PatternLayoutEncoder();
@@ -145,15 +213,17 @@ public class AjaxTestServlet extends HttpServlet {
 		consoleAppender.setEncoder(patternLayoutEncoder);
 		consoleAppender.start();
 
-		loggerContext.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(consoleAppender);
+		loggerContext.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(
+				consoleAppender);
 		loggerContext.start();
 
 		StatusPrinter.printInCaseOfErrorsOrWarnings(loggerContext);
 	}
 
 	/**
-	 * Starts an embedded webserver to serve this servlet. By default the servlet will be mapped to
-	 * {@link #DEFAULT_CONTEXT_PATH}/{@link #DEFAULT_SERVLET_MAPPING} on port {@link #DEFAULT_PORT}.
+	 * Starts an embedded webserver to serve this servlet. By default the
+	 * servlet will be mapped to {@link #DEFAULT_CONTEXT_PATH}/
+	 * {@link #DEFAULT_SERVLET_MAPPING} on port {@link #DEFAULT_PORT}.
 	 * 
 	 * @param args
 	 * 

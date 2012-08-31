@@ -1,8 +1,7 @@
 $(function() {
-	var ajaxTestServletUrl, htmlContent;
+	var ajaxTestServletUrl;
 
 	ajaxTestServletUrl = "/oddjob/ajaxTest";
-	htmlContent = "<div>Ajax Test</div>";
 
 	module("oj.ajax");
 
@@ -22,9 +21,11 @@ $(function() {
 	});
 
 	test("oj.ajax.doGet function synchronous HTML content type", function() {
-		var response;
+		var response, htmlContent;
 
 		expect(6);
+
+		htmlContent = "<div><div>get</div></div>";
 
 		response = oj.ajax.doGet({
 			url: ajaxTestServletUrl,
@@ -42,9 +43,11 @@ $(function() {
 	});
 
 	asyncTest("oj.ajax.doGet function asynchronous HTML content type with valid arguments", function() {
-		var synchronousResponse;
+		var synchronousResponse, htmlContent;
 
 		expect(6);
+
+		htmlContent = "<div><div>get</div></div>";
 
 		synchronousResponse = oj.ajax.doGet({
 			url: ajaxTestServletUrl,
@@ -67,5 +70,37 @@ $(function() {
 		});
 
 		strictEqual(synchronousResponse, null, "oj.ajax.doGet asynchronous HTML content type with valid arguments returns null");
+	});
+
+	asyncTest("oj.ajax.doGet function asynchronous JSON content type with valid arguments", function() {
+		var synchronousResponse, jsonContent;
+
+		expect(6);
+
+		jsonContent = {
+			"method": "get"
+		};
+
+		synchronousResponse = oj.ajax.doGet({
+			url: ajaxTestServletUrl + "?type=json",
+			params: {},
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				deepEqual(response, jsonContent, "oj.ajax.doGet asynchronous JSON content type with valid arguments returns test Ajax JSON");
+				strictEqual(status, 200, "oj.ajax.doGet asynchronous JSON content type with valid arguments returns 200 status");
+				ok(xhr, "oj.ajax.doGet asynchronous JSON content type with valid arguments returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doGet asynchronous JSON content type with valid arguments returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doGet asynchronous JSON content type with valid arguments returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doGet asynchronous JSON content type with valid arguments should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doGet asynchronous JSON content type with valid arguments returns null");
 	});
 });
