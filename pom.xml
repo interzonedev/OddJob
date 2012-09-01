@@ -45,6 +45,11 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.6</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.0.5</version>
+		</dependency>
 	</dependencies>
 
 	<pluginRepositories>
@@ -62,7 +67,8 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -209,7 +215,8 @@
 				</configuration>
 			</plugin>
 
-			<!-- Test servlet build without dependencies to be run with the repo in the classpath -->
+			<!-- Test servlet build without dependencies to be run with the repo in 
+				the classpath -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
