@@ -93,8 +93,10 @@ $(function() {
 		expect(8);
 
 		synchronousResponse = oj.ajax.doGet({
-			url: ajaxTestServletUrl + "?type=json",
-			params: {},
+			url: ajaxTestServletUrl,
+			params: {
+				"type": "json"
+			},
 			asynchronous: true,
 			preventCache: true,
 			successCallback: function(response, status, xhr) {
@@ -124,8 +126,10 @@ $(function() {
 		expect(8);
 
 		synchronousResponse = oj.ajax.doGet({
-			url: ajaxTestServletUrl + "?type=xml",
-			params: {},
+			url: ajaxTestServletUrl,
+			params: {
+				"type": "xml"
+			},
 			asynchronous: true,
 			preventCache: true,
 			successCallback: function(response, status, xhr) {
@@ -151,5 +155,40 @@ $(function() {
 		});
 
 		strictEqual(synchronousResponse, null, "oj.ajax.doGet asynchronous XML content type with valid arguments returns null");
+	});
+	
+	// oj.ajax.doPost method with HTML content type tests
+	asyncTest("oj.ajax.doPost function asynchronous HTML content type with valid arguments", function() {
+		var synchronousResponse, responseMethodFrag;
+
+		expect(8);
+
+		responseMethodFrag = "<div id=\"method\">post</div>";
+
+		synchronousResponse = oj.ajax.doPost({
+			url: ajaxTestServletUrl,
+			params: {
+				"foo": "bar"
+			},
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doPost asynchronous HTML content type with valid arguments returns 200 status");
+				ok(response, "oj.ajax.doPost asynchronous HTML content type with valid arguments returns content");
+				strictEqual(typeof(response), "string", "oj.ajax.doPost asynchronous HTML content type with valid arguments returns a string");
+				ok(response.indexOf(responseMethodFrag) > -1, "j.ajax.doPost asynchronous HTML content type with valid arguments returns the correct method");
+				ok(xhr, "oj.ajax.doPost asynchronous HTML content type with valid arguments returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doPost asynchronous HTML content type with valid arguments returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doPost asynchronous HTML content type with valid arguments returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doPost asynchronous HTML content type with valid arguments should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doPost asynchronous HTML content type with valid arguments returns null");
 	});
 });
