@@ -4,15 +4,27 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Concrete implementation of {@link RequestProcessor} for the HTML content type.
+ * 
+ * @author <a href="mailto:mark@interzonedev.com">Mark Markarian</a>
+ */
 public class HtmlRequestProcessor extends AbstractRequestProcessor {
 
 	public static final String HTML_CONTENT_TYPE = "text/html";
 
+	/**
+	 * Provides the content, content type and status code for the specified {@link HttpServletRequest} in the form of a
+	 * {@link ResponseValues} instance for the HTML content type. Echos the incoming method, parameters, headers and
+	 * cookies of the specified {@link HttpServletRequest} to the content.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 */
 	@Override
-	public ResponseValues getResponse(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int statusCode = getStatusForRequest(request);
+	public ResponseValues getResponse(HttpServletRequest request) throws Exception {
+		int statusCode = getStatusCodeForRequest(request);
 
 		StringBuilder content = new StringBuilder("<div>");
 

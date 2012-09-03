@@ -28,21 +28,30 @@ import com.interzonedev.oddjob.processor.ResponseValues;
 import com.interzonedev.oddjob.processor.XmlRequestProcessor;
 
 /**
+ * <p>
  * Servlet that handles Ajax requests from the OddJob JavaScript unit tests.
+ * </p>
  * 
- * The content type is set on the response according to the "type" request parameter:
- * html: {@link HtmlRequestProcessor#HTML_CONTENT_TYPE} json: {@link JsonRequestProcessor#JSON_CONTENT_TYPE} xml:
- * {@link XmlRequestProcessor#XML_CONTENT_TYPE}
+ * <p>
+ * The content type is set on the response according to the "type" request parameter:<br />
+ * html: {@link HtmlRequestProcessor#HTML_CONTENT_TYPE}<br />
+ * json: {@link JsonRequestProcessor#JSON_CONTENT_TYPE}<br />
+ * xml: {@link XmlRequestProcessor#XML_CONTENT_TYPE}<br />
+ * </p>
  * 
+ * <p>
  * The status code is set on the response according to the "error" request parameter regardless of the content type. If
  * the "error" request parameter can be parsed to a {@link Boolean#TRUE} the status code is set to
  * {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR}, otherwise it is set to {@link HttpServletResponse#SC_OK}.
+ * </p>
  * 
+ * <p>
  * The content set on the reponse contains the request method, request parameters, request headers and requets cookies
  * regardless of the content type. Each request method is handled in the same fashion only differing in the request
  * method value in the output.
+ * </p>
  * 
- * @author mmarkarian
+ * @author <a href="mailto:mark@interzonedev.com">Mark Markarian</a>
  */
 public class AjaxTestServlet extends HttpServlet {
 
@@ -137,7 +146,9 @@ public class AjaxTestServlet extends HttpServlet {
 	}
 
 	/**
-	 * Sets the content type and status on the specified response and writes the content to the output stream.
+	 * Sets the content type and status on the specified response and writes the content to the output stream depending
+	 * on the "type" and "error" request parameters. Delegates processing to an implementation of
+	 * {@link RequestProcessor} depending on the content type.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
@@ -152,7 +163,7 @@ public class AjaxTestServlet extends HttpServlet {
 		try {
 			RequestProcessor requestProcessor = RequestProcessorFactory.getRequestProcessor(request);
 
-			ResponseValues responseValues = requestProcessor.getResponse(request, response);
+			ResponseValues responseValues = requestProcessor.getResponse(request);
 
 			String contentType = responseValues.getContentType();
 			int statusCode = responseValues.getStatusCode();
@@ -202,6 +213,7 @@ public class AjaxTestServlet extends HttpServlet {
 	 * {@link #DEFAULT_CONTEXT_PATH}/ {@link #DEFAULT_SERVLET_MAPPING} on port {@link #DEFAULT_PORT}.
 	 * 
 	 * @param args
+	 *            TDB
 	 * 
 	 * @throws Exception
 	 *             Thrown if an error occurs starting the embedded webserver.

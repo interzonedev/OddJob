@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,6 +16,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Concrete implementation of {@link RequestProcessor} for the XML content type.
+ * 
+ * @author <a href="mailto:mark@interzonedev.com">Mark Markarian</a>
+ */
 public class XmlRequestProcessor extends AbstractRequestProcessor {
 
 	public static final String XML_CONTENT_TYPE = "text/xml";
@@ -38,9 +42,17 @@ public class XmlRequestProcessor extends AbstractRequestProcessor {
 		}
 	}
 
+	/**
+	 * Provides the content, content type and status code for the specified {@link HttpServletRequest} in the form of a
+	 * {@link ResponseValues} instance for the XML content type. Echos the incoming method, parameters, headers and
+	 * cookies of the specified {@link HttpServletRequest} to the content.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 */
 	@Override
-	public ResponseValues getResponse(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int statusCode = getStatusForRequest(request);
+	public ResponseValues getResponse(HttpServletRequest request) throws Exception {
+		int statusCode = getStatusCodeForRequest(request);
 
 		Document document = documentBuilder.newDocument();
 		Element rootElement = document.createElement("response");

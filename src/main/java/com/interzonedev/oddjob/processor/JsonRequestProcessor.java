@@ -5,17 +5,29 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Concrete implementation of {@link RequestProcessor} for the JSON content type.
+ * 
+ * @author <a href="mailto:mark@interzonedev.com">Mark Markarian</a>
+ */
 public class JsonRequestProcessor extends AbstractRequestProcessor {
 
 	public static final String JSON_CONTENT_TYPE = "application/json";
 
+	/**
+	 * Provides the content, content type and status code for the specified {@link HttpServletRequest} in the form of a
+	 * {@link ResponseValues} instance for the JSON content type. Echos the incoming method, parameters, headers and
+	 * cookies of the specified {@link HttpServletRequest} to the content.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 */
 	@Override
-	public ResponseValues getResponse(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int statusCode = getStatusForRequest(request);
+	public ResponseValues getResponse(HttpServletRequest request) throws Exception {
+		int statusCode = getStatusCodeForRequest(request);
 
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 

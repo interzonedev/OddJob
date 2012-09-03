@@ -15,21 +15,26 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 
+/**
+ * Abstract superclass for all implementations of {@link RequestProcessor}. Provides utility methods used by all
+ * implementations. Handles the setting of the status code for all implementations.
+ * 
+ * @author <a href="mailto:mark@interzonedev.com">Mark Markarian</a>
+ */
 public abstract class AbstractRequestProcessor implements RequestProcessor {
 
 	protected Logger log = (Logger) LoggerFactory.getLogger(getClass());
 
 	/**
-	 * Gets the status code for the specified request according to the "error"
-	 * parameter if it is present.
+	 * Gets the status code for the specified request according to the "error" parameter if it is present.
 	 * 
 	 * @param request
 	 *            The current {@link HttpServletRequest}
 	 * 
-	 * @return Returns the status code for the specified request according to
-	 *         the "error" parameter if it is present. Defaults to {@link HttpServletResponse#SC_OK}.
+	 * @return Returns the status code for the specified request according to the "error" parameter if it is present.
+	 *         Defaults to {@link HttpServletResponse#SC_OK}.
 	 */
-	protected int getStatusForRequest(HttpServletRequest request) {
+	protected int getStatusCodeForRequest(HttpServletRequest request) {
 		if (isParameterSet(request, "error")) {
 			return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		} else {
@@ -37,6 +42,15 @@ public abstract class AbstractRequestProcessor implements RequestProcessor {
 		}
 	}
 
+	/**
+	 * Transforms the parameters in the specified {@link HttpServletRequest} into a {@link Map} of parameter names to a
+	 * {@link List} of parameter values.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 * 
+	 * @return Returns a {@link Map} of parameter names to a {@link List} of parameter values.
+	 */
 	protected Map<String, List<String>> getParametersMap(HttpServletRequest request) {
 		Map<String, List<String>> parametersMap = new HashMap<String, List<String>>();
 
@@ -51,6 +65,15 @@ public abstract class AbstractRequestProcessor implements RequestProcessor {
 		return parametersMap;
 	}
 
+	/**
+	 * Transforms the headers in the specified {@link HttpServletRequest} into a {@link Map} of header names to a
+	 * {@link List} of header values.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 * 
+	 * @return Returns a {@link Map} of header names to a {@link List} of header values.
+	 */
 	@SuppressWarnings("unchecked")
 	protected Map<String, List<String>> getHeadersMap(HttpServletRequest request) {
 		Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
@@ -69,6 +92,15 @@ public abstract class AbstractRequestProcessor implements RequestProcessor {
 		return headersMap;
 	}
 
+	/**
+	 * Transforms the cookies in the specified {@link HttpServletRequest} into a {@link Map} of cookie names to cookie
+	 * values.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 * 
+	 * @return Returns a {@link Map} of cookie names to cookie values.
+	 */
 	protected Map<String, String> getCookiesMap(HttpServletRequest request) {
 		Map<String, String> cookiesMap = new HashMap<String, String>();
 
@@ -84,6 +116,18 @@ public abstract class AbstractRequestProcessor implements RequestProcessor {
 		return cookiesMap;
 	}
 
+	/**
+	 * Determines whether or not the parameter with the specified name in the specified {@link HttpServletRequest} is
+	 * set and can be parsed to a {@link Boolean#TRUE}.
+	 * 
+	 * @param request
+	 *            The current {@link HttpServletRequest}
+	 * @param parameterName
+	 *            The name of the parameter to check
+	 * 
+	 * @return Returns true if the parameter with the specified name in the specified {@link HttpServletRequest} is set
+	 *         and can be parsed to a {@link Boolean#TRUE}, otherwise returns false.
+	 */
 	private boolean isParameterSet(HttpServletRequest request, String parameterName) {
 		String parameterValue = request.getParameter(parameterName);
 		if ((null != parameterValue) && Boolean.parseBoolean(parameterValue)) {
