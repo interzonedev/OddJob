@@ -182,7 +182,7 @@ $(function() {
 	asyncTest("oj.ajax.doGet function asynchronous JSON content type", function() {
 		var params, synchronousResponse;
 
-		expect(8);
+		expect(12);
 
 		params = $.extend(true, {
 			"type": "json"
@@ -198,6 +198,10 @@ $(function() {
 				ok(response, "oj.ajax.doGet asynchronous JSON content type returns content");
 				strictEqual(typeof(response), "object", "oj.ajax.doGet asynchronous JSON content type returns an object");
 				strictEqual(response.method, "get", "oj.ajax.doGet asynchronous JSON content type returns test Ajax JSON");
+				ok(response.parameters[preventCacheQueryStringParamName], "oj.ajax.doGet asynchronous JSON content type prevents caching");
+				strictEqual(response.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doGet asynchronous JSON content type returns the test query string params");
+				strictEqual(response.parameters.type[0], "json", "oj.ajax.doGet asynchronous JSON content type returns the content type params");
+				strictEqual(response.parameters[ajaxTestServletParamName][0], ajaxTestServletParamValue, "oj.ajax.doGet asynchronous JSON content type returns the test params");
 				ok(xhr, "oj.ajax.doGet asynchronous JSON content type returns the XHR object");
 				strictEqual(typeof(xhr), "object", "oj.ajax.doGet asynchronous JSON content type returns the XHR object");
 				strictEqual(xhr.status, 200, "oj.ajax.doGet asynchronous JSON content type returns the XHR object");
