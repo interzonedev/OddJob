@@ -89,7 +89,7 @@
 			if (!oj.util.isDefined(obj)) {
 				return false;
 			}
-			
+
 			if (!oj.util.isString(obj)) {
 				return null;
 			}
@@ -110,7 +110,7 @@
 			if (!oj.util.isDefined(obj)) {
 				return true;
 			}
-			
+
 			if (!oj.util.isString(obj)) {
 				return null;
 			}

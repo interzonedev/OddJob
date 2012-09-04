@@ -130,7 +130,7 @@
 				instancePropertiesClone[propName] = instanceProperties[propName]; 
 			}
 		}
-		
+
 		// Clone the classProperties argument so the original value does not get altered.
 		for (propName in classProperties) {
 			if (classProperties.hasOwnProperty(propName)) {

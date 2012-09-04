@@ -170,11 +170,11 @@
 				initialErrorMessage, errorMessage, response, isPost, xhr, timeoutRef, requestAborted, timeoutWrapper,
 				preventCacheParam;
 
-			method = args.method;
+			method = args.method || "GET";
 			url = args.url;
-			data = args.data;
-			asynchronous = args.asynchronous;
-			preventCache = args.preventCache;
+			data = args.data || {};
+			asynchronous = ("undefined" === typeof(args.asynchronous)) ? true : !!args.asynchronous;
+			preventCache = ("undefined" === typeof(args.preventCache)) ? true : !!args.preventCache;;
 			successCallback = args.successCallback;
 			errorCallback = args.errorCallback;
 			timeout = args.timeout;
@@ -192,10 +192,6 @@
 			if (!url || !NOT_BLANK_REG_EXP.test(url)) {
 				errorMessage += "  The url argument must be a non-blank string.\n";
 		    }
-
-			// Make sure the arguments intended to be Boolean are cast as such.
-			asynchronous = !!asynchronous;
-			preventCache = !!preventCache;
 
 			// Check the optional arguments.
 			if ((successCallback || !NOT_BLANK_REG_EXP.test(successCallback)) && ("function" !== typeof(successCallback))) {
