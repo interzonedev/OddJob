@@ -1,18 +1,52 @@
 $(function() {
-	var xmlDocumentTypeRegEx, ajaxTestServletUrl, ajaxTestServletParams, getResponseMethodHtmlFrag, getMethodFromXmlResponse;
+	var xmlDocumentTypeRegExp, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue,
+		ajaxTestServletUrl, ajaxTestServletParamName, ajaxTestServletParamValue, ajaxTestServletParams,
+		preventCacheQueryStringParamName, htmlResponseContainsMethod, htmlResponseContainsParameter,
+		htmlResponseContainsParameterAndValue, getMethodFromXmlResponse;
 
 	module("oj.ajax");
 
-	xmlDocumentTypeRegEx = /^\[object (XML)?Document\]$/;
+	xmlDocumentTypeRegExp = /^\[object (XML)?Document\]$/;
 
-	ajaxTestServletUrl = "/oddjob/ajaxTest?queryName1=queryValue1";
+	ajaxTestServletQueryStringParamName = "queryName1";
+	ajaxTestServletQueryStringParamValue = "queryValue1";
+	ajaxTestServletUrl = "/oddjob/ajaxTest?" + ajaxTestServletQueryStringParamName + "=" + ajaxTestServletQueryStringParamValue;
 
-	ajaxTestServletParams = {
-		"paramName1": "paramValue1"
+	ajaxTestServletParamName = "paramName1";
+	ajaxTestServletParamValue = "paramValue1";
+	ajaxTestServletParams = {};
+	ajaxTestServletParams[ajaxTestServletParamName] = ajaxTestServletParamValue;
+
+	preventCacheQueryStringParamName = "ojPreventCache";
+
+	htmlResponseContainsMethod = function(response, method) {
+		var htmlMethodRegExp, result;
+
+		htmlMethodRegExp = new RegExp("<div id=\"method\">" + method + "</div>");
+
+		result = htmlMethodRegExp.test(response);
+
+		return result;
 	};
 
-	getResponseMethodHtmlFrag = function(method) {
-		return "<div id=\"method\">" + method + "</div>";
+	htmlResponseContainsParameter = function(response, parameterName) {
+		var htmlParameterRegExp, result;
+
+		htmlParameterRegExp = new RegExp("<dl id=\"parameters\">.*<dt>" + parameterName + "</dt><dd>.*</dd>(<dt>.*</dt><dd>.*</dd>)*</dl>");
+
+		result = htmlParameterRegExp.test(response);
+
+		return result;
+	};
+
+	htmlResponseContainsParameterAndValue = function(response, parameterName, parameterValue) {
+		var htmlParameterAndValueRegExp, result;
+
+		htmlParameterAndValueRegExp = new RegExp("<dl id=\"parameters\">.*<dt>" + parameterName + "</dt><dd>" + parameterValue + "</dd>(<dt>.*</dt><dd>.*</dd>)*</dl>");
+
+		result = htmlParameterAndValueRegExp.test(response);
+
+		return result;
 	};
 
 	getMethodFromXmlResponse = function(xmlDocument) {
@@ -40,32 +74,32 @@ $(function() {
 	});
 
 	asyncTest("oj.ajax.doRequest function asynchronous default parameters", function() {
-		var responseMethodFrag, synchronousResponse;
+		var synchronousResponse;
 
-		expect(8);
-
-		responseMethodFrag = getResponseMethodHtmlFrag("get");
+		expect(10);
 
 		synchronousResponse = oj.ajax.doRequest({
 			url: ajaxTestServletUrl,
 			successCallback: function(response, status, xhr) {
-				strictEqual(status, 200, "oj.ajax.doGet asynchronous HTML content type returns 200 status");
-				ok(response, "oj.ajax.doGet asynchronous HTML content type returns content");
-				strictEqual(typeof(response), "string", "oj.ajax.doGet asynchronous HTML content type returns a string");
-				ok(response.indexOf(responseMethodFrag) > -1, "j.ajax.doGet asynchronous HTML content type returns the correct method");
-				ok(xhr, "oj.ajax.doGet asynchronous HTML content type returns the XHR object");
-				strictEqual(typeof(xhr), "object", "oj.ajax.doGet asynchronous HTML content type returns the XHR object");
-				strictEqual(xhr.status, 200, "oj.ajax.doGet asynchronous HTML content type returns the XHR object");
+				strictEqual(status, 200, "oj.ajax.doRequest asynchronous default parameters returns 200 status");
+				ok(response, "oj.ajax.doRequest asynchronous default parameters returns content");
+				strictEqual(typeof(response), "string", "oj.ajax.doRequest asynchronous default parameters returns a string");
+				ok(htmlResponseContainsMethod(response, "get"), "oj.ajax.doRequest asynchronous default parameters returns the correct method");
+				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doRequest asynchronous default parameters prevents caching");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doRequest asynchronous default parameters returns the test query string params");
+				ok(xhr, "oj.ajax.doRequest asynchronous default parameters returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doRequest asynchronous default parameters returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doRequest asynchronous default parameters returns the XHR object");
 
 				start();
 			},
 			errorCallback: function(response, status, xhr) {
-				ok(false, "oj.ajax.doGet asynchronous HTML content type should not call the error callback ");
+				ok(false, "oj.ajax.doRequest asynchronous default parameters should not call the error callback ");
 				start();
 			}
 		});
 
-		strictEqual(synchronousResponse, null, "oj.ajax.doGet asynchronous HTML content type returns null");
+		strictEqual(synchronousResponse, null, "oj.ajax.doRequest asynchronous default parameters returns null");
 	});
 
 	// oj.ajax.doGet method tests
@@ -77,11 +111,9 @@ $(function() {
 
 	// oj.ajax.doGet method with HTML content type tests
 	test("oj.ajax.doGet function synchronous HTML content type", function() {
-		var responseMethodFrag, params, response;
+		var params, response;
 
-		expect(8);
-
-		responseMethodFrag = getResponseMethodHtmlFrag("get");
+		expect(12);
 
 		params = $.extend(true, {
 			"type": "html"
@@ -98,18 +130,20 @@ $(function() {
 		strictEqual(typeof(response), "object", "oj.ajax.doGet synchronous HTML content type returns an object");
 		ok(response.content, "oj.ajax.doGet synchronous HTML content type returns content");
 		strictEqual(typeof(response.content), "string", "oj.ajax.doGet synchronous HTML content type returns a string for content");
-		ok(response.content.indexOf(responseMethodFrag) > -1, "oj.ajax.doGet synchronous HTML content type returns the correct method");
+		ok(htmlResponseContainsMethod(response.content, "get"), "oj.ajax.doGet synchronous HTML content type returns the correct method");
+		ok(htmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doGet synchronous HTML content type prevents caching");
+		ok(htmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doGet synchronous HTML content type returns the test query string params");
+		ok(htmlResponseContainsParameterAndValue(response.content, "type", "html"), "oj.ajax.doGet synchronous HTML content type returns the content type params");
+		ok(htmlResponseContainsParameterAndValue(response.content, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doGet synchronous HTML content type returns the test params");
 		ok(response.xhr, "oj.ajax.doGet synchronous HTML content type returns the XHR object");
 		strictEqual(typeof(response.xhr), "object", "oj.ajax.doGet synchronous HTML content type returns the XHR object");
 		strictEqual(response.xhr.status, 200, "oj.ajax.doGet synchronous HTML content type returns the XHR object");
 	});
 
 	asyncTest("oj.ajax.doGet function asynchronous HTML content type", function() {
-		var responseMethodFrag, params, synchronousResponse;
+		var params, synchronousResponse;
 
-		expect(8);
-
-		responseMethodFrag = getResponseMethodHtmlFrag("get");
+		expect(12);
 
 		params = $.extend(true, {
 			"type": "html"
@@ -124,7 +158,11 @@ $(function() {
 				strictEqual(status, 200, "oj.ajax.doGet asynchronous HTML content type returns 200 status");
 				ok(response, "oj.ajax.doGet asynchronous HTML content type returns content");
 				strictEqual(typeof(response), "string", "oj.ajax.doGet asynchronous HTML content type returns a string");
-				ok(response.indexOf(responseMethodFrag) > -1, "j.ajax.doGet asynchronous HTML content type returns the correct method");
+				ok(htmlResponseContainsMethod(response, "get"), "oj.ajax.doGet asynchronous HTML content type returns the correct method");
+				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doGet asynchronous HTML content type prevents caching");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doGet asynchronous HTML content type returns the test query string params");
+				ok(htmlResponseContainsParameterAndValue(response, "type", "html"), "oj.ajax.doGet asynchronous HTML content type returns the content type params");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doGet asynchronous HTML content type returns the test params");
 				ok(xhr, "oj.ajax.doGet asynchronous HTML content type returns the XHR object");
 				strictEqual(typeof(xhr), "object", "oj.ajax.doGet asynchronous HTML content type returns the XHR object");
 				strictEqual(xhr.status, 200, "oj.ajax.doGet asynchronous HTML content type returns the XHR object");
@@ -195,7 +233,7 @@ $(function() {
 
 				strictEqual(status, 200, "oj.ajax.doGet asynchronous XML content type returns 200 status");
 				ok(response, "oj.ajax.doGet asynchronous XML content type returns content");
-				ok(xmlDocumentTypeRegEx.test(Object.prototype.toString.apply(response)), "oj.ajax.doGet asynchronous XML content type returns an XML object");
+				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doGet asynchronous XML content type returns an XML object");
 
 				method = getMethodFromXmlResponse(response);
 				strictEqual(method, "get", "j.ajax.doGet asynchronous XML content type returns the correct method");
@@ -224,11 +262,9 @@ $(function() {
 
 	// oj.ajax.doPost method with HTML content type tests
 	asyncTest("oj.ajax.doPost function asynchronous HTML content type", function() {
-		var responseMethodFrag, params, synchronousResponse;
+		var params, synchronousResponse;
 
-		expect(8);
-
-		responseMethodFrag = getResponseMethodHtmlFrag("post");
+		expect(12);
 
 		params = $.extend(true, {
 			"type": "html"
@@ -243,7 +279,11 @@ $(function() {
 				strictEqual(status, 200, "oj.ajax.doPost asynchronous HTML content type returns 200 status");
 				ok(response, "oj.ajax.doPost asynchronous HTML content type returns content");
 				strictEqual(typeof(response), "string", "oj.ajax.doPost asynchronous HTML content type returns a string");
-				ok(response.indexOf(responseMethodFrag) > -1, "j.ajax.doPost asynchronous HTML content type returns the correct method");
+				ok(htmlResponseContainsMethod(response, "post"), "oj.ajax.doPost asynchronous HTML content type returns the correct method");
+				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doPost asynchronous HTML content type prevents caching");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPost asynchronous HTML content type returns the test query string params");
+				ok(htmlResponseContainsParameterAndValue(response, "type", "html"), "oj.ajax.doPost asynchronous HTML content type returns the content type params");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doPost asynchronous HTML content type returns the test params");
 				ok(xhr, "oj.ajax.doPost asynchronous HTML content type returns the XHR object");
 				strictEqual(typeof(xhr), "object", "oj.ajax.doPost asynchronous HTML content type returns the XHR object");
 				strictEqual(xhr.status, 200, "oj.ajax.doPost asynchronous HTML content type returns the XHR object");
