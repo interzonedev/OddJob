@@ -2,7 +2,7 @@ $(function() {
 	var xmlDocumentTypeRegExp, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue,
 		ajaxTestServletUrl, ajaxTestServletParamName, ajaxTestServletParamValue, ajaxTestServletParams,
 		preventCacheQueryStringParamName, htmlResponseContainsMethod, htmlResponseContainsParameter,
-		htmlResponseContainsParameterAndValue, getMethodFromXmlResponse;
+		htmlResponseContainsParameterAndValue, xmlResponseContainsMethod;
 
 	module("oj.ajax");
 
@@ -49,13 +49,15 @@ $(function() {
 		return result;
 	};
 
-	getMethodFromXmlResponse = function(xmlDocument) {
-		var rootNode, method;
+	xmlResponseContainsMethod = function(xmlDocument, method) {
+		var rootNode, methodAttributeValue, result;
 
 		rootNode = xmlDocument.documentElement;
-		method = rootNode.getAttribute("method");
+		methodAttributeValue = rootNode.getAttribute("method");
 
-		return method;
+		result = (method === methodAttributeValue);
+
+		return result;
 	};
 
 	// oj.ajax object tests
@@ -233,15 +235,10 @@ $(function() {
 			asynchronous: true,
 			preventCache: true,
 			successCallback: function(response, status, xhr) {
-				var method;
-
 				strictEqual(status, 200, "oj.ajax.doGet asynchronous XML content type returns 200 status");
 				ok(response, "oj.ajax.doGet asynchronous XML content type returns content");
 				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doGet asynchronous XML content type returns an XML object");
-
-				method = getMethodFromXmlResponse(response);
-				strictEqual(method, "get", "j.ajax.doGet asynchronous XML content type returns the correct method");
-
+				ok(xmlResponseContainsMethod(response, "get"), "oj.ajax.doGet asynchronous XML content type returns the correct method");
 				ok(xhr, "oj.ajax.doGet asynchronous XML content type returns the XHR object");
 				strictEqual(typeof(xhr), "object", "oj.ajax.doGet asynchronous XML content type returns the XHR object");
 				strictEqual(xhr.status, 200, "oj.ajax.doGet asynchronous XML content type returns the XHR object");
