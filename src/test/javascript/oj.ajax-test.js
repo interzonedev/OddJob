@@ -213,6 +213,36 @@ $(function() {
 	});
 
 	// oj.ajax.doGet method with JSON content type tests
+	test("oj.ajax.doGet function synchronous JSON content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "json"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doGet({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doGet synchronous JSON content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doGet synchronous JSON content type returns an object");
+		ok(response.content, "oj.ajax.doGet synchronous JSON content type returns content");
+		strictEqual(typeof(response.content), "object", "oj.ajax.doGet synchronous JSON content type returns a string for content");
+		strictEqual(response.content.method, "get", "oj.ajax.doGet synchronous JSON content type returns the correct method");
+		ok(response.content.parameters[preventCacheQueryStringParamName], "oj.ajax.doGet synchronous JSON content type prevents caching");
+		strictEqual(response.content.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doGet synchronous JSON content type returns the test query string params");
+		strictEqual(response.content.parameters.type[0], "json", "oj.ajax.doGet synchronous JSON content type returns the content type params");
+		strictEqual(response.content.parameters[ajaxTestServletParamName][0], ajaxTestServletParamValue, "oj.ajax.doGet synchronous JSON content type returns the test params");
+		ok(response.xhr, "oj.ajax.doGet synchronous JSON content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doGet synchronous JSON content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doGet synchronous JSON content type returns the XHR object");
+	});
+
 	asyncTest("oj.ajax.doGet function asynchronous JSON content type", function() {
 		var params, synchronousResponse;
 
@@ -231,7 +261,7 @@ $(function() {
 				strictEqual(status, 200, "oj.ajax.doGet asynchronous JSON content type returns 200 status");
 				ok(response, "oj.ajax.doGet asynchronous JSON content type returns content");
 				strictEqual(typeof(response), "object", "oj.ajax.doGet asynchronous JSON content type returns an object");
-				strictEqual(response.method, "get", "oj.ajax.doGet asynchronous JSON content type returns test Ajax JSON");
+				strictEqual(response.method, "get", "oj.ajax.doGet asynchronous JSON content type returns the correct method");
 				ok(response.parameters[preventCacheQueryStringParamName], "oj.ajax.doGet asynchronous JSON content type prevents caching");
 				strictEqual(response.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doGet asynchronous JSON content type returns the test query string params");
 				strictEqual(response.parameters.type[0], "json", "oj.ajax.doGet asynchronous JSON content type returns the content type params");
@@ -252,10 +282,40 @@ $(function() {
 	});
 
 	// oj.ajax.doGet method with XML content type tests
+	test("oj.ajax.doGet function synchronous XML content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "xml"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doGet({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doGet synchronous XML content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doGet synchronous XML content type returns an object");
+		ok(response.content, "oj.ajax.doGet synchronous XML content type returns content");
+		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doGet synchronous XML content type returns an XML object");
+		ok(xmlResponseContainsMethod(response.content, "get"), "oj.ajax.doGet synchronous XML content type returns the correct method");
+		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doGet synchronous XML content type prevents caching");
+		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doGet synchronous XML content type returns the test query string params");
+		ok(xmlResponseContainsParameterAndValue(response.content, "type", "xml"), "oj.ajax.doGet synchronous XML content type returns the content type params");
+		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doGet synchronous XML content type returns the test params");
+		ok(response.xhr, "oj.ajax.doGet synchronous XML content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doGet synchronous XML content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doGet synchronous XML content type returns the XHR object");
+	});
+
 	asyncTest("oj.ajax.doGet function asynchronous XML content type", function() {
 		var params, synchronousResponse;
 
-		expect(11);
+		expect(12);
 
 		params = $.extend(true, {
 			"type": "xml"
@@ -272,6 +332,7 @@ $(function() {
 				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doGet asynchronous XML content type returns an XML object");
 				ok(xmlResponseContainsMethod(response, "get"), "oj.ajax.doGet asynchronous XML content type returns the correct method");
 				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doGet asynchronous XML content type prevents caching");
+				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doGet asynchronous XML content type returns the test query string params");
 				ok(xmlResponseContainsParameterAndValue(response, "type", "xml"), "oj.ajax.doGet asynchronous XML content type returns the content type params");
 				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doGet asynchronous XML content type returns the test params");
 				ok(xhr, "oj.ajax.doGet asynchronous XML content type returns the XHR object");
