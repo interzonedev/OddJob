@@ -50,12 +50,11 @@ $(function() {
 	};
 
 	xmlResponseContainsMethod = function(xmlDocument, method) {
-		var rootNode, methodAttributeValue, result;
+		var docAsJson, result;
 
-		rootNode = xmlDocument.documentElement;
-		methodAttributeValue = rootNode.getAttribute("method");
+		docAsJson = $.xml2json(xmlDocument);
 
-		result = (method === methodAttributeValue);
+		result = (method === docAsJson.method);
 
 		return result;
 	};
