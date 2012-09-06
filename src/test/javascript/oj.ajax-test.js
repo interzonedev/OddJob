@@ -571,10 +571,424 @@ $(function() {
 		strictEqual(typeof(oj.ajax.doPut), "function", "oj.ajax.doPut is a function");
 	});
 
+	// oj.ajax.doPut method with HTML content type tests
+	test("oj.ajax.doPut function synchronous HTML content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "html"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doPut({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doPut synchronous HTML content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doPut synchronous HTML content type returns an object");
+		ok(response.content, "oj.ajax.doPut synchronous HTML content type returns content");
+		strictEqual(typeof(response.content), "string", "oj.ajax.doPut synchronous HTML content type returns a string for content");
+		ok(htmlResponseContainsMethod(response.content, "put"), "oj.ajax.doPut synchronous HTML content type returns the correct method");
+		ok(htmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doPut synchronous HTML content type prevents caching");
+		ok(htmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPut synchronous HTML content type returns the test query string params");
+		ok(htmlResponseContainsParameterAndValue(response.content, "type", "html"), "oj.ajax.doPut synchronous HTML content type returns the content type params");
+		ok(htmlResponseContainsParameterAndValue(response.content, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doPut synchronous HTML content type returns the test params");
+		ok(response.xhr, "oj.ajax.doPut synchronous HTML content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doPut synchronous HTML content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doPut synchronous HTML content type returns the XHR object");
+	});
+
+	asyncTest("oj.ajax.doPut function asynchronous HTML content type", function() {
+		var params, synchronousResponse;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "html"
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doPut({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doPut asynchronous HTML content type returns 200 status");
+				ok(response, "oj.ajax.doPut asynchronous HTML content type returns content");
+				strictEqual(typeof(response), "string", "oj.ajax.doPut asynchronous HTML content type returns a string");
+				ok(htmlResponseContainsMethod(response, "put"), "oj.ajax.doPut asynchronous HTML content type returns the correct method");
+				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doPut asynchronous HTML content type prevents caching");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPut asynchronous HTML content type returns the test query string params");
+				ok(htmlResponseContainsParameterAndValue(response, "type", "html"), "oj.ajax.doPut asynchronous HTML content type returns the content type params");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doPut asynchronous HTML content type returns the test params");
+				ok(xhr, "oj.ajax.doPut asynchronous HTML content type returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doPut asynchronous HTML content type returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doPut asynchronous HTML content type returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doPut asynchronous HTML content type should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doPut asynchronous HTML content type returns null");
+	});
+
+	// oj.ajax.doPut method with JSON content type tests
+	test("oj.ajax.doPut function synchronous JSON content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "json"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doPut({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doPut synchronous JSON content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doPut synchronous JSON content type returns an object");
+		ok(response.content, "oj.ajax.doPut synchronous JSON content type returns content");
+		strictEqual(typeof(response.content), "object", "oj.ajax.doPut synchronous JSON content type returns a string for content");
+		strictEqual(response.content.method, "put", "oj.ajax.doPut synchronous JSON content type returns the correct method");
+		ok(response.content.parameters[preventCacheQueryStringParamName], "oj.ajax.doPut synchronous JSON content type prevents caching");
+		strictEqual(response.content.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doPut synchronous JSON content type returns the test query string params");
+		strictEqual(response.content.parameters.type[0], "json", "oj.ajax.doPut synchronous JSON content type returns the content type params");
+		strictEqual(response.content.parameters[ajaxTestServletParamName][0], ajaxTestServletParamValue, "oj.ajax.doPut synchronous JSON content type returns the test params");
+		ok(response.xhr, "oj.ajax.doPut synchronous JSON content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doPut synchronous JSON content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doPut synchronous JSON content type returns the XHR object");
+	});
+
+	asyncTest("oj.ajax.doPut function asynchronous JSON content type", function() {
+		var params, synchronousResponse;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "json"
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doPut({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doPut asynchronous JSON content type returns 200 status");
+				ok(response, "oj.ajax.doPut asynchronous JSON content type returns content");
+				strictEqual(typeof(response), "object", "oj.ajax.doPut asynchronous JSON content type returns an object");
+				strictEqual(response.method, "put", "oj.ajax.doPut asynchronous JSON content type returns the correct method");
+				ok(response.parameters[preventCacheQueryStringParamName], "oj.ajax.doPut asynchronous JSON content type prevents caching");
+				strictEqual(response.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doPut asynchronous JSON content type returns the test query string params");
+				strictEqual(response.parameters.type[0], "json", "oj.ajax.doPut asynchronous JSON content type returns the content type params");
+				strictEqual(response.parameters[ajaxTestServletParamName][0], ajaxTestServletParamValue, "oj.ajax.doPut asynchronous JSON content type returns the test params");
+				ok(xhr, "oj.ajax.doPut asynchronous JSON content type returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doPut asynchronous JSON content type returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doPut asynchronous JSON content type returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doPut asynchronous JSON content type should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doPut asynchronous JSON content type returns null");
+	});
+
+	// oj.ajax.doPut method with XML content type tests
+	test("oj.ajax.doPut function synchronous XML content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "xml"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doPut({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doPut synchronous XML content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doPut synchronous XML content type returns an object");
+		ok(response.content, "oj.ajax.doPut synchronous XML content type returns content");
+		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doPut synchronous XML content type returns an XML object");
+		ok(xmlResponseContainsMethod(response.content, "put"), "oj.ajax.doPut synchronous XML content type returns the correct method");
+		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doPut synchronous XML content type prevents caching");
+		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPut synchronous XML content type returns the test query string params");
+		ok(xmlResponseContainsParameterAndValue(response.content, "type", "xml"), "oj.ajax.doPut synchronous XML content type returns the content type params");
+		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doPut synchronous XML content type returns the test params");
+		ok(response.xhr, "oj.ajax.doPut synchronous XML content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doPut synchronous XML content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doPut synchronous XML content type returns the XHR object");
+	});
+
+	asyncTest("oj.ajax.doPut function asynchronous XML content type", function() {
+		var params, synchronousResponse;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "xml"
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doPut({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doPut asynchronous XML content type returns 200 status");
+				ok(response, "oj.ajax.doPut asynchronous XML content type returns content");
+				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doPut asynchronous XML content type returns an XML object");
+				ok(xmlResponseContainsMethod(response, "put"), "oj.ajax.doPut asynchronous XML content type returns the correct method");
+				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doPut asynchronous XML content type prevents caching");
+				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPut asynchronous XML content type returns the test query string params");
+				ok(xmlResponseContainsParameterAndValue(response, "type", "xml"), "oj.ajax.doPut asynchronous XML content type returns the content type params");
+				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doPut asynchronous XML content type returns the test params");
+				ok(xhr, "oj.ajax.doPut asynchronous XML content type returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doPut asynchronous XML content type returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doPut asynchronous XML content type returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doPut asynchronous XML content type should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doPut asynchronous XML content type returns null");
+	});
+
 	// oj.ajax.doDelete method tests
 	test("oj.ajax.doDelete function defined", function() {
 		expect(1);
 
 		strictEqual(typeof(oj.ajax.doDelete), "function", "oj.ajax.doDelete is a function");
+	});
+
+	// oj.ajax.doDelete method with HTML content type tests
+	test("oj.ajax.doDelete function synchronous HTML content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "html"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doDelete({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doDelete synchronous HTML content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doDelete synchronous HTML content type returns an object");
+		ok(response.content, "oj.ajax.doDelete synchronous HTML content type returns content");
+		strictEqual(typeof(response.content), "string", "oj.ajax.doDelete synchronous HTML content type returns a string for content");
+		ok(htmlResponseContainsMethod(response.content, "delete"), "oj.ajax.doDelete synchronous HTML content type returns the correct method");
+		ok(htmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doDelete synchronous HTML content type prevents caching");
+		ok(htmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doDelete synchronous HTML content type returns the test query string params");
+		ok(htmlResponseContainsParameterAndValue(response.content, "type", "html"), "oj.ajax.doDelete synchronous HTML content type returns the content type params");
+		ok(htmlResponseContainsParameterAndValue(response.content, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doDelete synchronous HTML content type returns the test params");
+		ok(response.xhr, "oj.ajax.doDelete synchronous HTML content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doDelete synchronous HTML content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doDelete synchronous HTML content type returns the XHR object");
+	});
+
+	asyncTest("oj.ajax.doDelete function asynchronous HTML content type", function() {
+		var params, synchronousResponse;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "html"
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doDelete({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doDelete asynchronous HTML content type returns 200 status");
+				ok(response, "oj.ajax.doDelete asynchronous HTML content type returns content");
+				strictEqual(typeof(response), "string", "oj.ajax.doDelete asynchronous HTML content type returns a string");
+				ok(htmlResponseContainsMethod(response, "delete"), "oj.ajax.doDelete asynchronous HTML content type returns the correct method");
+				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doDelete asynchronous HTML content type prevents caching");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doDelete asynchronous HTML content type returns the test query string params");
+				ok(htmlResponseContainsParameterAndValue(response, "type", "html"), "oj.ajax.doDelete asynchronous HTML content type returns the content type params");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doDelete asynchronous HTML content type returns the test params");
+				ok(xhr, "oj.ajax.doDelete asynchronous HTML content type returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doDelete asynchronous HTML content type returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doDelete asynchronous HTML content type returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doDelete asynchronous HTML content type should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doDelete asynchronous HTML content type returns null");
+	});
+
+	// oj.ajax.doDelete method with JSON content type tests
+	test("oj.ajax.doDelete function synchronous JSON content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "json"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doDelete({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doDelete synchronous JSON content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doDelete synchronous JSON content type returns an object");
+		ok(response.content, "oj.ajax.doDelete synchronous JSON content type returns content");
+		strictEqual(typeof(response.content), "object", "oj.ajax.doDelete synchronous JSON content type returns a string for content");
+		strictEqual(response.content.method, "delete", "oj.ajax.doDelete synchronous JSON content type returns the correct method");
+		ok(response.content.parameters[preventCacheQueryStringParamName], "oj.ajax.doDelete synchronous JSON content type prevents caching");
+		strictEqual(response.content.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doDelete synchronous JSON content type returns the test query string params");
+		strictEqual(response.content.parameters.type[0], "json", "oj.ajax.doDelete synchronous JSON content type returns the content type params");
+		strictEqual(response.content.parameters[ajaxTestServletParamName][0], ajaxTestServletParamValue, "oj.ajax.doDelete synchronous JSON content type returns the test params");
+		ok(response.xhr, "oj.ajax.doDelete synchronous JSON content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doDelete synchronous JSON content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doDelete synchronous JSON content type returns the XHR object");
+	});
+
+	asyncTest("oj.ajax.doDelete function asynchronous JSON content type", function() {
+		var params, synchronousResponse;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "json"
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doDelete({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doDelete asynchronous JSON content type returns 200 status");
+				ok(response, "oj.ajax.doDelete asynchronous JSON content type returns content");
+				strictEqual(typeof(response), "object", "oj.ajax.doDelete asynchronous JSON content type returns an object");
+				strictEqual(response.method, "delete", "oj.ajax.doDelete asynchronous JSON content type returns the correct method");
+				ok(response.parameters[preventCacheQueryStringParamName], "oj.ajax.doDelete asynchronous JSON content type prevents caching");
+				strictEqual(response.parameters[ajaxTestServletQueryStringParamName][0], ajaxTestServletQueryStringParamValue, "oj.ajax.doDelete asynchronous JSON content type returns the test query string params");
+				strictEqual(response.parameters.type[0], "json", "oj.ajax.doDelete asynchronous JSON content type returns the content type params");
+				strictEqual(response.parameters[ajaxTestServletParamName][0], ajaxTestServletParamValue, "oj.ajax.doDelete asynchronous JSON content type returns the test params");
+				ok(xhr, "oj.ajax.doDelete asynchronous JSON content type returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doDelete asynchronous JSON content type returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doDelete asynchronous JSON content type returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doDelete asynchronous JSON content type should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doDelete asynchronous JSON content type returns null");
+	});
+
+	// oj.ajax.doDelete method with XML content type tests
+	test("oj.ajax.doDelete function synchronous XML content type", function() {
+		var params, response;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "xml"
+		}, ajaxTestServletParams);
+
+		response = oj.ajax.doDelete({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: false,
+			preventCache: true
+		});
+
+		strictEqual(response.status, 200, "oj.ajax.doDelete synchronous XML content type returns 200 status");
+		strictEqual(typeof(response), "object", "oj.ajax.doDelete synchronous XML content type returns an object");
+		ok(response.content, "oj.ajax.doDelete synchronous XML content type returns content");
+		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doDelete synchronous XML content type returns an XML object");
+		ok(xmlResponseContainsMethod(response.content, "delete"), "oj.ajax.doDelete synchronous XML content type returns the correct method");
+		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doDelete synchronous XML content type prevents caching");
+		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doDelete synchronous XML content type returns the test query string params");
+		ok(xmlResponseContainsParameterAndValue(response.content, "type", "xml"), "oj.ajax.doDelete synchronous XML content type returns the content type params");
+		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doDelete synchronous XML content type returns the test params");
+		ok(response.xhr, "oj.ajax.doDelete synchronous XML content type returns the XHR object");
+		strictEqual(typeof(response.xhr), "object", "oj.ajax.doDelete synchronous XML content type returns the XHR object");
+		strictEqual(response.xhr.status, 200, "oj.ajax.doDelete synchronous XML content type returns the XHR object");
+	});
+
+	asyncTest("oj.ajax.doDelete function asynchronous XML content type", function() {
+		var params, synchronousResponse;
+
+		expect(12);
+
+		params = $.extend(true, {
+			"type": "xml"
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doDelete({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			successCallback: function(response, status, xhr) {
+				strictEqual(status, 200, "oj.ajax.doDelete asynchronous XML content type returns 200 status");
+				ok(response, "oj.ajax.doDelete asynchronous XML content type returns content");
+				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doDelete asynchronous XML content type returns an XML object");
+				ok(xmlResponseContainsMethod(response, "delete"), "oj.ajax.doDelete asynchronous XML content type returns the correct method");
+				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doDelete asynchronous XML content type prevents caching");
+				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doDelete asynchronous XML content type returns the test query string params");
+				ok(xmlResponseContainsParameterAndValue(response, "type", "xml"), "oj.ajax.doDelete asynchronous XML content type returns the content type params");
+				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletParamName, ajaxTestServletParamValue), "oj.ajax.doDelete asynchronous XML content type returns the test params");
+				ok(xhr, "oj.ajax.doDelete asynchronous XML content type returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doDelete asynchronous XML content type returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doDelete asynchronous XML content type returns the XHR object");
+
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doDelete asynchronous XML content type should not call the error callback ");
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doDelete asynchronous XML content type returns null");
 	});
 });
