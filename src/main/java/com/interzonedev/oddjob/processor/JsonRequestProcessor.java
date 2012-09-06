@@ -27,6 +27,9 @@ public class JsonRequestProcessor extends AbstractRequestProcessor {
 	 */
 	@Override
 	public ResponseValues getResponse(HttpServletRequest request) throws Exception {
+
+		log.debug("getResponse: Creating JSON response");
+
 		int statusCode = getStatusCodeForRequest(request);
 
 		Map<String, Object> contentMap = new HashMap<String, Object>();

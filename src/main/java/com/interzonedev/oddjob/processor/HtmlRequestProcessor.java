@@ -24,6 +24,9 @@ public class HtmlRequestProcessor extends AbstractRequestProcessor {
 	 */
 	@Override
 	public ResponseValues getResponse(HttpServletRequest request) throws Exception {
+
+		log.debug("getResponse: Creating HTML response");
+
 		int statusCode = getStatusCodeForRequest(request);
 
 		StringBuilder content = new StringBuilder("<div>");

@@ -52,6 +52,9 @@ public class XmlRequestProcessor extends AbstractRequestProcessor {
 	 */
 	@Override
 	public ResponseValues getResponse(HttpServletRequest request) throws Exception {
+
+		log.debug("getResponse: Creating XML response");
+
 		int statusCode = getStatusCodeForRequest(request);
 
 		Document document = documentBuilder.newDocument();
