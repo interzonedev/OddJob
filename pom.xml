@@ -67,7 +67,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -102,6 +102,19 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-antrun-plugin</artifactId>
+										<versionRange>[1.7,)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -110,6 +123,7 @@
 		</pluginManagement>
 
 		<plugins>
+			<!-- Compile with source and build at Java 1.6. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -215,7 +229,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Test servlet build without dependencies to be run with the repo in 
+			<!-- Test servlet build without dependencies to be run with the repo in
 				the classpath -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -239,6 +253,36 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Copy source and test JavaScript resources to the server deployment directory -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Copying source and test JavaScript resources to ${webserver.deploy.dir}</echo>
+								<copy todir="${webserver.deploy.dir}" file="${basedir}/index.html" overwrite="false" verbose="true" />
+								<copy todir="${webserver.deploy.dir}/${js.source.directory}" overwrite="false" verbose="true">
+									<fileset dir="${basedir}/${js.source.directory}" casesensitive="yes" />
+								</copy>
+								<copy todir="${webserver.deploy.dir}/src/test" overwrite="false" verbose="true">
+									<fileset dir="${basedir}/src/test" casesensitive="yes" />
+								</copy>
+								<copy todir="${webserver.deploy.dir}/target/${project.build.finalName}" file="${basedir}/target/${project.build.finalName}/${js.compress.output.filename}"
+									overwrite="false" verbose="true" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
