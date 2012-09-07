@@ -112,7 +112,17 @@ $(function() {
 		strictEqual(typeof(oj.ajax.doRequest), "function", "oj.ajax.doRequest is a function");
 	});
 
-	asyncTest("oj.ajax.doRequest function asynchronous default parameters", function() {
+	test("oj.ajax.doRequest called with non defined values", function() {
+		expect(QUnit.oj.nonDefinedValues.length);
+
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			raises(function() {
+				oj.ajax.doRequest(nonDefinedValue);
+			}, Error, "oj.ajax.doRequest called with " + nonDefinedValue + " should throw an Error");
+		});
+	});
+
+	asyncTest("oj.ajax.doRequest function default parameters", function() {
 		var synchronousResponse;
 
 		expect(10);
@@ -120,25 +130,25 @@ $(function() {
 		synchronousResponse = oj.ajax.doRequest({
 			url: ajaxTestServletUrl,
 			successCallback: function(response, status, xhr) {
-				strictEqual(status, 200, "oj.ajax.doRequest asynchronous default parameters returns 200 status");
-				ok(response, "oj.ajax.doRequest asynchronous default parameters returns content");
-				strictEqual(typeof(response), "string", "oj.ajax.doRequest asynchronous default parameters returns a string");
-				ok(htmlResponseContainsMethod(response, "get"), "oj.ajax.doRequest asynchronous default parameters returns the correct method");
-				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doRequest asynchronous default parameters prevents caching");
-				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doRequest asynchronous default parameters returns the test query string params");
-				ok(xhr, "oj.ajax.doRequest asynchronous default parameters returns the XHR object");
-				strictEqual(typeof(xhr), "object", "oj.ajax.doRequest asynchronous default parameters returns the XHR object");
-				strictEqual(xhr.status, 200, "oj.ajax.doRequest asynchronous default parameters returns the XHR object");
+				strictEqual(status, 200, "oj.ajax.doRequest default parameters returns 200 status");
+				ok(response, "oj.ajax.doRequest default parameters returns content");
+				strictEqual(typeof(response), "string", "oj.ajax.doRequest default parameters returns a string");
+				ok(htmlResponseContainsMethod(response, "get"), "oj.ajax.doRequest default parameters returns the correct method");
+				ok(htmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doRequest default parameters prevents caching");
+				ok(htmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doRequest default parameters returns the test query string params");
+				ok(xhr, "oj.ajax.doRequest default parameters returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doRequest default parameters returns the XHR object");
+				strictEqual(xhr.status, 200, "oj.ajax.doRequest default parameters returns the XHR object");
 
 				start();
 			},
 			errorCallback: function(response, status, xhr) {
-				ok(false, "oj.ajax.doRequest asynchronous default parameters should not call the error callback ");
+				ok(false, "oj.ajax.doRequest default parameters should not call the error callback ");
 				start();
 			}
 		});
 
-		strictEqual(synchronousResponse, null, "oj.ajax.doRequest asynchronous default parameters returns null");
+		strictEqual(synchronousResponse, null, "oj.ajax.doRequest default parameters returns null");
 	});
 
 	// oj.ajax.doGet method tests

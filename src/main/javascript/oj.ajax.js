@@ -170,6 +170,16 @@
 				initialErrorMessage, errorMessage, response, isPost, xhr, timeoutRef, requestAborted, timeoutWrapper,
 				preventCacheParam;
 
+			// Initialize error message.
+			initialErrorMessage = "oj.ajax.doRequest():\n";
+			errorMessage = initialErrorMessage;
+
+			// If the arguments are not set throw an exception since nothing else can be done.
+			if (!args) {
+				errorMessage += "  The method argument must be a non-blank string.";
+				throw(new Error(errorMessage));
+			}
+
 			method = args.method || "GET";
 			url = args.url;
 			data = args.data || null;
@@ -179,10 +189,6 @@
 			errorCallback = args.errorCallback;
 			timeout = args.timeout;
 			timeoutCallback = args.timeoutCallback;
-
-			// Initialize error message.
-			initialErrorMessage = "oj.ajax.doRequest():\n";
-			errorMessage = initialErrorMessage;
 
 			// Check required arguments.
 			if (!method || !NOT_BLANK_REG_EXP.test(method)) {
@@ -214,69 +220,67 @@
 				errorMessage += "  Can't abort a synchronous request.\n";
 			}
 
-			// If the arguments are valid make the request.
-			if (errorMessage === initialErrorMessage) {
-				response = null;
-
-				isPost = POST_REG_EXP.test(method);
-
-				xhr = getXhr();
-
-				// Set a timeout interval to abort the request if the timeout period
-				// has been set.
-				timeoutRef = null;
-				requestAborted = false;
-				if (!isNaN(parseFloat(timeout)) && (timeout > 0)) {
-					/** @ignore */
-					timeoutWrapper = function() {
-						xhr.onreadystatechange = function() {};
-						xhr.abort();
-						requestAborted = true;
-						if (timeoutCallback) {
-							timeoutCallback.call(null, xhr);
-						}
-					};
-					timeoutRef = setTimeout(timeoutWrapper, timeout);
-				}
-
-				if (asynchronous) {
-					// Set the handler for readystatechange events to the
-					// _handleResponse method and pass in the success and error callback
-					// methods.
-					xhr.onreadystatechange = function() {
-						handleResponse(xhr, successCallback, errorCallback, timeoutRef);
-					};
-				}
-
-				// Add a unique value to the url of the request if it is specified to
-				// prevent caching.
-				if (preventCache) {
-					preventCacheParam = PREVENT_CACHE_PARAM_NAME + "=" + oj.util.getUniqueId();
-					url = setQueryStringOnUrl(url, preventCacheParam);
-				}
-
-				// Perform the request.
-				xhr.open(method, url, asynchronous);
-				if (isPost) {
-					// Set the application/x-www-form-urlencoded request header for a
-					// POST.
-					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				}
-				xhr.send(data);
-
-				if (!asynchronous && !requestAborted) {
-					// For a synchronous request get the response directly from the handleResponse method.  The success
-					// or error callbacks may still be called in they are defined.
-					response = handleResponse(xhr, successCallback, errorCallback, timeoutRef);
-				}
-
-				return response;
-			}
-
-			// Throw an exception if there were any errors.
+			// Throw an exception if any of the arguments are invalid.
 			if (errorMessage !== initialErrorMessage) {
 				throw(new Error(errorMessage));
 			}
+
+			// The arguments are valid.  Make the request.
+			response = null;
+
+			isPost = POST_REG_EXP.test(method);
+
+			xhr = getXhr();
+
+			// Set a timeout interval to abort the request if the timeout period
+			// has been set.
+			timeoutRef = null;
+			requestAborted = false;
+			if (!isNaN(parseFloat(timeout)) && (timeout > 0)) {
+				/** @ignore */
+				timeoutWrapper = function() {
+					xhr.onreadystatechange = function() {};
+					xhr.abort();
+					requestAborted = true;
+					if (timeoutCallback) {
+						timeoutCallback.call(null, xhr);
+					}
+				};
+				timeoutRef = setTimeout(timeoutWrapper, timeout);
+			}
+
+			if (asynchronous) {
+				// Set the handler for readystatechange events to the
+				// _handleResponse method and pass in the success and error callback
+				// methods.
+				xhr.onreadystatechange = function() {
+					handleResponse(xhr, successCallback, errorCallback, timeoutRef);
+				};
+			}
+
+			// Add a unique value to the url of the request if it is specified to
+			// prevent caching.
+			if (preventCache) {
+				preventCacheParam = PREVENT_CACHE_PARAM_NAME + "=" + oj.util.getUniqueId();
+				url = setQueryStringOnUrl(url, preventCacheParam);
+			}
+
+			// Perform the request.
+			xhr.open(method, url, asynchronous);
+			if (isPost) {
+				// Set the application/x-www-form-urlencoded request header for a
+				// POST.
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			}
+			xhr.send(data);
+
+			if (!asynchronous && !requestAborted) {
+				// For a synchronous request get the response directly from the handleResponse method.  The success
+				// or error callbacks may still be called in they are defined.
+				response = handleResponse(xhr, successCallback, errorCallback, timeoutRef);
+			}
+
+			return response;
 		},
 
 		doGet: function(args) {
