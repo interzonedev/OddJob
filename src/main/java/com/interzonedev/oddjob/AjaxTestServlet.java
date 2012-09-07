@@ -79,11 +79,11 @@ public class AjaxTestServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.debug("doGet: Start");
+		log.debug("***** doGet: Start *****");
 
 		processResponseForRequest(request, response);
 
-		log.debug("doGet: End");
+		log.debug("***** doGet: End *****");
 	}
 
 	/**
@@ -100,11 +100,11 @@ public class AjaxTestServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		log.debug("doPost: Start");
+		log.debug("***** doPost: Start *****");
 
 		processResponseForRequest(request, response);
 
-		log.debug("doPost: End");
+		log.debug("***** doPost: End *****");
 	}
 
 	/**
@@ -120,11 +120,11 @@ public class AjaxTestServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.debug("doPut: Start");
+		log.debug("***** doPut: Start *****");
 
 		processResponseForRequest(request, response);
 
-		log.debug("doPut: End");
+		log.debug("***** doPut: End *****");
 	}
 
 	/**
@@ -141,11 +141,11 @@ public class AjaxTestServlet extends HttpServlet {
 	@Override
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		log.debug("doDelete: Start");
+		log.debug("***** doDelete: Start *****");
 
 		processResponseForRequest(request, response);
 
-		log.debug("doDelete: End");
+		log.debug("***** doDelete: End *****");
 	}
 
 	/**
@@ -187,19 +187,24 @@ public class AjaxTestServlet extends HttpServlet {
 	}
 
 	private String getRequestParametersLogMessage(HttpServletRequest request) {
-		StringBuilder logMessage = new StringBuilder("Received request params:");
-		logMessage.append(newline);
+		StringBuilder logMessage = new StringBuilder();
 
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = request.getParameterMap();
-		for (String paramName : parameterMap.keySet()) {
-			logMessage.append("  \"").append(paramName).append("\" = [");
-			String[] parameterValues = parameterMap.get(paramName);
-			for (String parameterValue : parameterValues) {
-				logMessage.append("\"").append(parameterValue).append("\",");
+		if (!parameterMap.isEmpty()) {
+			logMessage.append("Received request params:").append(newline);
+			for (String paramName : parameterMap.keySet()) {
+				logMessage.append("  \"").append(paramName).append("\" = [");
+				String[] parameterValues = parameterMap.get(paramName);
+				for (String parameterValue : parameterValues) {
+					logMessage.append("\"").append(parameterValue).append("\",");
+				}
+				logMessage.deleteCharAt(logMessage.length() - 1);
+				logMessage.append("]").append(newline);
 			}
-			logMessage.deleteCharAt(logMessage.length() - 1);
-			logMessage.append("]").append(newline);
+			logMessage.deleteCharAt(logMessage.length() - newline.length());
+		} else {
+			logMessage.append("No request parameters received");
 		}
 
 		return logMessage.toString();
