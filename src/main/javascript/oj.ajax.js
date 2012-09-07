@@ -172,7 +172,7 @@
 
 			method = args.method || "GET";
 			url = args.url;
-			data = args.data || {};
+			data = args.data || null;
 			asynchronous = ("undefined" === typeof(args.asynchronous)) ? true : !!args.asynchronous;
 			preventCache = ("undefined" === typeof(args.preventCache)) ? true : !!args.preventCache;;
 			successCallback = args.successCallback;

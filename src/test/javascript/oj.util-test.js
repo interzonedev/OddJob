@@ -29,7 +29,7 @@
 		});
 
 		cleanContext = function() {
-			delete context.property1;
+			context.property1 = null;
 		};
 
 		// oj.util object tests
