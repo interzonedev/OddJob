@@ -1,6 +1,7 @@
 package com.interzonedev.oddjob;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,6 +61,8 @@ public class AjaxTestServlet extends HttpServlet {
 	private static final int DEFAULT_PORT = 5001;
 	private static final String DEFAULT_CONTEXT_PATH = "/oddjob";
 	private static final String DEFAULT_SERVLET_MAPPING = "/ajaxTest";
+
+	public static final String newline = System.getProperty("line.separator", "\n");
 
 	private Logger log = (Logger) LoggerFactory.getLogger(getClass());
 
@@ -161,6 +164,10 @@ public class AjaxTestServlet extends HttpServlet {
 	private void processResponseForRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			log.debug("processResponseForRequest: " + getRequestParametersLogMessage(request));
+
+			delayResponse(request.getParameter("delay"));
+
 			RequestProcessor requestProcessor = RequestProcessorFactory.getRequestProcessor(request);
 
 			ResponseValues responseValues = requestProcessor.getResponse(request);
@@ -176,6 +183,35 @@ public class AjaxTestServlet extends HttpServlet {
 			String errorMessage = "Error processing request";
 			log.error("processResponseForRequest: " + errorMessage, e);
 			throw new ServletException(errorMessage, e);
+		}
+	}
+
+	private String getRequestParametersLogMessage(HttpServletRequest request) {
+		StringBuilder logMessage = new StringBuilder("Received request params:");
+		logMessage.append(newline);
+
+		@SuppressWarnings("unchecked")
+		Map<String, String[]> parameterMap = request.getParameterMap();
+		for (String paramName : parameterMap.keySet()) {
+			logMessage.append("  \"").append(paramName).append("\" = [");
+			String[] parameterValues = parameterMap.get(paramName);
+			for (String parameterValue : parameterValues) {
+				logMessage.append("\"").append(parameterValue).append("\",");
+			}
+			logMessage.deleteCharAt(logMessage.length() - 1);
+			logMessage.append("]").append(newline);
+		}
+
+		return logMessage.toString();
+	}
+
+	private void delayResponse(String delayParam) {
+		try {
+			int sleepMillis = Integer.parseInt(delayParam);
+			log.debug("delayResponse: Delaying response for " + sleepMillis + " milliseconds");
+			Thread.sleep(sleepMillis);
+		} catch (NumberFormatException nfe) {
+		} catch (InterruptedException e) {
 		}
 	}
 
