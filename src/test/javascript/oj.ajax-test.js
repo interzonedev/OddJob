@@ -1,13 +1,10 @@
 $(function() {
-	var xmlDocumentTypeRegExp, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue,
-		ajaxTestServletUrl, ajaxTestServletParamName, ajaxTestServletParamValue, ajaxTestServletParams,
-		preventCacheQueryStringParamName, htmlResponseContainsMethod, htmlResponseContainsParameter,
-		htmlResponseContainsParameterAndValue, xmlResponseContainsMethod, xmlResponseContainsParameter,
-		xmlResponseContainsParameterAndValue;
+	var ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue, ajaxTestServletUrl,
+		ajaxTestServletParamName, ajaxTestServletParamValue, ajaxTestServletParams, preventCacheQueryStringParamName,
+		htmlResponseContainsMethod, htmlResponseContainsParameter, htmlResponseContainsParameterAndValue, isXmlDocument,
+		xmlResponseContainsMethod, xmlResponseContainsParameter, xmlResponseContainsParameterAndValue;
 
 	module("oj.ajax");
-
-	xmlDocumentTypeRegExp = /^\[object (XML)?Document\]$/;
 
 	ajaxTestServletQueryStringParamName = "queryName1";
 	ajaxTestServletQueryStringParamValue = "queryValue1";
@@ -48,6 +45,14 @@ $(function() {
 		result = htmlParameterAndValueRegExp.test(response);
 
 		return result;
+	};
+
+	isXmlDocument = function(xmlDocument) {
+		if (!$.browser.msie) {
+			return /^\[object (XML)?Document\]$/.test(Object.prototype.toString.apply(xmlDocument));
+		} else {
+			return ("#document" === xmlDocument.nodeName);
+		}
 	};
 
 	xmlResponseContainsMethod = function(xmlDocument, method) {
@@ -301,7 +306,7 @@ $(function() {
 		strictEqual(response.status, 200, "oj.ajax.doGet synchronous XML content type returns 200 status");
 		strictEqual(typeof(response), "object", "oj.ajax.doGet synchronous XML content type returns an object");
 		ok(response.content, "oj.ajax.doGet synchronous XML content type returns content");
-		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doGet synchronous XML content type returns an XML object");
+		ok(isXmlDocument(response.content), "oj.ajax.doGet synchronous XML content type returns an XML object");
 		ok(xmlResponseContainsMethod(response.content, "get"), "oj.ajax.doGet synchronous XML content type returns the correct method");
 		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doGet synchronous XML content type prevents caching");
 		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doGet synchronous XML content type returns the test query string params");
@@ -329,7 +334,7 @@ $(function() {
 			successCallback: function(response, status, xhr) {
 				strictEqual(status, 200, "oj.ajax.doGet asynchronous XML content type returns 200 status");
 				ok(response, "oj.ajax.doGet asynchronous XML content type returns content");
-				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doGet asynchronous XML content type returns an XML object");
+				ok(isXmlDocument(response), "oj.ajax.doGet asynchronous XML content type returns an XML object");
 				ok(xmlResponseContainsMethod(response, "get"), "oj.ajax.doGet asynchronous XML content type returns the correct method");
 				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doGet asynchronous XML content type prevents caching");
 				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doGet asynchronous XML content type returns the test query string params");
@@ -515,7 +520,7 @@ $(function() {
 		strictEqual(response.status, 200, "oj.ajax.doPost synchronous XML content type returns 200 status");
 		strictEqual(typeof(response), "object", "oj.ajax.doPost synchronous XML content type returns an object");
 		ok(response.content, "oj.ajax.doPost synchronous XML content type returns content");
-		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doPost synchronous XML content type returns an XML object");
+		ok(isXmlDocument(response.content), "oj.ajax.doPost synchronous XML content type returns an XML object");
 		ok(xmlResponseContainsMethod(response.content, "post"), "oj.ajax.doPost synchronous XML content type returns the correct method");
 		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doPost synchronous XML content type prevents caching");
 		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPost synchronous XML content type returns the test query string params");
@@ -543,7 +548,7 @@ $(function() {
 			successCallback: function(response, status, xhr) {
 				strictEqual(status, 200, "oj.ajax.doPost asynchronous XML content type returns 200 status");
 				ok(response, "oj.ajax.doPost asynchronous XML content type returns content");
-				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doPost asynchronous XML content type returns an XML object");
+				ok(isXmlDocument(response), "oj.ajax.doPost asynchronous XML content type returns an XML object");
 				ok(xmlResponseContainsMethod(response, "post"), "oj.ajax.doPost asynchronous XML content type returns the correct method");
 				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doPost asynchronous XML content type prevents caching");
 				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPost asynchronous XML content type returns the test query string params");
@@ -729,7 +734,7 @@ $(function() {
 		strictEqual(response.status, 200, "oj.ajax.doPut synchronous XML content type returns 200 status");
 		strictEqual(typeof(response), "object", "oj.ajax.doPut synchronous XML content type returns an object");
 		ok(response.content, "oj.ajax.doPut synchronous XML content type returns content");
-		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doPut synchronous XML content type returns an XML object");
+		ok(isXmlDocument(response.content), "oj.ajax.doPut synchronous XML content type returns an XML object");
 		ok(xmlResponseContainsMethod(response.content, "put"), "oj.ajax.doPut synchronous XML content type returns the correct method");
 		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doPut synchronous XML content type prevents caching");
 		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPut synchronous XML content type returns the test query string params");
@@ -757,7 +762,7 @@ $(function() {
 			successCallback: function(response, status, xhr) {
 				strictEqual(status, 200, "oj.ajax.doPut asynchronous XML content type returns 200 status");
 				ok(response, "oj.ajax.doPut asynchronous XML content type returns content");
-				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doPut asynchronous XML content type returns an XML object");
+				ok(isXmlDocument(response), "oj.ajax.doPut asynchronous XML content type returns an XML object");
 				ok(xmlResponseContainsMethod(response, "put"), "oj.ajax.doPut asynchronous XML content type returns the correct method");
 				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doPut asynchronous XML content type prevents caching");
 				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doPut asynchronous XML content type returns the test query string params");
@@ -943,7 +948,7 @@ $(function() {
 		strictEqual(response.status, 200, "oj.ajax.doDelete synchronous XML content type returns 200 status");
 		strictEqual(typeof(response), "object", "oj.ajax.doDelete synchronous XML content type returns an object");
 		ok(response.content, "oj.ajax.doDelete synchronous XML content type returns content");
-		ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response.content)), "oj.ajax.doDelete synchronous XML content type returns an XML object");
+		ok(isXmlDocument(response.content), "oj.ajax.doDelete synchronous XML content type returns an XML object");
 		ok(xmlResponseContainsMethod(response.content, "delete"), "oj.ajax.doDelete synchronous XML content type returns the correct method");
 		ok(xmlResponseContainsParameter(response.content, preventCacheQueryStringParamName), "oj.ajax.doDelete synchronous XML content type prevents caching");
 		ok(xmlResponseContainsParameterAndValue(response.content, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doDelete synchronous XML content type returns the test query string params");
@@ -971,7 +976,7 @@ $(function() {
 			successCallback: function(response, status, xhr) {
 				strictEqual(status, 200, "oj.ajax.doDelete asynchronous XML content type returns 200 status");
 				ok(response, "oj.ajax.doDelete asynchronous XML content type returns content");
-				ok(xmlDocumentTypeRegExp.test(Object.prototype.toString.apply(response)), "oj.ajax.doDelete asynchronous XML content type returns an XML object");
+				ok(isXmlDocument(response), "oj.ajax.doDelete asynchronous XML content type returns an XML object");
 				ok(xmlResponseContainsMethod(response, "delete"), "oj.ajax.doDelete asynchronous XML content type returns the correct method");
 				ok(xmlResponseContainsParameter(response, preventCacheQueryStringParamName), "oj.ajax.doDelete asynchronous XML content type prevents caching");
 				ok(xmlResponseContainsParameterAndValue(response, ajaxTestServletQueryStringParamName, ajaxTestServletQueryStringParamValue), "oj.ajax.doDelete asynchronous XML content type returns the test query string params");
