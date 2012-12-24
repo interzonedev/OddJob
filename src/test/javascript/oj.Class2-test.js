@@ -19,7 +19,7 @@ $(function() {
 				instanceProperty1: "instanceValue1",
 
 				construct: function(params) {
-					//this._super(params);
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -29,7 +29,7 @@ $(function() {
 				},
 
 				init: function() {
-					//this._super();
+					this._super();
 
 					this.initializedCount += 1;
 				},
@@ -61,7 +61,7 @@ $(function() {
 				instanceProperty1: "instanceValue1",
 
 				construct: function(params) {
-					//this._super(params);
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -71,7 +71,7 @@ $(function() {
 				},
 
 				init: function() {
-					//this._super();
+					this._super();
 
 					this.initializedCount += 1;
 				},
@@ -101,7 +101,7 @@ $(function() {
 				instanceProperty2: "instanceValue2",
 
 				construct: function(params) {
-					//this._super(params);
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -112,13 +112,13 @@ $(function() {
 				},
 
 				init: function() {
-					//this._super();
+					this._super();
 
 					this.initializedCount += 1;
 				},
 
 				instanceMethod2: function(arg) {
-					return /*this._super(arg) +*/ " - " + this.instanceProperty2 + " - " + arg;
+					return this._super(arg) + " - " + this.instanceProperty2 + " - " + arg;
 				}
 			},{
 				className: "Singleton2",
@@ -134,7 +134,7 @@ $(function() {
 				instanceProperty2: "instanceValue2",
 
 				construct: function(params) {
-					//this._super(params);
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -145,13 +145,13 @@ $(function() {
 				},
 
 				init: function() {
-					//this._super();
+					this._super();
 
 					this.initializedCount += 1;
 				},
 
 				instanceMethod2: function(arg) {
-					return /*this._super(arg) +*/ " - " + this.instanceProperty2 + " - " + arg;
+					return this._super(arg) + " - " + this.instanceProperty2 + " - " + arg;
 				}
 			},{
 				className: "Prototype2",
@@ -186,7 +186,7 @@ $(function() {
 	});
 
 	test("oj.Class2.extend use", function() {
-		var prototype1, prototype2;
+		var prototype1, prototype2, singleton1, singleton2;
 
 		expect(8);
 

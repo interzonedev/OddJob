@@ -1,7 +1,9 @@
 (function() {
 	"use strict";
 
-	var constructFromPrototype, extend, extendWrapper, Class;
+	var functionCallsSuperRegExp, constructFromPrototype, extend, extendWrapper, Class;
+
+	functionCallsSuperRegExp = /xyz/.test(function() {xyz;}) ? /\b_super\b/ : /.*/;
 
 	/**
 	 * @private
@@ -21,7 +23,7 @@
 	constructFromPrototype = function(clazz, params, initialize) {
 		var instance;
 
-		instance = new clazz(params);
+		instance = new clazz();
 
 		if ("function" === typeof (instance.construct)) {
 			instance.construct.call(instance, params);
@@ -39,7 +41,7 @@
 	 */
 	extend = function(instanceProperties, classProperties, singleton) {
 		var superClass, propName = null, instancePropertiesClone = {}, classPropertiesClone = {},
-			singletonClone = false, superClassPrototype, subClass, subClassPrototype, propValue;
+			singletonClone = false, superClassPrototype, subClass, subClassPrototype, propValue, overridingFunctionCallsSuper;
 
 		superClass = this;
 
@@ -79,7 +81,39 @@
 		// Copy the instance properties onto the sub class prototype.
 		for (propName in instancePropertiesClone) {
 			propValue = instancePropertiesClone[propName];
-			subClassPrototype[propName] = propValue;
+
+			// Check if the property value is a function with a call to the superclass function it is overriding.
+			overridingFunctionCallsSuper = ("function" === typeof propValue)
+				&& ("function" === typeof superClassPrototype[propName])
+				&& functionCallsSuperRegExp.test(propValue);
+
+			if (overridingFunctionCallsSuper) {
+				subClassPrototype[propName] = (function(propName, overridingFunction) {
+					return function() {
+						var instance, tmp, returnValue;
+
+						// Get a reference to the current instance upon which the overriding method is being called.
+						instance = this;
+
+						// If there is a _super method on the current instance save it.
+						tmp = instance._super;
+						
+						// Decorate the current instance with a method called _super that points to the overridden
+						// method on the superclass. 
+						instance._super = superClassPrototype[propName];
+
+						// Execute the overridden method in the context of the decorated current instance.
+						returnValue = overridingFunction.apply(instance, arguments);
+
+						// Restore the original _super method (if there was one) on the current instance.
+						instance._super = tmp;
+
+						return returnValue;
+					};
+				}(propName, propValue));
+			} else {
+				subClassPrototype[propName] = propValue;	
+			}
 		}
 
 		// Copy the class properties onto the sub class.
