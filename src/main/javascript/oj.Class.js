@@ -3,7 +3,9 @@
 
 	var Class, fnTest, constructFromPrototype, initializing;
 
-	Class = function() {};
+	Class = function() {
+		this._super = function() {};
+	};
 
 	fnTest = /xyz/.test(function() {xyz;}) ? /\b_super\b/ : /.*/;
 
@@ -33,7 +35,7 @@
 
 		return instance;
 	};
-
+debugger;
 	Class.extend = function(instanceProperties, classProperties, singleton) {
 		var _super, _prototype, propName = null, instancePropertiesClone = {}, classPropertiesClone = {},
 			singletonClone, propValue, overrideFunction;
@@ -65,7 +67,7 @@
 
 		// Copy the instance properties onto the super class.
 		for (propName in instancePropertiesClone) {
-			var propValue = instancePropertiesClone[propName];
+			propValue = instancePropertiesClone[propName];
 
 			_prototype[propName] = propValue; 
 
@@ -100,16 +102,21 @@
 			// All construction is actually done in the init method
 			debugger;
 			if (!initializing) {
-				/*
-				if (this.constructor) {
-					this.constructor.apply(this, arguments);
+				if (this.construct) {
+					this.construct.apply(this, arguments);
 				}
-				*/
 
 				if (this.init) {
 					this.init.apply(this, arguments);
 				}
 			}
+		}
+
+		// Copy the class properties onto the currently being defined class.
+		for (propName in classPropertiesClone) {
+			propValue = classPropertiesClone[propName];
+
+			Class[propName] = propValue;
 		}
 
 		// Populate our constructed prototype object
@@ -119,7 +126,7 @@
 		Class.prototype.constructor = Class;
 
 		// And make this class extendable
-		//Class.extend = arguments.callee;
+		Class.extend = arguments.callee;
 
 		return Class;
 	};

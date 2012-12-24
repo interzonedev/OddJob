@@ -45,18 +45,19 @@ $(function() {
 	});
 
 	test("oj.Class.extend", function() {
-		var Prototype1, prototype1;
+		var Prototype1, Prototype2, prototype1, prototype2;
  
  		expect(0);
- 
+debugger;
 		Prototype1 = oj.Class.extend({
 			initializedCount: 0,
 
 			instanceProperty1: "instanceValue1",
 
-			constructor: function(params) {
+			construct: function(params) {
+				debugger;
 				this._super(params);
-debugger;
+
 				if (!params) {
 					return;
 				}
@@ -65,8 +66,9 @@ debugger;
 			},
 
 			init: function() {
-				//this._super();
-debugger;
+				debugger;
+				this._super();
+
 				this.initializedCount += 1;
 			},
 
@@ -91,7 +93,44 @@ debugger;
 			}
 		});
 
-		prototype1 = new Prototype1({a: "b"});
+debugger;
+		Prototype2 = Prototype1.extend({
+			instanceProperty2: "instanceValue2",
+
+			construct: function(params) {
+				this._super(params);
+
+				if (!params) {
+					return;
+				}
+
+				this.instanceProperty1 = params.instanceProperty1 || this.instanceProperty1;
+				this.instanceProperty2 = params.instanceProperty2 || this.instanceProperty2;
+			},
+
+			init: function() {
+				this._super();
+
+				this.initializedCount += 1;
+			},
+
+			instanceMethod2: function(arg) {
+				return this._super(arg) + " - " + this.instanceProperty2 + " - " + arg;
+			}
+		},{
+			className: "Prototype2",
+
+			classProperty2: "classValue2",
+
+			classMethod2: function(arg) {
+				return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
+			}
+		}, false);
+
 		debugger;
+		prototype1 = new Prototype1({a: "b"});
+		prototype2 = new Prototype2({c: "d"});
+		debugger;
+		var x;
 	});
 });
