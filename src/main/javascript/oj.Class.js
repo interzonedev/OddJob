@@ -35,7 +35,7 @@
 
 		return instance;
 	};
-debugger;
+
 	Class.extend = function(instanceProperties, classProperties, singleton) {
 		var _super, _prototype, propName = null, instancePropertiesClone = {}, classPropertiesClone = {},
 			singletonClone, propValue, overrideFunction;
@@ -45,8 +45,6 @@ debugger;
 		initializing = true;
 		_prototype = new this();
 		initializing = false;
-
-		debugger;
 
 		// Clone the instanceProperties argument so the original value does not get altered.
 		for (propName in instanceProperties) {
@@ -96,11 +94,10 @@ debugger;
 			}
 		}
 
-		debugger;
 		// The dummy class constructor
 		function Class() {
 			// All construction is actually done in the init method
-			debugger;
+			
 			if (!initializing) {
 				if (this.construct) {
 					this.construct.apply(this, arguments);

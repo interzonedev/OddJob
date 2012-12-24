@@ -1,9 +1,43 @@
 (function() {
-	//"use strict";
+	"use strict";
 
-	var _extend, extend;
+	var constructFromPrototype, extend, extendWrapper, Class;
 
-	_extend = function(instanceProperties, classProperties, singleton) {
+	/**
+	 * @private
+	 * 
+	 * Factory method that creates an instance of the specified class passing in the specified params to its
+	 * constructor.  Optionally runs the init method (if defined) on the newly created instance.
+	 * 
+	 * @param {Function} clazz The definition of the class from which to create the instance.  The class definition must
+	 *                         be a function type object with a prototype.
+	 * @param {Object} params An associative array of instantiation properties. These are passed directly into the
+	 *                        class constructor.
+	 * @param {Boolean} initialize Determines whether or not to call the init method (if defined) on the newly created
+	 *                             instance.
+	 * 
+	 * @returns {Object} An optionally initialized instance of the specified class.
+	 */
+	constructFromPrototype = function(clazz, params, initialize) {
+		var instance;
+
+		instance = new clazz(params);
+
+		if ("function" === typeof (instance.construct)) {
+			instance.construct.call(instance, params);
+		}
+
+		if (initialize && ("function" === typeof (instance.init))) {
+			instance.init.call(instance, params);
+		}
+
+		return instance;
+	};
+
+	/**
+	 * @private
+	 */
+	extend = function(instanceProperties, classProperties, singleton) {
 		var superClass, propName = null, instancePropertiesClone = {}, classPropertiesClone = {},
 			singletonClone = false, superClassPrototype, subClass, subClassPrototype, propValue;
 
@@ -34,9 +68,11 @@
 		// Force the singleton argument to a Boolean if it isn't already.
 		singletonClone = !!singleton;
 
-		debugger;
-		var superClassPrototype = superClass.prototype;
+		superClassPrototype = superClass.prototype;
 
+		/**
+		 * @private
+		 */
 		subClass = function() {};
 		subClassPrototype = new superClass();
 
@@ -52,25 +88,123 @@
 			subClass[propName] = propValue;
 		}
 
+		/**
+		 * @lends oj.Class2
+		 * 
+		 * Factory method that creates an instance of this class each time it is called.
+		 * 
+		 * @param {Object} params An associative array of instantiation properties. These are passed directly into the
+		 *                        class constructor.
+		 * @param {Boolean} initialize Determines whether or not to call the init method (if defined) on the newly
+		 *                             created instance.
+		 * 
+		 * @returns {Object} A unique instance of this class.
+		 */
+		subClass.getInstance = (function() {
+			var instance = null; // Cache the instance.  This is used for singletons and ignored for non-singletons.
+
+			return function(params, initialize) {
+				var instanceAlreadyExists = false, constructing = false;
+
+				if (singletonClone) {
+					instanceAlreadyExists = !!(instance || constructing);
+				}
+
+				if (!instanceAlreadyExists) {
+					constructing = true;
+					instance = constructFromPrototype(this, params, initialize);
+					constructing = false;
+				}
+
+				return instance;
+			};
+		}());
+
 		subClass.prototype = subClassPrototype;
 		subClass.prototype.constructor = subClass;
 
 		return subClass;
 	};
 
-	extend = function(instanceProperties, classProperties, singleton) {
+	/**
+	 * @private
+	 */
+	extendWrapper = function(instanceProperties, classProperties, singleton) {
 		var superClass, subClass;
-		debugger;
+
 		superClass = this;
 
-		subClass = _extend.apply(superClass, [instanceProperties, classProperties, singleton]);
-		subClass.extend = _extend;
+		subClass = extend.apply(superClass, [instanceProperties, classProperties, singleton]);
+		subClass.extend = extend;
 
 		return subClass;
 	};
 
+	/**
+	 * @private
+	 */
 	Class = function() {};
-	Class.extend = extend;
+	Class.extend = extendWrapper;
+	
+	/**
+	 * @class
+	 * 
+	 * Base class to be extended by all classes in the system.
+	 * 
+	 * @requires oj.util
+	 */
+	oj.Class2 = Class.extend(
+	/**
+	 * @lends oj.Class2.prototype
+	 */
+	{
+		/**
+		 * @lends oj.Class2.prototype
+		 * @property {Object} clazz A reference to the class definition of this instance.
+		 */
+		clazz: null,
 
-	oj.Class2 = Class.extend({}, {}, false);
+		/**
+		 * @lends oj.Class2.prototype
+		 * @property {String} className The name of this class. Used for logging.
+		 */
+		className: null,
+
+		/**
+		 * @lends oj.Class2.prototype
+		 * @property {String} instanceName The name of this instance. Used for logging.
+		 */
+		instanceName: null,
+
+		/**
+		 * Runs when a new instance of this class is constructed.
+		 * 
+		 * Sets the clazz instance property to the definition of the class being instantiated.
+		 * 
+		 * Sets the className instance property from the corresponding class property.
+		 * 
+		 * Sets the instanceName instance property from the specified parameters or sets a randomly generated value.
+		 * 
+		 * @param {Object} params An associative array of instantiation properties.<br />
+		 *                        Optional params:<br />
+		 *                        instanceName {String} The name of the instance for use in logging.
+		 */
+		construct: function(params) {
+			this.clazz = this.constructor;
+			this.className = this.constructor.className;
+			this.instanceName = (params && params.instanceName) || oj.util.getUniqueId(this.className + "_instance_");
+		},
+
+		/**
+		 * Empty default initialization method.
+		 */
+		init: function() {
+		}
+	}, {
+		/**
+		 * @lends oj.Class2
+		 * @property {String} className The name of this class. Used for logging.
+		 */
+		className: "oj.Class2"
+	});
 }());
