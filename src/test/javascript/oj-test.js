@@ -55,7 +55,6 @@ $(function() {
 		});
 	});
 
-
 	test("oj.namespace called with invalid namespaces", function() {
 		var invalidNamespaces;
 

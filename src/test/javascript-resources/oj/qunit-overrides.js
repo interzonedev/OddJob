@@ -120,6 +120,14 @@
 		if (window.console && window.console.log) {
 			logMessage = "";
 
+			if (assertionArguments.module) {
+				logMessage += assertionArguments.module + " - ";
+			}
+
+			if (assertionArguments.name) {
+				logMessage += assertionArguments.name + " - ";
+			}
+
 			if (assertionArguments.message) {
 				logMessage += assertionArguments.message + " - ";
 			}
@@ -136,7 +144,7 @@
 
 			window.console.log(logMessage);
 		}
-	}; 
+	};
 
 	// Tack on the object containing common test values to the oj namespace of the QUnit object. 
 	QUnit.oj = commonValues;
