@@ -5,7 +5,7 @@
 
 	<groupId>com.interzonedev</groupId>
 	<artifactId>oddjob</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 
 	<name>OddJob Object Oriented JavaScript Framework</name>
 	<description>
@@ -205,9 +205,6 @@
 				<configuration>
 					<jsDir>${js.source.directory}</jsDir>
 					<includes>**/*.js</includes>
-					<excludes>
-						base2-p.js Class.js
-					</excludes>
 				</configuration>
 			</plugin>
 
@@ -225,10 +222,6 @@
 					<Allfunctions>false</Allfunctions>
 					<privateOption>false</privateOption>
 					<srcDir>${basedir}/${js.source.directory}</srcDir>
-					<exclude>
-						<param>base2-p.js</param>
-						<param>Class.js</param>
-					</exclude>
 				</configuration>
 			</plugin>
 
