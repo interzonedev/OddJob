@@ -59,6 +59,14 @@
 			}
 		}
 
+		// Force the singleton argument to a Boolean if it isn't already.
+		singletonClone = !!singleton;
+
+		// If a class name was not set in the class properties set a random one based on the superclass name.
+		if (!classPropertiesClone.className) {
+			classPropertiesClone.className = oj.util.getUniqueId(superClass.className + "_subclass_");
+		}
+
 		// Add any class properties in the super class not already in the class being currently defined to the class
 		// properties.
 		for (propName in superClass) {
@@ -66,9 +74,6 @@
 				classPropertiesClone[propName] = superClass[propName];
 			}
 		}
-
-		// Force the singleton argument to a Boolean if it isn't already.
-		singletonClone = !!singleton;
 
 		superClassPrototype = superClass.prototype;
 
@@ -122,8 +127,11 @@
 			subClass[propName] = propValue;
 		}
 
+		// Add a reference on the subclass to the superclass.
+		subClass._super = superClass;
+
 		/**
-		 * @lends oj.Class2
+		 * @lends oj.OjObject
 		 * 
 		 * Factory method that creates an instance of this class each time it is called.
 		 * 
@@ -187,25 +195,25 @@
 	 * 
 	 * @requires oj.util
 	 */
-	oj.Class2 = Class.extend(
+	oj.OjObject = Class.extend(
 	/**
-	 * @lends oj.Class2.prototype
+	 * @lends oj.OjObject.prototype
 	 */
 	{
 		/**
-		 * @lends oj.Class2.prototype
+		 * @lends oj.OjObject.prototype
 		 * @property {Object} clazz A reference to the class definition of this instance.
 		 */
 		clazz: null,
 
 		/**
-		 * @lends oj.Class2.prototype
+		 * @lends oj.OjObject.prototype
 		 * @property {String} className The name of this class. Used for logging.
 		 */
 		className: null,
 
 		/**
-		 * @lends oj.Class2.prototype
+		 * @lends oj.OjObject.prototype
 		 * @property {String} instanceName The name of this instance. Used for logging.
 		 */
 		instanceName: null,
@@ -236,9 +244,9 @@
 		}
 	}, {
 		/**
-		 * @lends oj.Class2
+		 * @lends oj.OjObject
 		 * @property {String} className The name of this class. Used for logging.
 		 */
-		className: "oj.Class2"
+		className: "oj.OjObject"
 	});
 }());

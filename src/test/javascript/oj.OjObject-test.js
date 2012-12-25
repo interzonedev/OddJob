@@ -17,8 +17,8 @@ $(function() {
 
 				instanceProperty1: "instanceValue1",
 
-				constructor: function(params) {
-					this.base(params);
+				construct: function(params) {
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -28,7 +28,7 @@ $(function() {
 				},
 
 				init: function() {
-					this.base();
+					this._super();
 
 					this.initializedCount += 1;
 				},
@@ -59,8 +59,8 @@ $(function() {
 
 				instanceProperty1: "instanceValue1",
 
-				constructor: function(params) {
-					this.base(params);
+				construct: function(params) {
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -70,7 +70,7 @@ $(function() {
 				},
 
 				init: function() {
-					this.base();
+					this._super();
 
 					this.initializedCount += 1;
 				},
@@ -99,8 +99,8 @@ $(function() {
 			Singleton2 = Prototype1.extend({
 				instanceProperty2: "instanceValue2",
 
-				constructor: function(params) {
-					this.base(params);
+				construct: function(params) {
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -111,13 +111,13 @@ $(function() {
 				},
 
 				init: function() {
-					this.base();
+					this._super();
 
 					this.initializedCount += 1;
 				},
 
 				instanceMethod2: function(arg) {
-					return this.base(arg) + " - " + this.instanceProperty2 + " - " + arg;
+					return this._super(arg) + " - " + this.instanceProperty2 + " - " + arg;
 				}
 			},{
 				className: "Singleton2",
@@ -125,15 +125,15 @@ $(function() {
 				classProperty2: "classValue2",
 
 				classMethod2: function(arg) {
-					return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
+					return this._super.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
 				}
 			}, true);
 
 			Prototype2 = Singleton1.extend({
 				instanceProperty2: "instanceValue2",
 
-				constructor: function(params) {
-					this.base(params);
+				construct: function(params) {
+					this._super(params);
 
 					if (!params) {
 						return;
@@ -144,13 +144,13 @@ $(function() {
 				},
 
 				init: function() {
-					this.base();
+					this._super();
 
 					this.initializedCount += 1;
 				},
 
 				instanceMethod2: function(arg) {
-					return this.base(arg) + " - " + this.instanceProperty2 + " - " + arg;
+					return this._super(arg) + " - " + this.instanceProperty2 + " - " + arg;
 				}
 			},{
 				className: "Prototype2",
@@ -158,7 +158,7 @@ $(function() {
 				classProperty2: "classValue2",
 
 				classMethod2: function(arg) {
-					return this.ancestor.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
+					return this._super.classMethod2(arg) + " - " + this.classProperty2 + " - " + arg;
 				}
 			});
 		},
