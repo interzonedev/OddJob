@@ -1,8 +1,11 @@
 (function() {
 	"use strict";
 
-	var functionCallsSuperRegExp, constructFromPrototype, extend, extendWrapper, Class;
+	var functionCallsSuperRegExp, constructFromPrototype, extend, Class;
 
+	// Define a regular expression for determining whether or not the definition of a function contains "_super".  Falls
+	// back to a regular expression that always evaluates to true if the toString method of the function does not return
+	// its definition.
 	functionCallsSuperRegExp = /xyz/.test(function() {xyz;}) ? /\b_super\b/ : /.*/;
 
 	/**
@@ -38,11 +41,25 @@
 
 	/**
 	 * @private
+	 * 
+	 * Allows for the definition of new classes with the specified instance and class level properties and for singleton
+	 * class defintions.  Instance and class level properties will be inherited from the class on which the extend
+	 * method is run.
+	 * 
+	 * @param {String} instanceProperties The instance properties for the class being defined.  If this is not an object
+	 *                                    an empty object will be used in its place.
+	 * @param {String} classProperties The class (static-like) properties for the class being defined..  If this is not
+	 *                                 an object an empty object will be used in its place.
+	 * @param {Boolean} singleton Whether or not the class should be a singleton.  This is treated as "truthy".
+	 * 
+	 * @return {Function} Returns the newly defined class.
 	 */
 	extend = function(instanceProperties, classProperties, singleton) {
 		var superClass, propName = null, instancePropertiesClone = {}, classPropertiesClone = {},
-			singletonClone = false, superClassPrototype, subClass, subClassPrototype, propValue, overridingFunctionCallsSuper;
+			singletonClone = false, superClassPrototype, subClass, subClassPrototype, propValue,
+			overridingFunctionCallsSuper;
 
+		// The context in which this method is run is considered the superclass.
 		superClass = this;
 
 		// Clone the instanceProperties argument so the original value does not get altered.
@@ -75,15 +92,20 @@
 			}
 		}
 
+		// Get a reference to the superclass prototype.
 		superClassPrototype = superClass.prototype;
 
 		/**
 		 * @private
+		 * 
+		 * Start off the subclass as an empty class.
 		 */
 		subClass = function() {};
+
+		// Start off the subclass prototype definition from the superclass.
 		subClassPrototype = new superClass();
 
-		// Copy the instance properties onto the sub class prototype.
+		// Copy the instance properties onto the subclass prototype.
 		for (propName in instancePropertiesClone) {
 			propValue = instancePropertiesClone[propName];
 
@@ -93,6 +115,8 @@
 				&& functionCallsSuperRegExp.test(propValue);
 
 			if (overridingFunctionCallsSuper) {
+				// The property value is a function with a call to the superclass function it is overriding.  Assign the
+				// subclass to a wrapper function that handles the call to the overridden method.
 				subClassPrototype[propName] = (function(propName, overridingFunction) {
 					return function() {
 						var instance, tmp, returnValue;
@@ -121,7 +145,7 @@
 			}
 		}
 
-		// Copy the class properties onto the sub class.
+		// Copy the class properties onto the subclass.
 		for (propName in classPropertiesClone) {
 			propValue = classPropertiesClone[propName];
 			subClass[propName] = propValue;
@@ -130,18 +154,10 @@
 		// Add a reference on the subclass to the superclass.
 		subClass._super = superClass;
 
-		/**
-		 * @lends oj.OjObject
-		 * 
-		 * Factory method that creates an instance of this class each time it is called.
-		 * 
-		 * @param {Object} params An associative array of instantiation properties. These are passed directly into the
-		 *                        class constructor.
-		 * @param {Boolean} initialize Determines whether or not to call the init method (if defined) on the newly
-		 *                             created instance.
-		 * 
-		 * @returns {Object} A unique instance of this class.
-		 */
+		// Define the getInstance method definition to allow for singleton class definition.  Use the memoization
+		// pattern to keep track of whether or not the class being defined has already been instantiated in the case of
+		// a singleton class definition.  For non-singleton class definitions, the private constructFromPrototype method
+		// is called directly.
 		subClass.getInstance = (function() {
 			var instance = null; // Cache the instance.  This is used for singletons and ignored for non-singletons.
 
@@ -162,6 +178,7 @@
 			};
 		}());
 
+		// Set the prototype and constructor of the subclass.
 		subClass.prototype = subClassPrototype;
 		subClass.prototype.constructor = subClass;
 
@@ -170,23 +187,11 @@
 
 	/**
 	 * @private
-	 */
-	extendWrapper = function(instanceProperties, classProperties, singleton) {
-		var superClass, subClass;
-
-		superClass = this;
-
-		subClass = extend.apply(superClass, [instanceProperties, classProperties, singleton]);
-		subClass.extend = extend;
-
-		return subClass;
-	};
-
-	/**
-	 * @private
+	 * 
+	 * Create an initial empty class context in which to first run the extend method. 
 	 */
 	Class = function() {};
-	Class.extend = extendWrapper;
+	Class.extend = extend;
 	
 	/**
 	 * @class
@@ -247,6 +252,44 @@
 		 * @lends oj.OjObject
 		 * @property {String} className The name of this class. Used for logging.
 		 */
-		className: "oj.OjObject"
+		className: "oj.OjObject",
+
+		/**
+		 * Factory method that creates an instance of this class each time it is called.
+		 * 
+		 * @param {Object} params An associative array of instantiation properties. These are passed directly into the
+		 *                        class constructor.
+		 * @param {Boolean} initialize Determines whether or not to call the init method (if defined) on the newly
+		 *                             created instance.
+		 * 
+		 * @returns {Object} A unique instance of this class.
+		 */
+		getInstance: function(params, initialize) {
+			return constructFromPrototype(this, params, initialize);
+		}
 	});
+
+	/**
+	 * Allows for the definition of new classes with the specified instance and class level properties and for singleton
+	 * class defintions.  The newly defined class will also have the extend method for further subclassing.  Instance
+	 * and class level properties will be inherited from the class on which the extend method is run.
+	 * 
+	 * @param {String} instanceProperties The instance properties for the class being defined.  If this is not an object
+	 *                                    an empty object will be used in its place.
+	 * @param {String} classProperties The class (static-like) properties for the class being defined..  If this is not
+	 *                                 an object an empty object will be used in its place.
+	 * @param {Boolean} singleton Whether or not the class should be a singleton.  This is treated as "truthy".
+	 * 
+	 * @return {Function} Returns the newly defined class.
+	 */
+	oj.OjObject.extend = function(instanceProperties, classProperties, singleton) {
+		var superClass, subClass;
+
+		superClass = this;
+
+		subClass = extend.apply(superClass, [instanceProperties, classProperties, singleton]);
+		subClass.extend = extend;
+
+		return subClass;
+	};
 }());
