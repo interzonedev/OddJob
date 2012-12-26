@@ -30,8 +30,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<js.source.directory>src/main/javascript</js.source.directory>
-		<js.compress.output.directory>${project.build.directory}/${project.build.finalName}</js.compress.output.directory>
-		<js.compress.output.filename>oddjob-min.js</js.compress.output.filename>
+		<js.compress.output.directory.name>compress</js.compress.output.directory.name>
+		<js.compress.output.directory.path>${project.build.directory}/${js.compress.output.directory.name}</js.compress.output.directory.path>
+		<js.compress.output.filename>${project.build.finalName}.min.js</js.compress.output.filename>
 	</properties>
 
 	<dependencies>
@@ -175,11 +176,11 @@
 					<includes>
 						<include>**/*.js</include>
 					</includes>
-					<outputDirectory>${js.compress.output.directory}</outputDirectory>
+					<outputDirectory>${js.compress.output.directory.path}</outputDirectory>
 					<aggregations>
 						<aggregation>
 							<removeIncluded>true</removeIncluded>
-							<output>${js.compress.output.directory}/${js.compress.output.filename}</output>
+							<output>${js.compress.output.directory.path}/${js.compress.output.filename}</output>
 							<includes>
 								<include>**/*.js</include>
 							</includes>
@@ -254,7 +255,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -271,7 +271,8 @@
 								<copy todir="${webserver.deploy.dir}/src/test" overwrite="false" verbose="true">
 									<fileset dir="${basedir}/src/test" casesensitive="yes" />
 								</copy>
-								<copy todir="${webserver.deploy.dir}/target/${project.build.finalName}" file="${basedir}/target/${project.build.finalName}/${js.compress.output.filename}"
+								<copy todir="${webserver.deploy.dir}/target/${js.compress.output.directory.name}"
+									file="${js.compress.output.directory.path}/${js.compress.output.filename}"
 									overwrite="false" verbose="true" />
 							</tasks>
 						</configuration>
