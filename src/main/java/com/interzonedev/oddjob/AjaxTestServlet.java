@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -189,7 +189,6 @@ public class AjaxTestServlet extends HttpServlet {
 	private String getRequestParametersLogMessage(HttpServletRequest request) {
 		StringBuilder logMessage = new StringBuilder();
 
-		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (!parameterMap.isEmpty()) {
 			logMessage.append("Received request params:").append(newline);
@@ -228,7 +227,7 @@ public class AjaxTestServlet extends HttpServlet {
 		loggerContext.reset();
 
 		// Set log levels on individual packages.
-		loggerContext.getLogger("org.mortbay.log").setLevel(Level.INFO);
+		loggerContext.getLogger("org.eclipse.jetty").setLevel(Level.INFO);
 		loggerContext.getLogger("com.interzonedev.oddjob").setLevel(Level.DEBUG);
 
 		String logPattern = "%date [%thread] %-5level %logger - %msg%n";
@@ -266,11 +265,18 @@ public class AjaxTestServlet extends HttpServlet {
 		String contextPath = DEFAULT_CONTEXT_PATH;
 		String servletMapping = DEFAULT_SERVLET_MAPPING;
 
-		HttpServlet servlet = new AjaxTestServlet();
+		// Create a context and map the Ajax test servlet in it.
+		ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		contextHandler.setContextPath(contextPath);
+		contextHandler.addServlet(new ServletHolder(new AjaxTestServlet()), servletMapping);
 
+		// Create a server.
 		Server server = new Server(port);
-		Context context = new Context(server, contextPath, Context.SESSIONS);
-		context.addServlet(new ServletHolder(servlet), servletMapping);
+
+		// Set the context on the server.
+		server.setHandler(contextHandler);
+
+		// Start the server.
 		server.start();
 		server.join();
 	}
