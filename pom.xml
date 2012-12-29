@@ -182,7 +182,12 @@
 							<removeIncluded>true</removeIncluded>
 							<output>${js.compress.output.directory.path}/${js.compress.output.filename}</output>
 							<includes>
-								<include>**/*.js</include>
+								<include>oj-min.js</include>
+								<include>oj.util-min.js</include>
+								<include>oj.OjObject-min.js</include>
+								<include>oj.Logger-min.js</include>
+								<include>oj.ajax-min.js</include>
+								<include>oj.$-min.js</include>
 							</includes>
 						</aggregation>
 					</aggregations>
