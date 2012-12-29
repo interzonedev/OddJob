@@ -1010,7 +1010,7 @@ $(function() {
 	asyncTest("oj.ajax.doGet function with timeout", function() {
 		var params, synchronousResponse;
 
-		expect(4);
+		expect(3);
 
 		params = $.extend(true, {
 			"type": "json",
@@ -1034,7 +1034,6 @@ $(function() {
 			timeoutCallback: function(xhr) {
 				ok(xhr, "oj.ajax.doGet with timeout returns the XHR object");
 				strictEqual(typeof(xhr), "object", "oj.ajax.doGet with timeout returns the XHR object");
-				strictEqual(xhr.status, 0, "oj.ajax.doGet with timeout returns the XHR object with status 0");
 
 				start();
 			}
