@@ -215,7 +215,7 @@ public class AjaxTestServlet extends HttpServlet {
 			log.debug("delayResponse: Delaying response for " + sleepMillis + " milliseconds");
 			Thread.sleep(sleepMillis);
 		} catch (NumberFormatException nfe) {
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ie) {
 		}
 	}
 

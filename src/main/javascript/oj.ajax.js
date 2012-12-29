@@ -184,7 +184,7 @@
 			url = args.url;
 			data = args.data || null;
 			asynchronous = ("undefined" === typeof(args.asynchronous)) ? true : !!args.asynchronous;
-			preventCache = ("undefined" === typeof(args.preventCache)) ? true : !!args.preventCache;;
+			preventCache = ("undefined" === typeof(args.preventCache)) ? true : !!args.preventCache;
 			successCallback = args.successCallback;
 			errorCallback = args.errorCallback;
 			timeout = args.timeout;
@@ -232,8 +232,7 @@
 
 			xhr = getXhr();
 
-			// Set a timeout interval to abort the request if the timeout period
-			// has been set.
+			// Set a timeout interval to abort the request if the timeout period has been set.
 			timeoutRef = null;
 			requestAborted = false;
 			if (!isNaN(parseFloat(timeout)) && (timeout > 0)) {
@@ -250,16 +249,14 @@
 			}
 
 			if (asynchronous) {
-				// Set the handler for readystatechange events to the
-				// _handleResponse method and pass in the success and error callback
-				// methods.
+				// Set the handler for readystatechange events to the handleResponse method and pass in the success and
+				// error callback methods.
 				xhr.onreadystatechange = function() {
 					handleResponse(xhr, successCallback, errorCallback, timeoutRef);
 				};
 			}
 
-			// Add a unique value to the url of the request if it is specified to
-			// prevent caching.
+			// Add a unique value to the url of the request if it is specified to prevent caching.
 			if (preventCache) {
 				preventCacheParam = PREVENT_CACHE_PARAM_NAME + "=" + oj.util.getUniqueId();
 				url = setQueryStringOnUrl(url, preventCacheParam);
@@ -268,15 +265,14 @@
 			// Perform the request.
 			xhr.open(method, url, asynchronous);
 			if (isPost) {
-				// Set the application/x-www-form-urlencoded request header for a
-				// POST.
+				// Set the application/x-www-form-urlencoded request header for a POST.
 				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			}
 			xhr.send(data);
 
 			if (!asynchronous && !requestAborted) {
-				// For a synchronous request get the response directly from the handleResponse method.  The success
-				// or error callbacks may still be called in they are defined.
+				// For a synchronous request get the response directly from the handleResponse method.  The success or
+				// error callbacks may still be called in they are defined.
 				response = handleResponse(xhr, successCallback, errorCallback, timeoutRef);
 			}
 

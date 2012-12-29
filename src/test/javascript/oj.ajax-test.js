@@ -1006,4 +1006,41 @@ $(function() {
 
 		strictEqual(synchronousResponse, null, "oj.ajax.doDelete asynchronous XML content type returns null");
 	});
+
+	asyncTest("oj.ajax.doGet function with timeout", function() {
+		var params, synchronousResponse;
+
+		expect(4);
+
+		params = $.extend(true, {
+			"type": "json",
+			"delay": 1000
+		}, ajaxTestServletParams);
+
+		synchronousResponse = oj.ajax.doGet({
+			url: ajaxTestServletUrl,
+			params: params,
+			asynchronous: true,
+			preventCache: true,
+			timeout: 500,
+			successCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doGet with timeout should not call the success callback ");
+				start();
+			},
+			errorCallback: function(response, status, xhr) {
+				ok(false, "oj.ajax.doGet with timeout should not call the error callback ");
+				start();
+			},
+			timeoutCallback: function(xhr) {
+				ok(xhr, "oj.ajax.doGet with timeout returns the XHR object");
+				strictEqual(typeof(xhr), "object", "oj.ajax.doGet with timeout returns the XHR object");
+				strictEqual(xhr.status, 0, "oj.ajax.doGet with timeout returns the XHR object with status 0");
+
+				start();
+			}
+		});
+
+		strictEqual(synchronousResponse, null, "oj.ajax.doGet with timeout returns null");
+	});
+
 });
