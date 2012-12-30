@@ -197,8 +197,9 @@
 			functionHandle = functionHandle || "";
 
 			formattedMessage = this.formatMessage(messageLevel, message, functionHandle);
+
 			try {
-				this.logger[messageLevel](formattedMessage);
+				this.logger[messageLevel.toLowerCase()](formattedMessage);
 			} catch(e) {
 				if (this.alertLogErrors) {
 					errorMessage = this.name + " - Error attempt to log with " + messageLevel;
@@ -231,7 +232,9 @@
 				formattedMessage += "[" + functionHandle + "]";
 			}
 
-			formattedMessage += ": ";
+			if (/\S/.test(formattedMessage)) {
+				formattedMessage += ": ";
+			}
 
 			if (/\S/.test(message)) {
 				if (("object" === typeof(message)) && JSON && JSON.stringify) {

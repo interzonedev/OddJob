@@ -1,33 +1,48 @@
 $(function() {
-	var testLogger, logger;
+	var testLogger;
 
 	testLogger = null;
-	logger = null;
 
 	module("oj.Logger", {
 		setup: function() {
 			testLogger = {
 
-				levelCounts: {
-					"TRACE": 0,
-					"DEBUG": 0,
-					"INFO": 0,
-					"WARN": 0,
-					"ERROR": 0,
-					"FATAL": 0
+				levelMessages: {
+					"TRACE": [],
+					"DEBUG": [],
+					"INFO": [],
+					"WARN": [],
+					"ERROR": [],
+					"FATAL": []
 				},
 
 				trace: function(message) {
-					levelCounts["TRACE"] += 1;
+					this.levelMessages.TRACE.push(message);
+				},
+
+				debug: function(message) {
+					this.levelMessages.DEBUG.push(message);
+				},
+
+				info: function(message) {
+					this.levelMessages.INFO.push(message);
+				},
+
+				warn: function(message) {
+					this.levelMessages.WARN.push(message);
+				},
+
+				error: function(message) {
+					this.levelMessages.ERROR.push(message);
+				},
+
+				fatal: function(message) {
+					this.levelMessages.FATAL.push(message);
 				}
 			};
-			logger = oj.Logger.getInstance({
-				logger: testLogger
-			}, true);
 		},
 		teardown: function() {
 			testLogger = null;
-			logger = null;
 		}
 	});
 
@@ -44,11 +59,11 @@ $(function() {
 		strictEqual(oj.Logger.className, "oj.Logger", "oj.Logger.className is set");
 	});
 
-	// oj.Logger test class getInstance method tests
+	// oj.Logger getInstance method tests
 	test("oj.Logger.getInstance called with no params sets default properties on instance", function() {
 		var logger;
 
-		expect(9);
+		expect(10);
 
 		logger = oj.Logger.getInstance();
 
@@ -58,6 +73,7 @@ $(function() {
 		strictEqual(logger.className, "oj.Logger", "oj.Logger.getInstance called with no params returns an instance with the class name set");
 		strictEqual(logger.clazz, oj.Logger, "oj.Logger.getInstance called with no params returns an instance with the class set");
 		strictEqual(logger.name, "", "oj.Logger.getInstance called with no params returns an instance with the default name property set");
+		strictEqual(logger.level, "DEBUG", "oj.Logger.getInstance called with no params returns an instance with the default level property set");
 		strictEqual(logger.logger, null, "oj.Logger.getInstance called with no params returns an instance with the logger property set to null");
 		strictEqual(logger.prependLevelToMessage, false, "oj.Logger.getInstance called with no params returns an instance with the prependLevelToMessage property set to false");
 		strictEqual(logger.alertLogErrors, false, "oj.Logger.getInstance called with no params returns an instance with the alertLogErrors property set to false");
@@ -66,7 +82,7 @@ $(function() {
 	test("oj.Logger.getInstance called with empty params and no initialization sets default properties on instance", function() {
 		var logger;
 
-		expect(9);
+		expect(10);
 
 		logger = oj.Logger.getInstance({});
 
@@ -76,6 +92,7 @@ $(function() {
 		strictEqual(logger.className, "oj.Logger", "oj.Logger.getInstance called with empty params and no initialization returns an instance with the class name set");
 		strictEqual(logger.clazz, oj.Logger, "oj.Logger.getInstance called with empty params and no initialization returns an instance with the class set");
 		strictEqual(logger.name, "", "oj.Logger.getInstance called with empty params and no initialization returns an instance with the default name property set");
+		strictEqual(logger.level, "DEBUG", "oj.Logger.getInstance called with empty params and no initialization returns an instance with the default level property set");
 		strictEqual(logger.logger, null, "oj.Logger.getInstance called with empty params and no initialization returns an instance with the logger property set to null");
 		strictEqual(logger.prependLevelToMessage, false, "oj.Logger.getInstance called with empty params and no initialization returns an instance with the prependLevelToMessage property set to false");
 		strictEqual(logger.alertLogErrors, false, "oj.Logger.getInstance called with empty params and no initialization returns an instance with the alertLogErrors property set to false");
@@ -84,7 +101,7 @@ $(function() {
 	test("oj.Logger.getInstance called with empty params and initialization sets default properties on instance", function() {
 		var logger, loggerProperty;
 
-		expect(10);
+		expect(15);
 
 		logger = oj.Logger.getInstance({}, true);
 
@@ -96,9 +113,50 @@ $(function() {
 		strictEqual(logger.className, "oj.Logger", "oj.Logger.getInstance called with empty params and initialization returns an instance with the class name set");
 		strictEqual(logger.clazz, oj.Logger, "oj.Logger.getInstance called with empty params and initialization returns an instance with the class set");
 		strictEqual(logger.name, "", "oj.Logger.getInstance called with empty params and initialization returns an instance with the default name property set");
+		strictEqual(logger.level, "DEBUG", "oj.Logger.getInstance called with empty params and initialization returns an instance with the default level property set");
 		strictEqual(typeof(loggerProperty), "object", "oj.Logger.getInstance called with empty params and initialization returns an instance with the logger property set");
+		strictEqual(typeof(loggerProperty.trace), "function", "oj.Logger.getInstance called with empty params and initialization returns an instance with the logger property set with a trace method");
 		strictEqual(typeof(loggerProperty.debug), "function", "oj.Logger.getInstance called with empty params and initialization returns an instance with the logger property set with a debug method");
+		strictEqual(typeof(loggerProperty.info), "function", "oj.Logger.getInstance called with empty params and initialization returns an instance with the logger property set with a info method");
+		strictEqual(typeof(loggerProperty.warn), "function", "oj.Logger.getInstance called with empty params and initialization returns an instance with the logger property set with a warn method");
+		strictEqual(typeof(loggerProperty.error), "function", "oj.Logger.getInstance called with empty params and initialization returns an instance with the logger property set with a error method");
 		strictEqual(logger.prependLevelToMessage, false, "oj.Logger.getInstance called with empty params and initialization returns an instance with the prependLevelToMessage property set to false");
 		strictEqual(logger.alertLogErrors, false, "oj.Logger.getInstance called with empty params and initialization returns an instance with the alertLogErrors property set to false");
+	});
+
+	// oj.Logger trace method tests
+	test("oj.Logger.trace called with different logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "TRACE"
+		}, true);
+
+		logger.trace("trace logger level");
+
+		logger.level = "DEBUG";
+		logger.trace("debug logger level");
+
+		logger.level = "INFO";
+		logger.trace("info logger level");
+
+		logger.level = "WARN";
+		logger.trace("warn logger level");
+
+		logger.level = "ERROR";
+		logger.trace("error logger level");
+
+		logger.level = "FATAL";
+		logger.trace("fatal logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 6, "oj.Logger.trace called with different logger levels should log all messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the fatal level");
 	});
 });
