@@ -1,6 +1,34 @@
 (function() {
 	"use strict";
 
+	var logLevels, allowableLevel;
+
+	logLevels = {
+		"TRACE": 1,
+		"DEBUG": 2,
+		"INFO": 3,
+		"WARN": 4,
+		"ERROR": 5,
+		"FATAL": 6
+	};
+
+	allowableLevel = function(loggerLevel, messageLevel) {
+		var loggerLevelNum, messageLevelNum;
+
+		loggerLevelNum = logLevels[loggerLevel];
+		messageLevelNum = logLevels[messageLevel];
+
+		if (!loggerLevelNum) {
+			throw(new Error("Unsupported logger logging level: \"" + loggerLevel + "\""));
+		}
+
+		if (!messageLevelNum) {
+			throw(new Error("Unsupported message logging level: \"" + messageLevel + "\""));
+		}
+
+		return (messageLevelNum <= loggerLevelNum);
+	};
+
 	/**
 	 * @class
 	 * @extends oj.OjObject
@@ -19,14 +47,14 @@
 		 * @lends oj.Logger.prototype
 		 * @property {String} name The name of this logger.  This value will be prepended to every message.
 		 */
-		name: null,
+		name: "",
 
 		/**
 		 * @lends oj.Logger.prototype
 		 * @property {String} level The minimum level of logging below which messages will not be output to the logging
 		 *                          console.
 		 */
-		level: null,
+		level: "DEBUG",
 
 		/**
 		 * @lends oj.Logger.prototype
@@ -36,8 +64,8 @@
 
 		/**
 		 * @lends oj.Logger.prototype
-		 * @property {Boolean} level Whether or not to send an alert when there is an error attemtping to call a log
-		 *                           method on the logger instance.
+		 * @property {Boolean} alertLogErrors Whether or not to send an alert when there is an error attemtping to call
+		 *                                    a log method on the logger instance.
 		 */
 		alertLogErrors: false,
 
@@ -56,9 +84,14 @@
 		 */
 		construct: function(params) {
 			this._super(params);
-			this.logger = params.logger;
+
+			if (!params) {
+				return;
+			}
+
+			this.logger = params.logger || null;
 			this.name = params.name || "";
-			this.level = params.level || "debug";
+			this.level = params.level || "DEBUG";
 			this.prependLevelToMessage = params.prependLevelToMessage || false;
 			this.alertLogErrors = params.alertLogErrors || false;
 		},
@@ -67,178 +100,165 @@
 		 * Initializs this Logger instance.  Default the logger instance to the console if it is not specified.
 		 */
 		init: function() {
+			var propName = null;
+
 			this._super();
 
-			// Default to the console if no 3rd party framework logger is set.
-			if (!this.logger) {
-				try {
-					this.logger = $.extend({}, console);
-				} catch(e) {}
-			}
-		},
-
-		/**
-		 * Logs messages at the trace level.
-		 * 
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		trace: function(msg, functionHandle, category) {
-			if($.inArray(this.level, ["trace"]) > -1) {
-				this.logMessage("trace", msg, functionHandle, category);
-			}
-		},
-
-		/**
-		 * Logs messages at the debug level.
-		 * 
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		debug: function(msg, functionHandle, category) {
-			if($.inArray(this.level, ["trace", "debug"]) > -1) {
-				this.logMessage("debug", msg, functionHandle, category);
-			}
-		},
-
-		/**
-		 * Logs messages at the info level.
-		 * 
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		info: function(msg, functionHandle, category) {
-			if($.inArray(this.level, ["trace", "debug", "info"]) > -1) {
-				this.logMessage("info", msg, functionHandle, category);
-			}
-		},
-
-		/**
-		 * Logs messages at the warn level.
-		 * 
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		warn: function(msg, functionHandle, category) {
-			if($.inArray(this.level, ["trace", "debug", "info", "warn"]) > -1) {
-				this.logMessage("warn", msg, functionHandle, category);
-			}
-		},
-
-		/**
-		 * Logs messages at the error level.
-		 * 
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		error: function(msg, functionHandle, category) {
-			if($.inArray(this.level, ["trace", "debug", "info", "warn", "error"]) > -1) {
-				this.logMessage("error", msg, functionHandle, category);
-			}
-		},
-
-		/**
-		 * Logs messages at the fatal level.
-		 * 
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		fatal: function(msg, functionHandle, category) {
-			if($.inArray(this.level, ["trace", "debug", "info", "warn", "error", "fatal"]) > -1) {
-				this.logMessage("fatal", msg, functionHandle, category);
-			}
-		},
-
-		/**
-		 * Logs messages at the specified level.
-		 *
-		 * @param {String} level The level at which to output the logging message.
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
-		 */
-		logMessage: function(level, msg, functionHandle, category) {
-			var logMessage, errorMessage;
-
-			if (!this.logger) {
-				return;
-			}
-			functionHandle = functionHandle || "";
-			category = category || this.clazz.defaultCategory;
-			if (undefined === this.clazz.categories[category]) {
-				this.clazz.categories[category] = true;
-			}
-			if (this.clazz.categories[category]) {
-				logMessage = this.formatMessage(level, msg, functionHandle, category);
-				try {
-					this.logger[level](logMessage);
-				} catch(e) {
-					if (this.alertLogErrors) {
-						errorMessage = this.name + " - Error attempt to log with " + level;
-						alert(errorMessage);
+			// Default to the console if no 3rd party framework logger is set.  If the console is not present the logger
+			// will not be set.
+			if (!this.logger && console) {
+				this.logger = {};
+				for (propName in console) {
+					if (console.hasOwnProperty(propName)) {
+						this.logger[propName] = console[propName]; 
 					}
 				}
 			}
 		},
 
 		/**
-		 * Calls the method with the specified name on the logger instance with the specified array of arguments.
+		 * Logs messages at the trace level.
 		 * 
-		 * @param {String} methodName The name of the method to call on the logger instance.
-		 * @param {Array} args The array of arguments to pass to the method.
-		 * 
-		 * @returns {Object} Returns whatever the specified method call returns.
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
 		 */
-		loggerCall: function(methodName, args) {
-			return this.logger[methodName].apply(this.logger, args);
+		trace: function(message, functionHandle) {
+			this.logMessage("TRACE", message, functionHandle);
+		},
+
+		/**
+		 * Logs messages at the debug level.
+		 * 
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
+		 */
+		debug: function(message, functionHandle) {
+			this.logMessage("DEBUG", message, functionHandle);
+		},
+
+		/**
+		 * Logs messages at the info level.
+		 * 
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
+		 */
+		info: function(message, functionHandle) {
+			this.logMessage("INFO", message, functionHandle);
+		},
+
+		/**
+		 * Logs messages at the warn level.
+		 * 
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
+		 */
+		warn: function(message, functionHandle) {
+			this.logMessage("WARN", message, functionHandle);
+		},
+
+		/**
+		 * Logs messages at the error level.
+		 * 
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
+		 */
+		error: function(message, functionHandle) {
+			this.logMessage("ERROR", message, functionHandle);
+		},
+
+		/**
+		 * Logs messages at the fatal level.
+		 * 
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
+		 */
+		fatal: function(message, functionHandle) {
+			this.logMessage("FATAL", message, functionHandle);
+		},
+
+		/**
+		 * Logs messages at the specified level.
+		 *
+		 * @param {String} messageLevel The level at which to output the logging message.
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
+		 */
+		logMessage: function(messageLevel, message, functionHandle) {
+			var formattedMessage, errorMessage;
+
+			if (!this.logger) {
+				return;
+			}
+
+			if (!allowableLevel(this.level, messageLevel)) {
+				return;
+			}
+
+			functionHandle = functionHandle || "";
+
+			formattedMessage = this.formatMessage(messageLevel, message, functionHandle);
+			try {
+				this.logger[messageLevel](formattedMessage);
+			} catch(e) {
+				if (this.alertLogErrors) {
+					errorMessage = this.name + " - Error attempt to log with " + messageLevel;
+					alert(errorMessage);
+				}
+			}
 		},
 
 		/**
 		 * Creates a formatted logging message according to the specified parameters.
 		 * 
-		 * @param {String} level The level at which to output the logging message.
-		 * @param {String} msg The message to output to the logging console.
-		 * @param {String} functionHandle The name of the function in which the debugging is taking place.
-		 * @param {String} category The name of the logging category in which to place the specified logging message. 
+		 * @param {String} messageLevel The level at which to output the logging message.
+		 * @param {String} message The message to output to the logging console.
+		 * @param {String} [functionHandle] The name of the function in which the logging is taking place. 
 		 * 
 		 * @returns {String} A formatted logging message according to the specified parameters.
 		 */
-		formatMessage: function(level, msg, functionHandle, category) {
-			var message;
+		formatMessage: function(messageLevel, message, functionHandle) {
+			var formattedMessage;
 
-			message = "";
+			formattedMessage = "";
 
 			if (this.prependLevelToMessage) {
-				message += level.toUpperCase() + " - ";
+				formattedMessage += messageLevel.toUpperCase() + " - ";
 			}
 
-			message += this.name;
+			formattedMessage += this.name;
 
 			if (/\S/.test(functionHandle)) {
-				message += "[" + functionHandle + "]";
+				formattedMessage += "[" + functionHandle + "]";
 			}
 
-			if (/\S/.test(category) && (category !== this.clazz.defaultCategory)) {
-				message += "[" + category + "]";
-			}
+			formattedMessage += ": ";
 
-			message += ": ";
-
-			if (/\S/.test(msg)) {
-				if (("object" === typeof(msg)) && JSON && JSON.stringify) {
-					message += JSON.stringify(msg);
+			if (/\S/.test(message)) {
+				if (("object" === typeof(message)) && JSON && JSON.stringify) {
+					formattedMessage += JSON.stringify(message);
 				} else {
-					message += msg;	
+					formattedMessage += message;	
 				}
 			}
 
-			return message;
+			return formattedMessage;
+		},
+
+		/**
+		 * Calls the method with the specified name on the logger instance with the specified array of arguments.  This
+		 * is a convenience method for making calls directly on the underlying logger instance.
+		 * 
+		 * @param {String} methodName The name of the method to call on the logger instance.
+		 * @param {Array} args The array of arguments to pass to the method.
+		 * 
+		 * @returns {Object} Returns whatever the specified method call returns.  If the logger is not set returns null.
+		 */
+		loggerCall: function(methodName, args) {
+			if (!this.logger) {
+				return null;
+			}
+
+			return this.logger[methodName].apply(this.logger, args);
 		}
 	},
 	{
@@ -246,20 +266,6 @@
 		 * @lends oj.Logger
 		 * @property {String} className The name of this class.
 		 */
-		className: "oj.Logger",
-
-		/**
-		 * @lends oj.Logger
-		 * @property {Object} categories A collection of names by which to categorize logging messages.
-		 */
-		categories: {},
-
-		/**
-		 * @lends oj.Logger
-		 * @constant
-		 * @property {String} defaultCategory The default logging category.  This label will not be output in the log
-		 *                                    message.
-		 */
-		defaultCategory: "default"
+		className: "oj.Logger"
 	});
 }());
