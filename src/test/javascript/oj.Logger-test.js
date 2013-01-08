@@ -79,6 +79,34 @@ $(function() {
 		strictEqual(logger.alertLogErrors, false, "oj.Logger.getInstance called with no params returns an instance with the alertLogErrors property set to false");
 	});
 
+	test("oj.Logger.getInstance called with non defined values", function() {
+		expect(15 * QUnit.oj.nonDefinedValues.length);
+
+		$.each(QUnit.oj.nonDefinedValues, function(i, nonDefinedValue) {
+			var logger, loggerProperty;
+
+			logger = oj.Logger.getInstance(nonDefinedValue, true);
+
+			loggerProperty = logger.logger;
+
+			ok(logger, "oj.Logger.getInstance called with " + nonDefinedValue + " returns a defined value");
+			strictEqual(typeof(logger), "object", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance");
+			strictEqual(logger.instanceName.indexOf("oj.Logger_instance_"), 0, "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instantiated instance");
+			strictEqual(logger.className, "oj.Logger", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the class name set");
+			strictEqual(logger.clazz, oj.Logger, "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the class set");
+			strictEqual(logger.name, "", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the default name property set");
+			strictEqual(logger.level, "DEBUG", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the default level property set");
+			strictEqual(typeof(loggerProperty), "object", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the logger property set");
+			strictEqual(typeof(loggerProperty.trace), "function", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the logger property set with a trace method");
+			strictEqual(typeof(loggerProperty.debug), "function", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the logger property set with a debug method");
+			strictEqual(typeof(loggerProperty.info), "function", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the logger property set with a info method");
+			strictEqual(typeof(loggerProperty.warn), "function", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the logger property set with a warn method");
+			strictEqual(typeof(loggerProperty.error), "function", "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the logger property set with a error method");			
+			strictEqual(logger.prependLevelToMessage, false, "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the prependLevelToMessage property set to false");
+			strictEqual(logger.alertLogErrors, false, "oj.Logger.getInstance called with " + nonDefinedValue + " returns an instance with the alertLogErrors property set to false");
+		});
+	});
+
 	test("oj.Logger.getInstance called with empty params and no initialization sets default properties on instance", function() {
 		var logger;
 
@@ -124,6 +152,28 @@ $(function() {
 		strictEqual(logger.alertLogErrors, false, "oj.Logger.getInstance called with empty params and initialization returns an instance with the alertLogErrors property set to false");
 	});
 
+	/**
+	 * This is for testing the use of the native console logger when no 3rd party logger instance is specified.  It's
+	 * difficult to make meaningful assertions on the console however.  The console output itself needs to be inspected
+	 * manually to see if this worked.  There should be a trace and 
+	 */
+	test("oj.Logger.logMessage called with default initialized instance - test the native console", function() {
+		var logger;
+
+		expect(0);
+
+		logger = oj.Logger.getInstance({
+			level: "FATAL"
+		}, true);
+
+		logger.trace("trace logger level");
+		logger.debug("debug logger level");
+		logger.info("info logger level");
+		logger.warn("warn logger level");
+		logger.error("error logger level");
+		logger.fatal("fatal logger level");
+	});
+
 	// oj.Logger trace method tests
 	test("oj.Logger.trace called with different logger levels", function() {
 		var logger;
@@ -158,5 +208,31 @@ $(function() {
 		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the warn level");
 		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the error level");
 		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the fatal level");
+	});
+
+	// oj.Logger level method tests
+	test("oj.Logger logging methods called with TRACE logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "TRACE"
+		}, true);
+
+		logger.trace("trace logger level");
+		logger.debug("debug logger level");
+		logger.info("info logger level");
+		logger.warn("warn logger level");
+		logger.error("error logger level");
+		logger.fatal("fatal logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 1, "oj.Logger.trace called with TRACE logger levels should log a message");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.debug called with TRACE logger levels should not log a message");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.info called with TRACE logger levels should not log a message");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.warn called with TRACE logger levels should not log a message");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.error called with TRACE logger levels should not log a message");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.fatal called with TRACE logger levels should not log a message");
 	});
 });

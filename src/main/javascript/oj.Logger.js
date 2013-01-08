@@ -1,4 +1,4 @@
-(function() {
+(function(context) {
 	"use strict";
 
 	var logLevels, allowableLevel;
@@ -100,18 +100,31 @@
 		 * Initializs this Logger instance.  Default the logger instance to the console if it is not specified.
 		 */
 		init: function() {
-			var propName = null;
+			var propName = null, loggerMethodNames, i = 0, loggerMethodName;
 
 			this._super();
 
-			// Default to the console if no 3rd party framework logger is set.  If the console is not present the logger
-			// will not be set.
-			if (!this.logger && console) {
+			// If the logger instance is not set, set it.
+			if (!this.logger) {
 				this.logger = {};
-				for (propName in console) {
-					if (console.hasOwnProperty(propName)) {
-						this.logger[propName] = console[propName]; 
-					}
+
+				// If the console is present copy its properties onto the logger instance.
+				if (context.console) {
+					for (propName in context.console) {
+						if (context.console.hasOwnProperty(propName)) {
+							this.logger[propName] = context.console[propName]; 
+						}
+					}	
+				}
+			}
+
+			loggerMethodNames = [ "trace", "debug", "info", "warn", "error", "fatal" ];
+
+			// If the logger instance is missing a logger method set it to an anonymous no-op function.
+			for (i in loggerMethodNames) {
+				loggerMethodName = loggerMethodNames[i]; 
+				if (!this.logger[loggerMethodName]) {
+					this.logger[loggerMethodName] = function() {};
 				}
 			}
 		},
@@ -199,7 +212,7 @@
 			formattedMessage = this.formatMessage(messageLevel, message, functionHandle);
 
 			try {
-				this.logger[messageLevel.toLowerCase()](formattedMessage);
+				this.loggerCall(messageLevel.toLowerCase(), [formattedMessage]);
 			} catch(e) {
 				if (this.alertLogErrors) {
 					errorMessage = this.name + " - Error attempt to log with " + messageLevel;
@@ -271,4 +284,4 @@
 		 */
 		className: "oj.Logger"
 	});
-}());
+}(this));
