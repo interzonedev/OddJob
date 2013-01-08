@@ -174,40 +174,215 @@ $(function() {
 		logger.fatal("fatal logger level");
 	});
 
-	// oj.Logger trace method tests
+	// oj.Logger logging method tests
 	test("oj.Logger.trace called with different logger levels", function() {
 		var logger;
 
 		expect(6);
 
 		logger = oj.Logger.getInstance({
-			logger: testLogger,
-			level: "TRACE"
+			logger: testLogger
 		}, true);
 
-		logger.trace("trace logger level");
+		level = "TRACE";
+		logger.trace("trace method called with TRACE logger level");
 
 		logger.level = "DEBUG";
-		logger.trace("debug logger level");
+		logger.trace("trace method called with DEBUG logger level");
 
 		logger.level = "INFO";
-		logger.trace("info logger level");
+		logger.trace("trace method called with INFO logger level");
 
 		logger.level = "WARN";
-		logger.trace("warn logger level");
+		logger.trace("trace method called with WARN logger level");
 
 		logger.level = "ERROR";
-		logger.trace("error logger level");
+		logger.trace("trace method called with ERROR logger level");
 
 		logger.level = "FATAL";
-		logger.trace("fatal logger level");
+		logger.trace("trace method called with FATAL logger level");
 
-		strictEqual(testLogger.levelMessages.TRACE.length, 6, "oj.Logger.trace called with different logger levels should log all messages at the trace level");
-		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the debug level");
-		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the info level");
-		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the warn level");
-		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the error level");
-		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.trace called with different logger levels should log no messages at the fatal level");
+		strictEqual(testLogger.levelMessages.TRACE.length, 6, "oj.Logger.trace called with different logger levels should log messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.trace called with different logger levels should not log messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.trace called with different logger levels should not log messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.trace called with different logger levels should not log messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.trace called with different logger levels should not log messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.trace called with different logger levels should not log messages at the fatal level");
+	});
+
+	test("oj.Logger.debug called with different logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger
+		}, true);
+
+		logger.level = "TRACE";
+		logger.debug("debug method called with TRACE logger level");
+
+		logger.level = "DEBUG";
+		logger.debug("debug method called with DEBUG logger level");
+
+		logger.level = "INFO";
+		logger.debug("debug method called with INFO logger level");
+
+		logger.level = "WARN";
+		logger.debug("debug method called with WARN logger level");
+
+		logger.level = "ERROR";
+		logger.debug("debug method called with ERROR logger level");
+
+		logger.level = "FATAL";
+		logger.debug("debug method called with FATAL logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 0, "oj.Logger.debug called with different logger levels should not log messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 5, "oj.Logger.debug called with different logger levels should log messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.debug called with different logger levels should not log messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.debug called with different logger levels should not log messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.debug called with different logger levels should not log messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.debug called with different logger levels should not log messages at the fatal level");
+	});
+
+	test("oj.Logger.info called with different logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger
+		}, true);
+
+		level = "TRACE";
+		logger.info("info method called with TRACE logger level");
+
+		logger.level = "DEBUG";
+		logger.info("info method called with DEBUG logger level");
+
+		logger.level = "INFO";
+		logger.info("info method called with INFO logger level");
+
+		logger.level = "WARN";
+		logger.info("info method called with WARN logger level");
+
+		logger.level = "ERROR";
+		logger.info("info method called with ERROR logger level");
+
+		logger.level = "FATAL";
+		logger.info("info method called with FATAL logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 0, "oj.Logger.info called with different logger levels should not log messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.info called with different logger levels should not log messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 4, "oj.Logger.info called with different logger levels should log messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.info called with different logger levels should not log messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.info called with different logger levels should not log messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.info called with different logger levels should not log messages at the fatal level");
+	});
+
+	test("oj.Logger.warn called with different logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger
+		}, true);
+
+		level = "TRACE";
+		logger.warn("warn method called with TRACE logger level");
+
+		logger.level = "DEBUG";
+		logger.warn("warn method called with DEBUG logger level");
+
+		logger.level = "INFO";
+		logger.warn("warn method called with INFO logger level");
+
+		logger.level = "WARN";
+		logger.warn("warn method called with WARN logger level");
+
+		logger.level = "ERROR";
+		logger.warn("warn method called with ERROR logger level");
+
+		logger.level = "FATAL";
+		logger.warn("warn method called with FATAL logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 0, "oj.Logger.warn called with different logger levels should not log messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.warn called with different logger levels should not log messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.warn called with different logger levels should not log messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 3, "oj.Logger.warn called with different logger levels should log messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.warn called with different logger levels should not log messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.warn called with different logger levels should not log messages at the fatal level");
+	});
+
+	test("oj.Logger.error called with different logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger
+		}, true);
+
+		level = "TRACE";
+		logger.error("error method called with TRACE logger level");
+
+		logger.level = "DEBUG";
+		logger.error("error method called with DEBUG logger level");
+
+		logger.level = "INFO";
+		logger.error("error method called with INFO logger level");
+
+		logger.level = "WARN";
+		logger.error("error method called with WARN logger level");
+
+		logger.level = "ERROR";
+		logger.error("error method called with ERROR logger level");
+
+		logger.level = "FATAL";
+		logger.error("error method called with FATAL logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 0, "oj.Logger.error called with different logger levels should not log messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.error called with different logger levels should not log messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.error called with different logger levels should not log messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.error called with different logger levels should not log messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 2, "oj.Logger.error called with different logger levels should log messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 0, "oj.Logger.error called with different logger levels should not log messages at the fatal level");
+	});
+
+	test("oj.Logger.fatal called with different logger levels", function() {
+		var logger;
+
+		expect(6);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger
+		}, true);
+
+		level = "TRACE";
+		logger.fatal("fatal method called with TRACE logger level");
+
+		logger.level = "DEBUG";
+		logger.fatal("fatal method called with DEBUG logger level");
+
+		logger.level = "INFO";
+		logger.fatal("fatal method called with INFO logger level");
+
+		logger.level = "WARN";
+		logger.fatal("fatal method called with WARN logger level");
+
+		logger.level = "ERROR";
+		logger.fatal("fatal method called with ERROR logger level");
+
+		logger.level = "FATAL";
+		logger.fatal("fatal method called with FATAL logger level");
+
+		strictEqual(testLogger.levelMessages.TRACE.length, 0, "oj.Logger.fatal called with different logger levels should not log messages at the trace level");
+		strictEqual(testLogger.levelMessages.DEBUG.length, 0, "oj.Logger.fatal called with different logger levels should not log messages at the debug level");
+		strictEqual(testLogger.levelMessages.INFO.length, 0, "oj.Logger.fatal called with different logger levels should not log messages at the info level");
+		strictEqual(testLogger.levelMessages.WARN.length, 0, "oj.Logger.fatal called with different logger levels should not log messages at the warn level");
+		strictEqual(testLogger.levelMessages.ERROR.length, 0, "oj.Logger.fatal called with different logger levels should not log messages at the error level");
+		strictEqual(testLogger.levelMessages.FATAL.length, 1, "oj.Logger.fatal called with different logger levels should log messages at the fatal level");
 	});
 
 	// oj.Logger level method tests
