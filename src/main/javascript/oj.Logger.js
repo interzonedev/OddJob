@@ -249,7 +249,7 @@
 				formattedMessage += ": ";
 			}
 
-			if (/\S/.test(message)) {
+			if (message && /\S/.test(message)) {
 				if (("object" === typeof(message)) && JSON && JSON.stringify) {
 					formattedMessage += JSON.stringify(message);
 				} else {

@@ -535,4 +535,136 @@ $(function() {
 		strictEqual(testLogger.levelMessages.ERROR.length, 1, "oj.Logger.error called at the FATAL logger level should log a message");
 		strictEqual(testLogger.levelMessages.FATAL.length, 1, "oj.Logger.fatal called at the FATAL logger level should log a message");
 	});
+
+	test("oj.Logger.debug called with no arguments", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG"
+		}, true);
+
+		logger.debug();
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with no arguments should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "", "oj.Logger.debug called with no arguments should have logged an empty message");
+	});
+
+	test("oj.Logger.debug called with message argument", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG"
+		}, true);
+
+		logger.debug("message");
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with message argument should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "message", "oj.Logger.debug called with message argument should have logged an empty message");
+	});
+
+	test("oj.Logger.debug called with message and function handle arguments", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG"
+		}, true);
+
+		logger.debug("message", "functionHandle");
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with message and function handle arguments should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "[functionHandle]: message", "oj.Logger.debug called with message and function handle arguments should have logged an empty message");
+	});
+
+	test("oj.Logger.debug called with prependLevelToMessage with message arguments", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG",
+			prependLevelToMessage: true
+		}, true);
+
+		logger.debug("message");
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with prependLevelToMessage with message arguments should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "DEBUG - : message", "oj.Logger.debug called with prependLevelToMessage with message arguments should have logged an empty message");
+	});
+
+	test("oj.Logger.debug called with prependLevelToMessage with message and function handle arguments", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG",
+			prependLevelToMessage: true
+		}, true);
+
+		logger.debug("message", "functionHandle");
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with prependLevelToMessage with message and function handle arguments should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "DEBUG - [functionHandle]: message", "oj.Logger.debug called with prependLevelToMessage with message and function handle arguments should have logged an empty message");
+	});
+
+	test("oj.Logger.debug called with prependLevelToMessage and name with message arguments", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG",
+			prependLevelToMessage: true,
+			name: "testLogger"
+		}, true);
+
+		logger.debug("message");
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with prependLevelToMessage and name with message arguments should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "DEBUG - testLogger: message", "oj.Logger.debug called with prependLevelToMessage and name with message arguments should have logged an empty message");
+	});
+
+	test("oj.Logger.debug called with prependLevelToMessage and name with message and function handle arguments", function() {
+		var logger, debugLogMessage;
+
+		expect(2);
+
+		logger = oj.Logger.getInstance({
+			logger: testLogger,
+			level: "DEBUG",
+			prependLevelToMessage: true,
+			name: "testLogger"
+		}, true);
+
+		logger.debug("message", "functionHandle");
+
+		strictEqual(testLogger.levelMessages.DEBUG.length, 1, "oj.Logger.debug called with prependLevelToMessage and name with message and function handle arguments should have logged a message");
+
+		debugLogMessage = testLogger.levelMessages.DEBUG[0];
+		strictEqual(debugLogMessage, "DEBUG - testLogger[functionHandle]: message", "oj.Logger.debug called with prependLevelToMessage and name with message and function handle arguments should have logged an empty message");
+	});
 });
