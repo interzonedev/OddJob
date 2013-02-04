@@ -14,10 +14,22 @@ Optional components can be included in custom [builds](http://oddjob.interzonede
 + Logger: A wrapper around 3rd party logger frameworks to provide a common logging API
 + jQuery Utils: Utility methods for use in a jQuery based system if the jQuery library is included
 
+File Structure
+--------------
+
+`/src/main/javascript` - The Oddjob JavaScript source code  
+`/src/main/java` - Java code that runs a servlet for unit testing the Ajax component  
+`/src/test/javascript` - The JavaScript unit testing code  
+`/src/test/javascript-resources` - JavaScript library code and HTML pages that support unit testing  
+
 Building
 --------
 
-The OddJob source code is compressed using the [YUI Compressor plugin](https://github.com/davidB/yuicompressor-maven-plugin)
+The Oddjob source and test code is built using Maven via the command line and scripts in the `bin` directory.
+
+Running `mvn clean package` from the command line in the OddJob project root will copy all the necessary files to run unit tests to the directory specified by the `webserver.deploy.dir` property in the `build.properties` file.  The default value is `/Users/${user.name}/Sites/oddjob` which on a Mac will land the files in the `oddjob` directory in current user's personal Apache docroot and can accessed in a browser at `http://localhost/~${user.name}/oddjob`.
+
+The source code is compressed using the [YUI Compressor plugin](https://github.com/davidB/yuicompressor-maven-plugin).
 
 To produce a compressed version of the source run from the command line in the OddJob project root:
 `./bin/alchim31_yui_compress.sh`
