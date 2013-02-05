@@ -111,7 +111,7 @@
 				// If the console is present copy its properties onto the logger instance.
 				if (context.console) {
 					for (propName in context.console) {
-						if (context.console.hasOwnProperty(propName)) {
+						if (Object.prototype.hasOwnProperty.call(context.console, propName)) {
 							this.logger[propName] = context.console[propName]; 
 						}
 					}	
