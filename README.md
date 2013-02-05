@@ -17,9 +17,9 @@ Optional components can be included in custom [builds](http://oddjob.interzonede
 File Structure
 --------------
 
-`/src/main/javascript` - The Oddjob JavaScript source code  
-`/src/main/java` - Java code that runs a servlet for unit testing the Ajax component  
-`/src/test/javascript` - The JavaScript unit testing code  
+`/src/main/javascript` - The Oddjob framework JavaScript source code  
+`/src/main/java` - Java code that runs a servlet that handles requests from the Ajax component unit tests  
+`/src/test/javascript` - The unit tests JavaScript source code  
 `/src/test/javascript-resources` - JavaScript library code and HTML pages that support unit testing  
 
 Building
@@ -27,12 +27,14 @@ Building
 
 The Oddjob source and test code is built using Maven via the command line and scripts in the `bin` directory.
 
-Running `mvn clean package` from the command line in the OddJob project root will copy all the necessary files to run unit tests to the directory specified by the `webserver.deploy.dir` property in the `build.properties` file.  The default value is `/Users/${user.name}/Sites/oddjob` which on a Mac will land the files in the `oddjob` directory in current user's personal Apache docroot and can accessed in a browser at `http://localhost/~${user.name}/oddjob`.
+Running `mvn clean package` from the command line in the OddJob project root will copy all the necessary files to run the unit tests to the directory specified by the `webserver.deploy.dir` property in the `build.properties` file.  The default value is `/Users/${user.name}/Sites/oddjob` which on a Mac will land the files in the `oddjob` directory in current user's personal Apache docroot and can accessed in a browser at `http://localhost/~${user.name}/oddjob`.
 
 The source code is compressed using the [YUI Compressor plugin](https://github.com/davidB/yuicompressor-maven-plugin).
 
 To produce a compressed version of the source run from the command line in the OddJob project root:
 `./bin/alchim31_yui_compress.sh`
+
+The source code is compressed to the `oddjob-${project.version}-SNAPSHOT.jar` file in the `target` directory.
 
 Docs
 ----
@@ -54,10 +56,16 @@ To produce JS lint warnings and errors from the JSTools JSLint plugin run from t
 Running Tests
 -------------
 
-Add the following to your Apache httpd.conf:  
-`ProxyPass /<oddjob web URL>/ajaxTest http://localhost:5001/oddjob/ajaxTest`  
-`ProxyPassReverse /<oddjob web URL>/ajaxTest http://localhost:5001/oddjob/ajaxTest`
+The [QUnit](http://qunitjs.com) JavaScript testing framework is used for all unit tests.  There are two HTML files that contain all the markup to run the unit tests against both the uncompressed (`./src/test/javascript-resources/testSuite.html`) and the compressed (`./src/test/javascript-resources/compressedTestSuite.html`) source code.
 
-From the command line in the OddJob project root:  
+To run the units tests navigate to either of these files after they are copied to a webserver docroot.  By default on a Mac, the HTML files are found at:  
+`http://localhost/~${user.name}/oddjob/src/test/javascript-resources/testSuite.html` (uncompressed)  
+`http://localhost/~${user.name}/oddjob/src/test/javascript-resources/compressedTestSuite.html` (compressed)
+
+In order to get the unit tests for the Ajax component to pass the Ajax test servlet needs to be running.  To build and run the Ajax test servlet run from the command line in the OddJob project root:  
 `mvn clean package`  
 `./bin/ajax_test_servlet.sh`
+
+The Ajax component unit tests make requests to the same origin as the HTML that serves them to avoid cross site scripting problems.  The Ajax test servlet starts an embedded Jetty web server on port 5001 on localhost.  To get the Ajax requests to hit the test servlet add the following to your Apache httpd.conf:  
+`ProxyPass /oddjob/ajaxTest http://localhost:5001/oddjob/ajaxTest`  
+`ProxyPassReverse /oddjob/ajaxTest http://localhost:5001/oddjob/ajaxTest`
