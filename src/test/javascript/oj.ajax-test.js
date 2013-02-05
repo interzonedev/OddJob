@@ -48,11 +48,7 @@ $(function() {
 	};
 
 	isXmlDocument = function(xmlDocument) {
-		if (!$.browser.msie) {
-			return /^\[object (XML)?Document\]$/.test(Object.prototype.toString.apply(xmlDocument));
-		} else {
-			return ("#document" === xmlDocument.nodeName);
-		}
+		return ("#document" === xmlDocument.nodeName) || /^\[object (XML)?Document\]$/.test(Object.prototype.toString.apply(xmlDocument));
 	};
 
 	xmlResponseContainsMethod = function(xmlDocument, method) {
